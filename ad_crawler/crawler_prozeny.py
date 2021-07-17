@@ -21,7 +21,7 @@ to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.prozeny.cz/autor/komercni-sdeleni-41"
 max_scrolls = 1
-
+filename_length = 255
 
 class Crawler:
 
@@ -128,13 +128,17 @@ class Crawler:
             LibraryMethods.filter_html(soup)
             self.remove_article_heading(soup)
 
-            with open(html_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            filename = url.replace("/", "_")
+            if len(filename) > filename_length:
+                filename = filename[0:filename_length]
+
+            with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
 
-            with open(plaintext_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
 
-            with open(p_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
                 f.write(soup.prettify())
 

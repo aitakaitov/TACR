@@ -79,12 +79,42 @@ class LibraryMethods:
         return driver.page_source
 
     @staticmethod
+    def download_page_html_timeout(driver, url: str, max_scrolls: int, timeout: int):
+        """
+        Given a driver and URL, downloads the page html code.
+        If driver.get(url) times out, it throws WebDriverException.
+        :param driver: webdriver
+        :param url: url
+        :return: page html code
+        """
+        driver.get(url)
+        # takes care of scrolling
+        last_height = driver.execute_script("return document.body.scrollHeight")
+        scrolls = 0
+        while True:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(1)
+            new_height = driver.execute_script("return document.body.scrollHeight")
+            scrolls += 1
+            if new_height == last_height or scrolls == max_scrolls:
+                if driver.execute_script("return document.readyState") == 'complete':
+                    break
+                else:
+                    time.sleep(1)
+            last_height = new_height
+
+        time.sleep(timeout)
+        return driver.page_source
+
+    @staticmethod
     def keep_paragraphs(soup: BeautifulSoup):
         tags = soup.find_all()
 
         for tag in tags:
             if tag.name != "p":
                 tag.unwrap()
+            else:
+                tag.attrs = {}
 
         comments = soup.find_all(text=lambda text: isinstance(text, Comment))
         for comment in comments:

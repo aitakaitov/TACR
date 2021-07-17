@@ -20,7 +20,8 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.garaz.cz/autor/komercni-sdeleni-1035"
-max_scrolls = 1
+max_scrolls = 2
+filename_length = 255
 
 
 class Crawler:
@@ -91,7 +92,7 @@ class Crawler:
             expand = soup.find("a", {"class": "c_K c_J"})
             url = expand.get("href")
 
-        li_tags = soup.find_all("li", {"class": "d_d7 g_gN"})
+        li_tags = soup.find_all("li", {"class": "c_bV e_f4"})
         for tag in li_tags:
             a_tag = tag.find("a", recursive=True)
 
@@ -126,18 +127,35 @@ class Crawler:
             LibraryMethods.filter_html(soup)
             self.remove_article_heading(soup)
 
-            with open(html_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            filename = url.replace("/", "_")
+            parts = filename.split("-")
+            filename = ""
+            for part in parts[0:len(parts) - 1]:
+                filename += part + "-"
+
+            if len(filename) > filename_length:
+                filename = filename[0:filename_length]
+
+            if os.path.exists(html_folder + "/" + filename):
+                self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
+                continue
+
+            with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
 
-            with open(plaintext_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
 
-            with open(p_folder + "/" + url.replace("/", "_"), "w+", encoding='utf-8') as f:
+            with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
                 f.write(soup.prettify())
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "g_gC"})
+        tag = soup.find("div", {"class": "d_cw"})
+        if tag is not None:
+            tag.extract()
+
+        tag = soup.find("a", {"class": "e_gA"})
         if tag is not None:
             tag.extract()
 

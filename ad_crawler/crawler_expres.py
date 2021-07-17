@@ -14,12 +14,12 @@ import os
 import traceback
 
 root_folder = "ad_pages"
-site_folder = "ctk"
-log_path = "log_ctk.log"
+site_folder = "expres"
+log_path = "log_expres.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.ceskenoviny.cz/pr/"
+starting_page = "https://www.expres.cz/komercni-sdeleni"
 max_scrolls = 2
 filename_length = 255
 
@@ -50,6 +50,9 @@ class Crawler:
         ''' List of links to visit '''
         self.links_to_visit = PersistentList(to_visit_file)
 
+        ''' List of visited links '''
+        #self.visited_links = PersistentList(visited_file)
+
         try:
             os.mkdir("./" + root_folder)
         except OSError:
@@ -78,20 +81,23 @@ class Crawler:
 
     def collect_links(self, page):
         self.log.log("Collecting links")
-        html = LibraryMethods.download_page_html(self.driver, page, max_scrolls)
+        url = page
 
-        soup = BeautifulSoup(html)
-        li_tags = soup.find_all("li", {"class": "list-item"}, recursive=True)
+        for i in range(max_scrolls):
+            try:
+                html = LibraryMethods.download_page_html(self.driver, url, max_scrolls)
+            except WebDriverException:
+                break
+            soup = BeautifulSoup(html)
 
-        for tag in li_tags:
-            a_tag = tag.find("a", recursive=True)
+            a_tags = soup.find_all("a", {"class": "art-link"})
+            for tag in a_tags:
+                tag_url = tag.get("href")
+                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit and LibraryMethods.strip_url(
+                        urllib.parse.urljoin(page, tag_url)) == "expres.cz":
+                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
-            if a_tag is None:
-                continue
-
-            tag_url = a_tag.get("href")
-            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+            url = page + "/" + str(i + 2)
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -108,9 +114,8 @@ class Crawler:
 
         for url in self.links_to_visit:
             self.log.log("Processing " + url)
-
             try:
-                html = LibraryMethods.download_page_html(self.driver, url, 20)
+                html = LibraryMethods.download_page_html_timeout(self.driver, url, 0, 6)
             except WebDriverException:
                 continue
 
@@ -119,8 +124,17 @@ class Crawler:
             self.remove_article_heading(soup)
 
             filename = url.replace("/", "_")
+            parts = filename.split("-")
+            filename = ""
+            for part in parts[0:len(parts) - 1]:
+                filename += part + "-"
+
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
+
+            if os.path.exists(html_folder + "/" + filename):
+                self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
+                continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
@@ -133,15 +147,9 @@ class Crawler:
                 f.write(soup.prettify())
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "box-article-info"})
+        tag = soup.find("div", {"class": "komercni-sdeleni"})
         if tag is not None:
             tag.extract()
 
 
 Crawler().start_crawler()
-
-
-
-
-
-
