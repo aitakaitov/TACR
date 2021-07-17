@@ -14,12 +14,12 @@ import os
 import traceback
 
 root_folder = "ad_pages"
-site_folder = "jablickar"
-log_path = "log_jablickar.log"
+site_folder = "banky"
+log_path = "log_banky.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://jablickar.cz/rubrika/komercni_sdeleni/"
+starting_page = "https://www.banky.cz/clanky/komercni-sdeleni/"
 max_scrolls = 2
 filename_length = 255
 
@@ -90,9 +90,9 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
 
-            article_tags = soup.find_all("article", {"class": "preview big feature-author feature-title feature-category feature-comments feature-thumbnail cat-1313"})
-            for tag in article_tags:
-                a_tag = tag.find("a", recursive=False)
+            div_tags = soup.find_all("div", {"class": "Data"})
+            for tag in div_tags:
+                a_tag = tag.find("h3").find("a")
 
                 if a_tag is None:
                     continue
@@ -101,7 +101,7 @@ class Crawler:
                 if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
                     self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
-            url = page + "page/" + str(i + 2)
+            url = page + str(i + 2) + "/"
 
 
 
@@ -153,18 +153,16 @@ class Crawler:
                 f.write(soup.prettify())
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "category-line"})
+        tag = soup.find("a", {"title": "Komerční sdělení"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("div", {"class": "content", "itemprop": "text"})
+        tag = soup.find("a", {"title": "Komerční sdělení :: Banky.cz"})
         if tag is not None:
-            tag = soup.find("p").find("strong")
-            if tag is not None:
-                tag.extract()
-            tag = soup.find("p").find("b")
-            if tag is not None:
-                tag.extract()
+            tag.extract()
 
+        tag = soup.find("a", {"href": "http://www.banky.cz/clanky-komercni-sdeleni"})
+        if tag is not None:
+            tag.extract()
 
 Crawler().start_crawler()
