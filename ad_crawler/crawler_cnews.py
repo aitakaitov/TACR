@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import urllib.parse
 
 import os
+import re
 import traceback
 
 root_folder = "ad_pages"
@@ -108,11 +109,13 @@ class Crawler:
         html_folder = root_folder + "/" + site_folder + "/html"
         plaintext_folder = root_folder + "/" + site_folder + "/plaintext"
         p_folder = root_folder + "/" + site_folder + "/plaintext_with_p"
+        relevant_p_folder = root_folder + "/" + site_folder + "/relevant_with_p"
 
         try:
             os.mkdir(html_folder)
             os.mkdir(plaintext_folder)
             os.mkdir(p_folder)
+            os.mkdir(relevant_p_folder)
         except FileExistsError:
             pass
 
@@ -143,12 +146,43 @@ class Crawler:
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
 
+            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                f.write(self.get_relevant_text(soup))
+
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
 
             with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
                 f.write(soup.prettify())
+
+    def get_relevant_text(self, soup):
+        title = soup.find("h1", {"class": "entry-title"}).get_text()
+        div_tag = soup.find("div", {"class": "td-post-content"})
+        
+        tags = div_tag.find_all()
+        for tag in tags:
+            if tag.name == "div":
+                tag.extract()
+            elif tag.name != "p":
+                tag.unwrap()
+
+        content = div_tag.contents
+        content_string = ""
+        for i in range(len(content) - 2):
+
+            part = content[i]
+            if len(part) == 0:
+                continue
+            if str(part).isspace():
+                continue
+            if "kk-star-ratings" in str(part):
+                continue
+
+            content_string += "\n" + str(part) + "\n"
+
+        return title + "\n" + content_string
+
 
     def remove_article_heading(self, soup):
         tag = soup.find("li", {"class": "entry-category"})
