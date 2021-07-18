@@ -93,16 +93,45 @@ class Crawler:
             if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
                 self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
+    def get_relevant_text(self, soup):
+        title = soup.find("h1", {"itemprop": "name"}).get_text()
+        div_tag = soup.find("div", {"itemprop": "articleBody"})
+        tags = div_tag.find_all()
+
+        for tag in tags:
+            if tag.name == "div":
+                tag.extract()
+            elif tag.name != "p":
+                tag.unwrap()
+            elif tag.name == "p":
+                tag.attrs = {}
+
+        content = div_tag.contents
+        content_string = ""
+        for i in range(len(content) - 2):
+
+            part = content[i]
+            if len(part) == 0:
+                continue
+            if str(part).isspace():
+                continue
+
+            content_string += "\n" + str(part) + "\n"
+
+        return title + "\n" + content_string
+
     def download_links(self):
         self.log.log("Downloading pages")
         html_folder = root_folder + "/" + site_folder + "/html"
         plaintext_folder = root_folder + "/" + site_folder + "/plaintext"
         p_folder = root_folder + "/" + site_folder + "/plaintext_with_p"
+        relevant_p_folder = root_folder + "/" + site_folder + "/relevant_with_p"
 
         try:
             os.mkdir(html_folder)
             os.mkdir(plaintext_folder)
             os.mkdir(p_folder)
+            os.mkdir(relevant_p_folder)
         except FileExistsError:
             pass
 
@@ -124,6 +153,9 @@ class Crawler:
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
+
+            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                f.write(self.get_relevant_text(soup))
 
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
