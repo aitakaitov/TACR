@@ -108,11 +108,13 @@ class Crawler:
         html_folder = root_folder + "/" + site_folder + "/html"
         plaintext_folder = root_folder + "/" + site_folder + "/plaintext"
         p_folder = root_folder + "/" + site_folder + "/plaintext_with_p"
+        relevant_p_folder = root_folder + "/" + site_folder + "/relevant_with_p"
 
         try:
             os.mkdir(html_folder)
             os.mkdir(plaintext_folder)
             os.mkdir(p_folder)
+            os.mkdir(relevant_p_folder)
         except FileExistsError:
             pass
 
@@ -141,14 +143,46 @@ class Crawler:
                 continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(soup.prettify())
+                f.write(LibraryMethods.unescape_chars(soup.prettify()))
+
+            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                f.write(LibraryMethods.unescape_chars(self.get_relevant_text(soup)))
 
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(BeautifulSoup(soup.prettify()).getText())
+                f.write(LibraryMethods.unescape_chars(BeautifulSoup(soup.prettify()).getText()))
 
             with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
-                f.write(soup.prettify())
+                f.write(LibraryMethods.unescape_chars(soup.prettify()))
+
+    def get_relevant_text(self, soup):
+        title = soup.find("h1", {"class": "c_c3 c_N"}).get_text()
+        header = soup.find("p", {"class": "c_C e_fj"}).get_text()
+        article_tag = soup.find("div", {"class": "d_bu mol-rich-content--for-article"})
+        tags = article_tag.find_all()
+
+        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "span"]
+        for tag in tags:
+            if tag.name == "p":
+                tag.attrs = {}
+            elif tag.name in valid_tags:
+                tag.unwrap()
+            else:
+                tag.extract()
+
+        content = article_tag.contents
+        content_string = ""
+        for i in range(len(content)):
+
+            part = content[i]
+            if len(part) == 0:
+                continue
+            if str(part).isspace():
+                continue
+
+            content_string += "\n" + str(part) + "\n"
+
+        return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
         tag = soup.find("div", {"class": "d_cw"})

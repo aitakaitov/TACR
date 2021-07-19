@@ -1,13 +1,15 @@
 import time
 from bs4 import BeautifulSoup, Comment
 from urllib import parse
-#from crawler.config import Config
+import html
 
 
 class LibraryMethods:
     """
     Static methods
     """
+
+    char_dict = {}
 
     @staticmethod
     def filter_html(soup: BeautifulSoup):
@@ -119,3 +121,8 @@ class LibraryMethods:
         comments = soup.find_all(text=lambda text: isinstance(text, Comment))
         for comment in comments:
             comment.extract()
+
+    @staticmethod
+    def unescape_chars(string):
+        return html.unescape(string)
+
