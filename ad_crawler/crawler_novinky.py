@@ -152,7 +152,7 @@ class Crawler:
         article_tag = soup.find("article", {"class": "g_gl"})
         tags = article_tag.find_all()
 
-        valid_tags = ["div", "p", "h1", "h2", "h3", "h4", "h5", "a"]
+        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
             if tag.name == "p":
                 tag.attrs = {}

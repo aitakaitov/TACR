@@ -98,13 +98,14 @@ class Crawler:
         div_tag = soup.find("div", {"itemprop": "articleBody"})
         tags = div_tag.find_all()
 
+        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
-            if tag.name == "div":
-                tag.extract()
-            elif tag.name != "p":
-                tag.unwrap()
-            elif tag.name == "p":
+            if tag.name == "p":
                 tag.attrs = {}
+            elif tag.name in valid_tags:
+                tag.unwrap()
+            else:
+                tag.extract()
 
         content = div_tag.contents
         content_string = ""
