@@ -129,6 +129,10 @@ class Crawler:
             LibraryMethods.filter_html(soup)
             self.remove_article_heading(soup)
 
+            comments = soup.find_all(text=lambda text: isinstance(text, Comment))
+            for comment in comments:
+                comment.extract()
+
             filename = url.replace("/", "_")
             parts = filename.split("-")
             filename = ""
