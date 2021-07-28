@@ -14,12 +14,12 @@ import os
 import traceback
 
 root_folder = "ad_pages"
-site_folder = "chip"
-log_path = "log_chip.log"
+site_folder = "idnes"
+log_path = "log_idnes.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.chip.cz/komercni-sdeleni/"
+starting_page = "https://sdeleni.idnes.cz/"
 max_scrolls = 2
 filename_length = 255
 
@@ -90,19 +90,19 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
 
-            main_div = soup.find("div", {"class": "post"})
-            div_tags = main_div.find_all("div", {"class": "actuality-wrap actuality-wrap--small"})
+            div_tags = soup.find_all("div", {"class": "art"}) + soup.find_all("div", {"class": "art opener"})
             for tag in div_tags:
-                a_tag = tag.find("a", {"class": "anotace-image"})
+                a_tag = tag.find("a")
 
                 if a_tag is None:
                     continue
 
                 tag_url = a_tag.get("href")
                 if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+                    if LibraryMethods.strip_url(urllib.parse.urljoin(page, tag_url)) == "sdeleni.idnes.cz":
+                        self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
-            url = page + "?page=" + str(i + 2)
+            url = page + str(i + 2)
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -152,8 +152,9 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        title = soup.find("div", {"class": "post-header__title"}).get_text()
-        article_tag = soup.find("div", {"class": "post article"})
+        title = soup.find("div", {"class": "art-full"}).find("h1").get_text()
+        header = soup.find("div", {"class": "opener"}).get_text()
+        article_tag = soup.find("div", {"id": "art-text"})
         tags = article_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
@@ -177,14 +178,14 @@ class Crawler:
 
             content_string += "\n" + str(part) + "\n"
 
-        return title + "\n" + content_string
+        return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "breadcrumbs"})
+        tag = soup.find("div", {"class": "art-info"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("span", {"class": "post-header__info__author"})
+        tag = soup.find("div", {"id": "komercni-sdeleni"})
         if tag is not None:
             tag.extract()
 

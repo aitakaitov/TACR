@@ -7,7 +7,7 @@ from library_methods import LibraryMethods
 from log import Log
 from persistent_list import PersistentList
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.garaz.cz/autor/komercni-sdeleni-1035"
-max_scrolls = 2
+max_scrolls = 15
 filename_length = 255
 
 
@@ -90,18 +90,22 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
             expand = soup.find("a", {"class": "c_K c_J"})
+
+            li_tags = soup.find_all("li", {"class": "c_bV e_f4"})
+            for tag in li_tags:
+                a_tag = tag.find("a", recursive=True)
+
+                if a_tag is None:
+                    continue
+
+                tag_url = a_tag.get("href")
+                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+
+            if expand is None:
+                break
+
             url = expand.get("href")
-
-        li_tags = soup.find_all("li", {"class": "c_bV e_f4"})
-        for tag in li_tags:
-            a_tag = tag.find("a", recursive=True)
-
-            if a_tag is None:
-                continue
-
-            tag_url = a_tag.get("href")
-            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
     def download_links(self):
         self.log.log("Downloading pages")

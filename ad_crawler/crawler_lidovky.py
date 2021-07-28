@@ -14,13 +14,13 @@ import os
 import traceback
 
 root_folder = "ad_pages"
-site_folder = "aktualne"
-log_path = "log_aktualne.log"
+site_folder = "lidovky"
+log_path = "log_lidovky.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/"
-max_scrolls = 42
+starting_page = "https://www.lidovky.cz/pr/sdeleni-komercni/"
+max_scrolls = 26
 filename_length = 255
 
 
@@ -72,7 +72,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -90,8 +91,8 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
 
-            article_tags = soup.find_all("div", {"class": "small-box small-box--article small-box--listing clearfix"})
-            for tag in article_tags:
+            div_tags = soup.find_all("div", {"class": "art"}) + soup.find_all("div", {"class": "art opener"})
+            for tag in div_tags:
                 a_tag = tag.find("a")
 
                 if a_tag is None:
@@ -101,17 +102,7 @@ class Crawler:
                 if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
                     self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
-            tag = soup.find("a", {"class": "more-btn"})
-            if tag is not None:
-                url = urllib.parse.urljoin(page, tag.get("href"))
-            else:
-                tag = soup.find("a", {"class": "listing-nav__btn listing-nav__btn--right"})
-                if tag is not None:
-                    url = urllib.parse.urljoin(page, tag.get("href"))
-                else:
-                    break
-
-
+            url = page + str(i + 2)
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -144,16 +135,10 @@ class Crawler:
                 comment.extract()
 
             filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
-
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 
-            if os.path.exists(html_folder + "/" + filename):
-                self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
+            if filename in os.listdir(html_folder):
                 continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
@@ -170,9 +155,12 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        title = soup.find("h1", {"class": "article-title"}).get_text()
-        header = soup.find("div", {"class": "article__perex"}).get_text()
-        article_tag = soup.find("div", {"class": "article__content"})
+        try:
+            title = soup.find("h1", {"itemprop": "name headline"}).get_text()
+        except AttributeError:
+            title = ""
+        header = soup.find("div", {"class": "opener"}).get_text()
+        article_tag = soup.find("div", {"id": "art-text"})
         tags = article_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
@@ -186,7 +174,7 @@ class Crawler:
 
         content = article_tag.contents
         content_string = ""
-        for i in range(len(content)):
+        for i in range(len(content) - 1):
 
             part = content[i]
             if len(part) == 0:
@@ -199,11 +187,11 @@ class Crawler:
         return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "article-subtitle--commercial"})
+        tag = soup.find("div", {"class": "art-info"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("div", {"class": "taglist"})
+        tag = soup.find("div", {"id": "komercni-sdeleni"})
         if tag is not None:
             tag.extract()
 

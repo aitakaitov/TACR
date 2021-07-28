@@ -13,14 +13,14 @@ import urllib.parse
 import os
 import traceback
 
-root_folder = "ad_pages"
-site_folder = "aktualne"
-log_path = "log_aktualne.log"
+root_folder = "art_pages"
+site_folder = "ctk"
+log_path = "log_ctk.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/"
-max_scrolls = 42
+starting_page = "https://www.ceskenoviny.cz/prehled-zprav/"
+max_scrolls = 1000
 filename_length = 255
 
 
@@ -50,9 +50,6 @@ class Crawler:
         ''' List of links to visit '''
         self.links_to_visit = PersistentList(to_visit_file)
 
-        ''' List of visited links '''
-        #self.visited_links = PersistentList(visited_file)
-
         try:
             os.mkdir("./" + root_folder)
         except OSError:
@@ -81,37 +78,67 @@ class Crawler:
 
     def collect_links(self, page):
         self.log.log("Collecting links")
-        url = page
+        html = LibraryMethods.download_page_html(self.driver, page, max_scrolls)
 
-        for i in range(max_scrolls):
-            try:
-                html = LibraryMethods.download_page_html(self.driver, url, max_scrolls)
-            except WebDriverException:
-                break
-            soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html)
+        li_tags = soup.find_all("li", {"class": "list-item"}, recursive=True)
 
-            article_tags = soup.find_all("div", {"class": "small-box small-box--article small-box--listing clearfix"})
-            for tag in article_tags:
-                a_tag = tag.find("a")
-
-                if a_tag is None:
+        for tag in li_tags:
+            span_tag = tag.find("span", {"class": "info"})
+            if span_tag is not None:
+                if span_tag.get_text() == "Reklama":
                     continue
 
-                tag_url = a_tag.get("href")
-                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+            a_tag = tag.find("a", {"class": "inner inner-img priorita2"})
 
-            tag = soup.find("a", {"class": "more-btn"})
-            if tag is not None:
-                url = urllib.parse.urljoin(page, tag.get("href"))
-            else:
-                tag = soup.find("a", {"class": "listing-nav__btn listing-nav__btn--right"})
-                if tag is not None:
-                    url = urllib.parse.urljoin(page, tag.get("href"))
+            if a_tag is None:
+                continue
+
+            tag_url = a_tag.get("href")
+            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+
+    def get_relevant_text(self, soup):
+        try:
+            title = soup.find("h1", {"itemprop": "name"}).get_text()
+        except AttributeError:
+            title = ""
+
+        div_tag = soup.find("div", {"itemprop": "articleBody"})
+        tags = div_tag.find_all()
+
+        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
+        end = False
+        for tag in tags:
+            if not end:
+                if tag.name == "p":
+                    try:
+                        if tag.has_attr("class") and "tags" in tag["class"]:
+                            tag.extract()
+                            end = True
+                    except KeyError:
+                        pass
+                    tag.attrs = {}
+                elif tag.name in valid_tags:
+                    tag.unwrap()
                 else:
-                    break
+                    tag.extract()
+            else:
+                tag.extract()
 
+        content = div_tag.contents
+        content_string = ""
+        for i in range(len(content) - 2):
 
+            part = content[i]
+            if len(part) == 0:
+                continue
+            if str(part).isspace():
+                continue
+
+            content_string += "\n" + str(part) + "\n"
+
+        return title + "\n" + content_string
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -130,6 +157,7 @@ class Crawler:
 
         for url in self.links_to_visit:
             self.log.log("Processing " + url)
+
             try:
                 html = LibraryMethods.download_page_html(self.driver, url, 20)
             except WebDriverException:
@@ -144,24 +172,19 @@ class Crawler:
                 comment.extract()
 
             filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
-
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 
-            if os.path.exists(html_folder + "/" + filename):
-                self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
-                continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
 
-            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
-
+            try:
+                with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                    f.write(self.get_relevant_text(soup))
+            except AttributeError:
+                os.remove(html_folder + "/" + filename)
+                continue
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
 
@@ -169,43 +192,20 @@ class Crawler:
                 LibraryMethods.keep_paragraphs(soup)
                 f.write(soup.prettify())
 
-    def get_relevant_text(self, soup):
-        title = soup.find("h1", {"class": "article-title"}).get_text()
-        header = soup.find("div", {"class": "article__perex"}).get_text()
-        article_tag = soup.find("div", {"class": "article__content"})
-        tags = article_tag.find_all()
-
-        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
-        for tag in tags:
-            if tag.name == "p":
-                tag.attrs = {}
-            elif tag.name in valid_tags:
-                tag.unwrap()
-            else:
-                tag.extract()
-
-        content = article_tag.contents
-        content_string = ""
-        for i in range(len(content)):
-
-            part = content[i]
-            if len(part) == 0:
-                continue
-            if str(part).isspace():
-                continue
-
-            content_string += "\n" + str(part) + "\n"
-
-        return title + "\n" + header + "\n" + content_string
-
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "article-subtitle--commercial"})
+        tag = soup.find("div", {"class": "box-article-info"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("div", {"class": "taglist"})
+        tag = soup.find("div", {"class": "box-article-footer"})
         if tag is not None:
             tag.extract()
 
 
 Crawler().start_crawler()
+
+
+
+
+
+

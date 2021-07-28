@@ -7,7 +7,7 @@ from library_methods import LibraryMethods
 from log import Log
 from persistent_list import PersistentList
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.ceskenoviny.cz/pr/"
-max_scrolls = 2
+max_scrolls = 1000
 filename_length = 255
 
 
@@ -69,7 +69,7 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -94,7 +94,10 @@ class Crawler:
                 self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
     def get_relevant_text(self, soup):
-        title = soup.find("h1", {"itemprop": "name"}).get_text()
+        try:
+            title = soup.find("h1", {"itemprop": "name"}).get_text()
+        except AttributeError:
+            title = ""
         div_tag = soup.find("div", {"itemprop": "articleBody"})
         tags = div_tag.find_all()
 
@@ -156,12 +159,16 @@ class Crawler:
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 
+
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
 
-            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
-
+            try:
+                with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                    f.write(self.get_relevant_text(soup))
+            except AttributeError:
+                os.remove(html_folder + "/" + filename)
+                continue
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())
 
@@ -171,6 +178,10 @@ class Crawler:
 
     def remove_article_heading(self, soup):
         tag = soup.find("div", {"class": "box-article-info"})
+        if tag is not None:
+            tag.extract()
+
+        tag = soup.find("div", {"class": "box-article-footer"})
         if tag is not None:
             tag.extract()
 

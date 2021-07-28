@@ -7,7 +7,7 @@ from library_methods import LibraryMethods
 from log import Log
 from persistent_list import PersistentList
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.novinky.cz/komercni-clanky"
-max_scrolls = 2
+max_scrolls = 1000
 filename_length = 255
 
 
@@ -72,7 +72,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -90,18 +91,23 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
             expand = soup.find("a", {"class": "d_aZ d_gV"})
+
+            if expand is None:
+                break
+
+            li_tags = soup.find_all("li", {"class": "d_d7 g_gN"})
+            for tag in li_tags:
+                a_tag = tag.find("a", recursive=True)
+
+                if a_tag is None:
+                    continue
+
+                tag_url = a_tag.get("href")
+                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                    if LibraryMethods.strip_url(tag_url) == "novinky.cz":
+                        self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+
             url = expand.get("href")
-
-        li_tags = soup.find_all("li", {"class": "d_d7 g_gN"})
-        for tag in li_tags:
-            a_tag = tag.find("a", recursive=True)
-
-            if a_tag is None:
-                continue
-
-            tag_url = a_tag.get("href")
-            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
     def download_links(self):
         self.log.log("Downloading pages")

@@ -7,7 +7,7 @@ from library_methods import LibraryMethods
 from log import Log
 from persistent_list import PersistentList
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
@@ -21,7 +21,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.cnews.cz/komercni-clanek/"
-max_scrolls = 2
+max_scrolls = 14
 filename_length = 255
 
 
@@ -151,7 +151,11 @@ class Crawler:
                 f.write(soup.prettify())
 
             with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
+                try:
+                    f.write(self.get_relevant_text(soup))
+                except AttributeError:
+                    continue
+
 
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(BeautifulSoup(soup.prettify()).getText())

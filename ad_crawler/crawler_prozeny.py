@@ -7,7 +7,7 @@ from library_methods import LibraryMethods
 from log import Log
 from persistent_list import PersistentList
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.prozeny.cz/autor/komercni-sdeleni-41"
-max_scrolls = 1
+max_scrolls = 1000
 filename_length = 255
 
 class Crawler:
@@ -71,7 +71,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -88,21 +89,23 @@ class Crawler:
             except WebDriverException:
                 break
             soup = BeautifulSoup(html)
+
+            li_tags = soup.find_all("li", {"class": "c_eB d_hh"})
+            for tag in li_tags:
+                a_tag = tag.find("a", recursive=True)
+
+                if a_tag is None:
+                    continue
+
+                tag_url = a_tag.get("href")
+                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+
             expand = soup.find("a", {"class": "c_C c_B"})
+            if expand is None:
+                break
+
             url = expand.get("href")
-
-        urls = []
-        li_tags = soup.find_all("li", {"class": "c_ex d_gG"})
-        for tag in li_tags:
-            a_tag = tag.find("a", recursive=True)
-
-            if a_tag is None:
-                continue
-
-            tag_url = a_tag.get("href")
-            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
-
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -152,9 +155,22 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        title = soup.find("h1", {"class": "c_J c_D"}).get_text()
-        header = soup.find("div", {"class": "d_gD"}).find("p").get_text()
-        article_tag = soup.find("article", {"class": "d_gs"})
+        try:
+            title = soup.find("h1", {"class": "c_J c_D"}).get_text()
+        except AttributeError:
+            title = ""
+
+        try:
+            header = soup.find("div", {"class": "d_hc"}).find("p").get_text()
+        except AttributeError:
+            header = ""
+
+        article_tag = soup.find("article", {"class": "d_g1"})
+
+        temp = article_tag.find("div", {"class": "c_aG"})
+        if temp is not None:
+            temp.extract()
+
         tags = article_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
@@ -168,7 +184,7 @@ class Crawler:
 
         content = article_tag.contents
         content_string = ""
-        for i in range(len(content) - 1):
+        for i in range(len(content)):
 
             part = content[i]
             if len(part) == 0:
@@ -181,6 +197,10 @@ class Crawler:
         return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
+        tag = soup.find("a", {"class": "c_C d_hJ"})
+        if tag is not None:
+            tag.extract()
+
         tag = soup.find("a", {"class": "c_C"})
         if tag is not None:
             tag.extract()

@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.chip.cz/komercni-sdeleni/"
-max_scrolls = 2
+max_scrolls = 10
 filename_length = 255
 
 
