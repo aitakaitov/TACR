@@ -13,14 +13,14 @@ import urllib.parse
 import os
 import traceback
 
-root_folder = "ad_pages"
+root_folder = "art_pages"
 site_folder = "banky"
 log_path = "log_banky.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.banky.cz/clanky/komercni-sdeleni/"
-max_scrolls = 10
+starting_page = "https://www.banky.cz/clanky/"
+max_scrolls = 68
 filename_length = 255
 
 
@@ -90,8 +90,11 @@ class Crawler:
                 break
             soup = BeautifulSoup(html)
 
-            div_tags = soup.find_all("div", {"class": "Data"})
+            div_tags = soup.find("div", {"class": "ArticlesItems"}).find_all("div", {"class": "Data"})
             for tag in div_tags:
+                if "Komerční sdělení" in tag.get_text():
+                    continue
+
                 a_tag = tag.find("h3").find("a")
 
                 if a_tag is None:
