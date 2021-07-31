@@ -2,6 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
+from selenium.webdriver import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 from library_methods import LibraryMethods
 from log import Log
@@ -12,23 +16,22 @@ import urllib.parse
 
 import os
 import traceback
+import time
 
 root_folder = "art_pages"
-site_folder = "banky"
-log_path = "log_banky.log"
+site_folder = "prozeny"
+log_path = "log_prozeny.log"
 chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.banky.cz/clanky/"
-max_scrolls = 1000
+starting_page = "https://prozeny.cz/sekce"
+max_scrolls = 2
 filename_length = 255
 
-
 class Crawler:
-
     def __init__(self):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--incognito")
 
         self.log = Log(log_path)
@@ -73,6 +76,7 @@ class Crawler:
         # Test if we have no links from previous run
         try:
             self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -82,29 +86,30 @@ class Crawler:
     def collect_links(self, page):
         self.log.log("Collecting links")
         url = page
-
+        self.driver.get(page)
         for i in range(max_scrolls):
-            try:
-                html = LibraryMethods.download_page_html(self.driver, url, max_scrolls)
-            except WebDriverException:
-                break
-            soup = BeautifulSoup(html)
+            element = self.driver.find_element_by_class_name("c_A")
+            ActionChains(self.driver).click(element).perform()
+            time.sleep(4)
 
-            div_tags = soup.find("div", {"class": "ArticlesItems"}).find_all("div", {"class": "Data"})
-            for tag in div_tags:
-                if "Komerční sdělení" in tag.get_text():
-                    continue
+        html = LibraryMethods.download_page_html(self.driver, url, 0)
+        soup = BeautifulSoup(html)
 
-                a_tag = tag.find("h3").find("a")
+        li_tags = soup.find_all("li", {"class": "c_eB d_hh"})
+        for tag in li_tags:
+            ad_tag = tag.find("div", {"class": "e_ib mol-feed-item__top-section"}).find("div", {"class": "e_b7"})
+            if ad_tag is not None and "Komerční sdělení" in ad_tag.get_text():
+                continue
 
-                if a_tag is None:
-                    continue
+            a_tag = tag.find("a", recursive=True)
 
-                tag_url = a_tag.get("href")
-                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+            if a_tag is None:
+                continue
 
-            url = page + str(i + 2) + "/"
+            tag_url = a_tag.get("href")
+            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -137,17 +142,8 @@ class Crawler:
                 comment.extract()
 
             filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
-
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
-
-            if os.path.exists(html_folder + "/" + filename):
-                self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
-                continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 f.write(soup.prettify())
@@ -163,19 +159,22 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        main_div = soup.find("div", {"id": "MainContent"})
         try:
-            title = main_div.find("h1").get_text()
+            title = soup.find("h1", {"class": "c_J c_D"}).get_text()
         except AttributeError:
             title = ""
 
         try:
-            header = soup.find("div", {"class": "Description TextContent Clear"}).get_text()
+            header = soup.find("div", {"class": "d_hc"}).find("p").get_text()
         except AttributeError:
             header = ""
-        article_tag = soup.find("div", {"class": "Text TextContent"})
-        if article_tag is None:
-            return title + "\n" + header
+
+        article_tag = soup.find("article", {"class": "d_g1"})
+
+        temp = article_tag.find("div", {"class": "c_aG"})
+        if temp is not None:
+            temp.extract()
+
         tags = article_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
@@ -202,16 +201,17 @@ class Crawler:
         return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
-        tag = soup.find("a", {"title": "Komerční sdělení"})
+        tag = soup.find("a", {"class": "c_C d_hJ"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("a", {"title": "Komerční sdělení :: Banky.cz"})
+        tag = soup.find("a", {"class": "c_C"})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find("a", {"href": "http://www.banky.cz/clanky-komercni-sdeleni"})
+        tag = soup.find("span", {"data-dot-data": '{"click":"footer-Reklama"}'})
         if tag is not None:
             tag.extract()
+
 
 Crawler().start_crawler()

@@ -21,7 +21,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.aktualne.cz/prave-se-stalo/"
-max_scrolls = 500
+max_scrolls = 1500
 filename_length = 255
 
 
@@ -73,7 +73,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -149,8 +150,9 @@ class Crawler:
             soup = BeautifulSoup(html)
 
             taglist = soup.find("div", {"class": "taglist"})
-            if "online" in taglist.get_text():
-                continue
+            if taglist is not None:
+                if "online" in taglist.get_text():
+                    continue
 
             LibraryMethods.filter_html(soup)
             self.remove_article_heading(soup)
@@ -186,10 +188,21 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        title = soup.find("h1", {"class": "article-title"}).get_text()
-        header = soup.find("div", {"class": "article__perex"}).get_text()
-        article_tag = soup.find("div", {"class": "article__content"})
-        tags = article_tag.find_all()
+        try:
+            title = soup.find("h1", {"class": "article-title"}).get_text()
+        except AttributeError:
+            title = ""
+
+        try:
+            header = soup.find("div", {"class": "article__perex"}).get_text()
+        except AttributeError:
+            header = ""
+
+        try:
+            article_tag = soup.find("div", {"class": "article__content"})
+            tags = article_tag.find_all()
+        except AttributeError:
+            return title + "\n" + header
 
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
