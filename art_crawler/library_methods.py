@@ -68,7 +68,7 @@ class LibraryMethods:
         scrolls = 0
         while True:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(1)
+            time.sleep(4)
             new_height = driver.execute_script("return document.body.scrollHeight")
             scrolls += 1
             if new_height == last_height or scrolls == max_scrolls:

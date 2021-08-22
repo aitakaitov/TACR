@@ -12,15 +12,16 @@ import urllib.parse
 
 import os
 import traceback
+import re
 
 root_folder = "art_pages"
 site_folder = "novinky"
 log_path = "log_novinky.log"
 chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
+to_visit_file = "TO_VISIT.PERSISTENT.NOVINKY"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.novinky.cz/stalo-se"
-max_scrolls = 2000
+max_scrolls = 1250
 filename_length = 255
 
 
@@ -72,7 +73,7 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
             print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
@@ -139,7 +140,7 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
+            filename = re.sub('[^a-zA-Z0-9]', '_', url)
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 

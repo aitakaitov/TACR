@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
 import os
+import re
 import traceback
 
 root_folder = "art_pages"
@@ -20,8 +21,8 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.chip.cz/novinky/"
-max_scrolls = 200
-filename_length = 255
+max_scrolls = 1000
+filename_length = 180
 
 
 class Crawler:
@@ -72,7 +73,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -146,7 +148,7 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
+            filename = re.sub('[^a-zA-Z0-9]', '_', url)
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 
@@ -164,6 +166,7 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
+
         title = soup.find("div", {"class": "post-header__title"}).get_text()
         article_tag = soup.find("div", {"class": "post article"})
         tags = article_tag.find_all()

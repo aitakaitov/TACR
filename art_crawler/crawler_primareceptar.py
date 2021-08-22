@@ -12,15 +12,16 @@ import urllib.parse
 
 import os
 import traceback
+import re
 
 root_folder = "art_pages"
 site_folder = "prima-receptar"
 log_path = "log_prima-receptar.log"
 chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
+to_visit_file = "TO_VISIT.PERSISTENT.RECEPTAR"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://prima-receptar.cz/"
-max_scrolls = 2
+max_scrolls = 569
 filename_length = 255
 
 
@@ -72,7 +73,7 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
             print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
@@ -138,12 +139,7 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
-
+            filename = re.sub('[^a-zA-Z0-9]', '_', url)
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 

@@ -1,7 +1,10 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
+from selenium.webdriver import ActionChains
 
 from library_methods import LibraryMethods
 from log import Log
@@ -12,6 +15,7 @@ import urllib.parse
 
 import os
 import traceback
+import re
 
 root_folder = "art_pages"
 site_folder = "garaz"
@@ -20,7 +24,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.garaz.cz/"
-max_scrolls = 2
+max_scrolls = 250
 filename_length = 255
 
 
@@ -28,7 +32,7 @@ class Crawler:
 
     def __init__(self):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--incognito")
 
         self.log = Log(log_path)
@@ -81,36 +85,32 @@ class Crawler:
 
     def collect_links(self, page):
         self.log.log("Collecting links")
-        url = page
+        self.driver.get(page)
 
         for i in range(max_scrolls):
-            try:
-                html = LibraryMethods.download_page_html(self.driver, url, max_scrolls)
-            except WebDriverException:
-                break
-            soup = BeautifulSoup(html)
-            expand = soup.find("a", {"class": "c_K c_J"})
+            time.sleep(5)
+            element = self.driver.find_element_by_class_name("c_K c_J")
+            ActionChains(self.driver).click(element).perform()
 
-            li_tags = soup.find_all("li", {"class": "c_bV e_f4"})
-            for tag in li_tags:
+        html = LibraryMethods.download_page_html(self.driver, page, max_scrolls)
+        soup = BeautifulSoup(html)
 
-                ad_tag = tag.find("div", {"class": "d_cI"})
-                if ad_tag is not None and "Komerční sdělení" in ad_tag.get_text():
-                    continue
+        li_tags = soup.find_all("li", {"class": "c_bV e_f4"})
+        for tag in li_tags:
 
-                a_tag = tag.find("a", recursive=True)
+            ad_tag = tag.find("div", {"class": "d_cI"})
+            if ad_tag is not None and "Komerční sdělení" in ad_tag.get_text():
+                continue
 
-                if a_tag is None:
-                    continue
+            a_tag = tag.find("a", recursive=True)
 
-                tag_url = a_tag.get("href")
-                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
+            if a_tag is None:
+                continue
 
-            if expand is None:
-                break
+            tag_url = a_tag.get("href")
+            if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
+                self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
 
-            url = expand.get("href")
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -142,11 +142,7 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
+            filename = re.sub('[^a-zA-Z0-9]', '_', url)
 
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]

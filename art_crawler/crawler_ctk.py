@@ -20,7 +20,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.ceskenoviny.cz/prehled-zprav/"
-max_scrolls = 1000
+max_scrolls = 1750
 filename_length = 255
 
 
@@ -104,7 +104,10 @@ class Crawler:
         except AttributeError:
             title = ""
 
-        div_tag = soup.find("div", {"itemprop": "articleBody"})
+        try:
+            div_tag = soup.find("div", {"itemprop": "articleBody"})
+        except AttributeError:
+            return title
         tags = div_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]

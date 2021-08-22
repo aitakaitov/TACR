@@ -12,6 +12,7 @@ import urllib.parse
 
 import os
 import traceback
+import re
 
 root_folder = "art_pages"
 site_folder = "idnes"
@@ -20,7 +21,7 @@ chromedriver_path = "./chromedriver"
 to_visit_file = "TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.idnes.cz/zpravy/archiv/"
-max_scrolls = 500
+max_scrolls = 2000
 filename_length = 255
 
 
@@ -72,7 +73,8 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(starting_page)
+            #self.collect_links(starting_page)
+            print(len(self.links_to_visit))
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -128,7 +130,8 @@ class Crawler:
         except FileExistsError:
             pass
 
-        for url in self.links_to_visit:
+        for i in range(430, len(self.links_to_visit)):
+            url = self.links_to_visit[i]
             self.log.log("Processing " + url)
             try:
                 html = LibraryMethods.download_page_html(self.driver, url, 20)
@@ -143,7 +146,7 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
+            filename = re.sub('[^a-zA-Z0-9]', '_', url)
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
 
@@ -161,10 +164,22 @@ class Crawler:
                 f.write(soup.prettify())
 
     def get_relevant_text(self, soup):
-        title = soup.find("div", {"class": "art-full"}).find("h1").get_text()
-        header = soup.find("div", {"class": "opener"}).get_text()
-        article_tag = soup.find("div", {"class": "bbtext"})
-        tags = article_tag.find_all()
+        try:
+            title = soup.find("div", {"class": "art-full"}).find("h1").get_text()
+        except AttributeError:
+            title = ""
+
+        try:
+            header = soup.find("div", {"class": "opener"}).get_text()
+        except AttributeError:
+            header = ""
+
+        try:
+            article_tag = soup.find("div", {"class": "bbtext"})
+            tags = article_tag.find_all()
+        except AttributeError:
+            return title + header
+
 
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
