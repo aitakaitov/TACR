@@ -21,7 +21,7 @@ class LongBert2(tf.keras.Model):
         # for each input (batch, 512) we get a (batch, 768) result
         results = []
         for block in x:
-            results.append(self.bert(block).pooler_output)
+            results.append(self.bert(block, training=True).pooler_output)
 
         # concat blocks
         # we concatenate the blocks, creating a tensor (batch, 8, 768)
@@ -153,7 +153,7 @@ def main():
     loader_train, loader_test = load_data()
 
     optimizer = tf.keras.optimizers.Adam()
-    loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False)
     train_acc_metric = tf.keras.metrics.BinaryAccuracy()
     test_acc_metric = tf.keras.metrics.BinaryAccuracy()
 
