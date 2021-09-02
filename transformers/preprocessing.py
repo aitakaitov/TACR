@@ -22,9 +22,8 @@ def create_split(pos_examples: list, neg_examples: list):
     :return: train, test
     """
     print("Creating split")
-    #random.shuffle(pos_examples)
-    #random.shuffle(neg_examples)
-    neg_examples = neg_examples[:len(pos_examples)]
+    random.shuffle(pos_examples)
+    random.shuffle(neg_examples)
     ratio = 0.7
     # split positive and negative examples into train and test sets
     pos_train = pos_examples[:int(len(pos_examples) * ratio)]
@@ -33,9 +32,9 @@ def create_split(pos_examples: list, neg_examples: list):
     neg_test = neg_examples[int(len(neg_examples) * ratio):]
     # merge train and test sets and shuffle them
     train = pos_train + neg_train
-    #random.shuffle(train)
+    random.shuffle(train)
     test = pos_test + neg_test
-    #random.shuffle(test)
+    random.shuffle(test)
 
     return train, test
 
@@ -55,93 +54,81 @@ def load_example_paths(_dir: str):
     return examples
 
 
+def to_example(ids, mask, tokens, label):
+    """
+    Converts the processed example into TF Example
+    :param ids: ids
+    :param mask: mask
+    :param tokens: tokens
+    :param label: label
+    :return: Example
+    """
+    # define the example data
+    # we need to first serialize the tensors (arrays), then convert them into ByteLists, which can then
+    # be wrapped in a Feature object
+    # then we place all the Features into a Dict
+    data = {
+        'ids': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.serialize_tensor(ids).numpy()])),
+        'mask': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.serialize_tensor(mask).numpy()])),
+        'tokens': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.serialize_tensor(tokens).numpy()])),
+        'label': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.serialize_tensor(label).numpy()]))
+    }
+
+    # create an Example based on the dict, the serialize it so it can be written into TFRecord file
+    return tf.train.Example(features=tf.train.Features(feature=data)).SerializeToString()
+
+
 def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrainedTokenizerBase):
+    """
+    Processes examples and saves them into TFRecord files
+    :param train_paths: train paths
+    :param test_paths: test paths
+    :param tokenizer: tokenizer
+    :return: None
+    """
     print("Converting input files to tensors")
     print("Train")
-    # where to save them
-    train_dir = "split_datasets/transformer_train_512_1-1"
-    test_dir = "split_datasets/transformer_test_512_1-1"
 
+    # where to save them
+    _dir = "split_datasets/dataset_new_full"
     try:
-        os.mkdir(train_dir)
+        os.mkdir(_dir)
     except OSError:
         print("Train directory already exists")
 
-    try:
-        os.mkdir(test_dir)
-    except OSError:
-        print("Test directory already exists")
+    # TFRecordWriter for training examples
+    tfrecord_train = tf.io.TFRecordWriter(_dir + "/train.tfrecord")
 
-    # create TFRecordWriters for all 4 tensors - ids, mask, token types and labels
-    tfrecord_train_ids = tf.io.TFRecordWriter(train_dir + "/ids.tfrecord")
-    tfrecord_train_mask = tf.io.TFRecordWriter(train_dir + "/mask.tfrecord")
-    tfrecord_train_tokens = tf.io.TFRecordWriter(train_dir + "/tokens.tfrecord")
-    tfrecord_train_labels = tf.io.TFRecordWriter(train_dir + "/labels.tfrecord")
-    train_dataset_size = len(train_paths)
-
-    # write dataset size
-    with open(train_dir + "/dataset_size", "w+", encoding='utf-8') as f:
-        f.write(str(train_dataset_size))
-
+    # for each example
     for i in range(len(train_paths)):
         # read example file - path is at [1]
         with open(train_paths[i][1], "r", encoding='utf-8') as f:
             plaintext = f.read()
 
-        #x = tokenizer.encode_plus(plaintext, max_length=512*3, pad_to_multiple_of=512, padding='max_length')
+        # tokenize the example
+        x = tokenizer(plaintext, padding='max_length', pad_to_multiple_of=512, max_length=1536, truncation=True)
+        # convert the processed example into TF Example
+        example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],
+                             tf.fill((1, ), train_paths[i][0]))
+        # write the Example into the TFRecord file
+        tfrecord_train.write(example)
 
-        # encode the example text
-        x = tokenizer(plaintext, padding='max_length', pad_to_multiple_of=512, max_length=512, truncation=True)
-        # debug
-        if len(x.data['input_ids']) != 512:
-            print(str(len(x.data['input_ids'])))
-        # extract arrays from tokenized example and serialize them as tensors
-        x_serialized_ids = tf.io.serialize_tensor(x.data["input_ids"])
-        x_serialized_types = tf.io.serialize_tensor(x.data["token_type_ids"])
-        x_serialized_mask = tf.io.serialize_tensor(x.data["attention_mask"])
-        # create tensor for label and serialize it
-        x_serialized_label = tf.io.serialize_tensor(tf.fill((1, ), train_paths[i][0]))
-
-        # write the example into TFRecords
-        tfrecord_train_ids.write(x_serialized_ids.numpy())
-        tfrecord_train_mask.write(x_serialized_mask.numpy())
-        tfrecord_train_tokens.write(x_serialized_types.numpy())
-        tfrecord_train_labels.write(x_serialized_label.numpy())
-
+    # do the same for test
     print("Test")
-    # do the same for test set
-    tfrecord_test_ids = tf.io.TFRecordWriter(test_dir + "/ids.tfrecord")
-    tfrecord_test_mask = tf.io.TFRecordWriter(test_dir + "/mask.tfrecord")
-    tfrecord_test_tokens = tf.io.TFRecordWriter(test_dir + "/tokens.tfrecord")
-    tfrecord_test_labels = tf.io.TFRecordWriter(test_dir + "/labels.tfrecord")
-
-    test_dataset_size = len(test_paths)
-    with open(test_dir + "/dataset_size", "w+", encoding='utf-8') as f:
-        f.write(str(test_dataset_size))
+    tfrecord_test = tf.io.TFRecordWriter(_dir + "/test.tfrecord")
 
     for i in range(len(test_paths)):
         with open(test_paths[i][1], "r", encoding='utf-8') as f:
             plaintext = f.read()
 
-
-        #x = tokenizer.encode_plus(plaintext, max_length=1536, pad_to_multiple_of=512, padding='max_length')
-        x = tokenizer(plaintext, padding='max_length', max_length=512, pad_to_multiple_of=512, truncation=True)
-        if len(x.data['input_ids']) != 512:
-            print(str(len(x.data['input_ids'])))
-        x_serialized_ids = tf.io.serialize_tensor(x.data["input_ids"])
-        x_serialized_types = tf.io.serialize_tensor(x.data["token_type_ids"])
-        x_serialized_mask = tf.io.serialize_tensor(x.data["attention_mask"])
-        x_serialized_label = tf.io.serialize_tensor(tf.fill((1, ), train_paths[i][0]))
-
-        tfrecord_test_ids.write(x_serialized_ids.numpy())
-        tfrecord_test_mask.write(x_serialized_mask.numpy())
-        tfrecord_test_tokens.write(x_serialized_types.numpy())
-        tfrecord_test_labels.write(x_serialized_label.numpy())
+        x = tokenizer(plaintext, padding='max_length', max_length=1536, pad_to_multiple_of=512, truncation=True)
+        example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],\
+                             tf.fill((1, ), test_paths[i][0]))
+        tfrecord_test.write(example)
 
 
 def main():
     tokenizer, model = load_model("UWB-AIR/Czert-B-base-cased")
-
     # positive example paths have y=1
     pos_paths = [(1, path) for path in load_example_paths("raw_datasets/merged_positive/relevant_with_p")]
     # negative example paths have y=0
@@ -152,6 +139,4 @@ def main():
     to_tensors_and_save(train_paths, test_paths, tokenizer)
 
 
-
 main()
-
