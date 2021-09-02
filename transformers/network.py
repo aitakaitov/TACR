@@ -22,7 +22,7 @@ class LongBert2(tf.keras.Model):
         # for each input (batch, 512) we get a (batch, 768) result
         results = []
         for block in x:
-            results.append(self.bert(block).pooler_output)
+            results.append(self.bert(block, training=True).pooler_output)
 
         # concat blocks
         # we concatenate the blocks, creating a tensor (batch, 8, 768)
