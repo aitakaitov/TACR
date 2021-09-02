@@ -22,8 +22,9 @@ def create_split(pos_examples: list, neg_examples: list):
     :return: train, test
     """
     print("Creating split")
-    random.shuffle(pos_examples)
-    random.shuffle(neg_examples)
+    #random.shuffle(pos_examples)
+    #random.shuffle(neg_examples)
+    neg_examples = neg_examples[:len(pos_examples)]
     ratio = 0.7
     # split positive and negative examples into train and test sets
     pos_train = pos_examples[:int(len(pos_examples) * ratio)]
@@ -32,9 +33,9 @@ def create_split(pos_examples: list, neg_examples: list):
     neg_test = neg_examples[int(len(neg_examples) * ratio):]
     # merge train and test sets and shuffle them
     train = pos_train + neg_train
-    random.shuffle(train)
+    #random.shuffle(train)
     test = pos_test + neg_test
-    random.shuffle(test)
+    #random.shuffle(test)
 
     return train, test
 
@@ -58,8 +59,8 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
     print("Converting input files to tensors")
     print("Train")
     # where to save them
-    train_dir = "split_datasets/transformer_train_1536_1-1"
-    test_dir = "split_datasets/transformer_test_1536_1-1"
+    train_dir = "split_datasets/transformer_train_512_1-1"
+    test_dir = "split_datasets/transformer_test_512_1-1"
 
     try:
         os.mkdir(train_dir)
@@ -90,9 +91,9 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
         #x = tokenizer.encode_plus(plaintext, max_length=512*3, pad_to_multiple_of=512, padding='max_length')
 
         # encode the example text
-        x = tokenizer(plaintext, padding='max_length', max_length=1536, pad_to_multiple_of=512, truncation=True)
+        x = tokenizer(plaintext, padding='max_length', pad_to_multiple_of=512, max_length=512, truncation=True)
         # debug
-        if len(x.data['input_ids']) != 1536:
+        if len(x.data['input_ids']) != 512:
             print(str(len(x.data['input_ids'])))
         # extract arrays from tokenized example and serialize them as tensors
         x_serialized_ids = tf.io.serialize_tensor(x.data["input_ids"])
@@ -124,8 +125,8 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
 
 
         #x = tokenizer.encode_plus(plaintext, max_length=1536, pad_to_multiple_of=512, padding='max_length')
-        x = tokenizer(plaintext, padding='max_length', max_length=1536, pad_to_multiple_of=512, truncation=True)
-        if len(x.data['input_ids']) != 1536:
+        x = tokenizer(plaintext, padding='max_length', max_length=512, pad_to_multiple_of=512, truncation=True)
+        if len(x.data['input_ids']) != 512:
             print(str(len(x.data['input_ids'])))
         x_serialized_ids = tf.io.serialize_tensor(x.data["input_ids"])
         x_serialized_types = tf.io.serialize_tensor(x.data["token_type_ids"])
