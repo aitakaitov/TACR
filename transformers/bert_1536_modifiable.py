@@ -6,13 +6,13 @@ class LongBert2(tf.keras.Model):
     def __init__(self):
         super(LongBert2, self).__init__()
         self.bert = load_model("UWB-AIR/Czert-B-base-cased")
-        self.bert.config.attention_probs_dropout_prob = 0.2
-        self.bert.config.hidden_dropout_prob = 0.5
-        self.lstm = tf.keras.layers.RNN(tf.keras.layers.LSTMCell(100, dropout=0.5, recurrent_dropout=0.5))
-        self.dropout_1 = tf.keras.layers.Dropout(0.5)
-        self.dense_1 = tf.keras.layers.Dense(24, activation='relu', name='classifier')
-        self.dropout_2 = tf.keras.layers.Dropout(0.2)
-        self.dense_output = tf.keras.layers.Dense(1, activation='sigmoid', name='output')
+        self.bert.config.attention_probs_dropout_prob = ?
+        self.bert.config.hidden_dropout_prob = ?
+        self.lstm = tf.keras.layers.RNN(tf.keras.layers.LSTMCell(?, dropout=?, recurrent_dropout=?))
+        self.dropout_1 = tf.keras.layers.Dropout(?)
+        self.dense_1 = tf.keras.layers.Dense(?, activation='?', name='classifier')
+        self.dropout_2 = tf.keras.layers.Dropout(?)
+        self.dense_output = tf.keras.layers.Dense(1, activation='?', name='output')
 
     def call(self, inputs, training=False, **kwargs):
         # inputs = (ids, mask, tokens), each shape (batch, 4096)
@@ -24,16 +24,16 @@ class LongBert2(tf.keras.Model):
         # for each input (batch, 512) we get a (batch, 768) result
         results = []
         for block in x:
-            results.append(self.bert(block, training=True).pooler_output)
+            results.append(self.bert(block, training=training).pooler_output)
 
         # concat blocks
         # we concatenate the blocks, creating a tensor (batch, 8, 768)
         concatenated = tf.stack(results, axis=1)
 
         x = self.lstm(concatenated)
-        x = self.dropout_1(x)
+        x = self.dropout_1(x, training=training)
         x = self.dense_1(x)
-        x = self.dropout_2(x)
+        x = self.dropout_2(x, training=training)
         return self.dense_output(x)
 
     def split_data(self, x) -> list:
@@ -109,10 +109,10 @@ def main():
     train_acc_metric = tf.keras.metrics.BinaryAccuracy()
     test_acc_metric = tf.keras.metrics.BinaryAccuracy()
 
-    summary_writer_train = tf.summary.create_file_writer("logs/train")
-    summary_writer_test = tf.summary.create_file_writer("logs/test")
+    summary_writer_train = tf.summary.create_file_writer("logs-!/train")
+    summary_writer_test = tf.summary.create_file_writer("logs-!/test")
 
-    logfile = open("log", "w+", encoding='utf-8')
+    logfile = open("log-!", "w+", encoding='utf-8')
 
     epochs = 5
     batch_size = 1
@@ -143,6 +143,7 @@ def main():
 
             if i % 200 == 0:
                 logfile.writelines(["-- loss: " + str(float(loss)), "-- accuracy: " + str(float(train_acc_metric.result()))])
+                logfile.flush()
 
             grads = tape.gradient(loss, model.trainable_weights)
             optimizer.apply_gradients(zip(grads, model.trainable_weights))

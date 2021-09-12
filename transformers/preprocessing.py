@@ -1,6 +1,6 @@
 import os
 import random
-from transformers import AutoTokenizer, TFAutoModel, PreTrainedTokenizerBase, BatchEncoding
+from transformers import AutoTokenizer, TFAutoModel, PreTrainedTokenizerBase
 import tensorflow as tf
 
 
@@ -90,7 +90,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
     print("Train")
 
     # where to save them
-    _dir = "split_datasets/dataset_new_full"
+    _dir = "split_datasets/dataset_new_512"
     try:
         os.mkdir(_dir)
     except OSError:
@@ -106,7 +106,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
             plaintext = f.read()
 
         # tokenize the example
-        x = tokenizer(plaintext, padding='max_length', pad_to_multiple_of=512, max_length=1536, truncation=True)
+        x = tokenizer(plaintext, padding='max_length', max_length=512, truncation=True)
         # convert the processed example into TF Example
         example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],
                              tf.fill((1, ), train_paths[i][0]))
@@ -121,7 +121,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
         with open(test_paths[i][1], "r", encoding='utf-8') as f:
             plaintext = f.read()
 
-        x = tokenizer(plaintext, padding='max_length', max_length=1536, pad_to_multiple_of=512, truncation=True)
+        x = tokenizer(plaintext, padding='max_length', max_length=512, truncation=True)
         example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],\
                              tf.fill((1, ), test_paths[i][0]))
         tfrecord_test.write(example)
