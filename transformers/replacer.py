@@ -50,6 +50,8 @@ def create_and_run(config, python_file, sh_file, i):
                 repl_index = subject.find("?")
 
             beg_index = python_text.find(subject[0:repl_index])
+            if beg_index == -1:
+                continue
 
             python_text = python_text[0:(beg_index + repl_index)] + replacement + python_text[(beg_index + repl_index + 1):]
             subject = subject[0:repl_index] + replacement + subject[(repl_index + 1):]

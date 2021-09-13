@@ -1,6 +1,6 @@
 import os
 import random
-from transformers import AutoTokenizer, TFAutoModel, PreTrainedTokenizerBase
+from transformers import AutoTokenizer, TFAutoModel, PreTrainedTokenizerBase, LongformerTokenizer, TFLongformerPreTrainedModel
 import tensorflow as tf
 
 
@@ -11,7 +11,7 @@ def load_model(model_name):
     :return: tokenizer, model
     """
     print("Loading model")
-    return AutoTokenizer.from_pretrained(model_name), TFAutoModel.from_pretrained(model_name)
+    return AutoTokenizer.from_pretrained(model_name)
 
 
 def create_split(pos_examples: list, neg_examples: list):
@@ -36,7 +36,7 @@ def create_split(pos_examples: list, neg_examples: list):
     test = pos_test + neg_test
     random.shuffle(test)
 
-    return train, test
+    return train[:5], test[:3]
 
 
 def load_example_paths(_dir: str):
@@ -89,8 +89,9 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
     print("Converting input files to tensors")
     print("Train")
 
+
     # where to save them
-    _dir = "split_datasets/dataset_new_512"
+    _dir = "split_datasets/dataset_new_notrunc_small"
     try:
         os.mkdir(_dir)
     except OSError:
@@ -106,7 +107,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
             plaintext = f.read()
 
         # tokenize the example
-        x = tokenizer(plaintext, padding='max_length', max_length=512, truncation=True)
+        x = tokenizer(plaintext)
         # convert the processed example into TF Example
         example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],
                              tf.fill((1, ), train_paths[i][0]))
@@ -121,14 +122,14 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
         with open(test_paths[i][1], "r", encoding='utf-8') as f:
             plaintext = f.read()
 
-        x = tokenizer(plaintext, padding='max_length', max_length=512, truncation=True)
+        x = tokenizer(plaintext)
         example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],\
                              tf.fill((1, ), test_paths[i][0]))
         tfrecord_test.write(example)
 
 
 def main():
-    tokenizer, model = load_model("UWB-AIR/Czert-B-base-cased")
+    tokenizer = load_model("UWB-AIR/Czert-B-base-cased")
     # positive example paths have y=1
     pos_paths = [(1, path) for path in load_example_paths("raw_datasets/merged_positive/relevant_with_p")]
     # negative example paths have y=0
