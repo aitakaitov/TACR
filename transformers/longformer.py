@@ -1,4 +1,4 @@
-from transformers import TFAutoModel
+from transformers import TFAutoModel, LongformerConfig, TFLongformerModel
 import tensorflow as tf
 
 batch_size = 1
@@ -38,8 +38,8 @@ def load_data():
     Creates TFRecordReaders for train and test
     :return: train, test
     """
-    train_file = "split_datasets/dataset_new_small/train.tfrecord"
-    test_file = "split_datasets/dataset_new_small/test.tfrecord"
+    train_file = "split_datasets/dataset_new_512_small/train.tfrecord"
+    test_file = "split_datasets/dataset_new_512_small/test.tfrecord"
 
     return tf.data.TFRecordDataset(train_file).map(parse_element), tf.data.TFRecordDataset(test_file).map(parse_element)
 
@@ -79,7 +79,7 @@ def main():
     model = LongBert2()
     dataset_train, dataset_test = load_data()
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate=0.000001)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
     loss_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False)
     train_acc_metric = tf.keras.metrics.BinaryAccuracy()
     test_acc_metric = tf.keras.metrics.BinaryAccuracy()

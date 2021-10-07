@@ -1,4 +1,4 @@
-from transformers import TFAutoModel
+from transformers import TFAutoModel, TFBertModel, TFPreTrainedModel
 import tensorflow as tf
 
 
@@ -49,6 +49,9 @@ class LongBert2(tf.keras.Model):
 
         return out
 
+    def get_config(self):
+        super(LongBert2, self).get_config()
+
 
 def load_model(model_name):
     """
@@ -68,7 +71,7 @@ def load_data():
     train_file = "split_datasets/dataset_new_small/train.tfrecord"
     test_file = "split_datasets/dataset_new_small/test.tfrecord"
 
-    return tf.data.TFRecordDataset(train_file).map(parse_element).cache('cache_train'), tf.data.TFRecordDataset(test_file).map(parse_element).cache('cache_test')
+    return tf.data.TFRecordDataset(train_file).map(parse_element), tf.data.TFRecordDataset(test_file).map(parse_element)
 
 
 # feature descriptor for example parsing
@@ -114,7 +117,7 @@ def main():
 
     logfile = open("log", "w+", encoding='utf-8')
 
-    epochs = 5
+    epochs = 1
     batch_size = 1
 
     logfile.writelines(["Epochs = " + str(epochs), "Batch size = " + str(batch_size)])
@@ -174,5 +177,9 @@ def main():
         logfile.writelines(["Epoch " + str(epoch + 1) + " validation", "-- accuracy:" + str(float(test_acc_metric.result()))])
         test_acc_metric.reset_states()
 
+    model.save_weights("model-weights")
 
+
+model = LongBert2()
+model.load_weights("model-weights")
 main()

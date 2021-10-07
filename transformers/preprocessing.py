@@ -24,6 +24,7 @@ def create_split(pos_examples: list, neg_examples: list):
     print("Creating split")
     random.shuffle(pos_examples)
     random.shuffle(neg_examples)
+
     ratio = 0.7
     # split positive and negative examples into train and test sets
     pos_train = pos_examples[:int(len(pos_examples) * ratio)]
@@ -36,7 +37,7 @@ def create_split(pos_examples: list, neg_examples: list):
     test = pos_test + neg_test
     random.shuffle(test)
 
-    return train[:5], test[:3]
+    return train, test
 
 
 def load_example_paths(_dir: str):
@@ -91,7 +92,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
 
 
     # where to save them
-    _dir = "split_datasets/dataset_new_notrunc_small"
+    _dir = "split_datasets/dataset_new_full"
     try:
         os.mkdir(_dir)
     except OSError:
@@ -107,7 +108,7 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
             plaintext = f.read()
 
         # tokenize the example
-        x = tokenizer(plaintext)
+        x = tokenizer(plaintext, max_length=1536, truncation=True, padding='max_length')
         # convert the processed example into TF Example
         example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],
                              tf.fill((1, ), train_paths[i][0]))
@@ -122,8 +123,8 @@ def to_tensors_and_save(train_paths: list, test_paths: list, tokenizer: PreTrain
         with open(test_paths[i][1], "r", encoding='utf-8') as f:
             plaintext = f.read()
 
-        x = tokenizer(plaintext)
-        example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],\
+        x = tokenizer(plaintext, max_length=1536, truncation=True, padding='max_length')
+        example = to_example(x.data['input_ids'], x.data['token_type_ids'], x.data['attention_mask'],
                              tf.fill((1, ), test_paths[i][0]))
         tfrecord_test.write(example)
 
