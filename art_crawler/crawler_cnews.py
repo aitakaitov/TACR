@@ -10,7 +10,7 @@ class CrawlerCnewsArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.cnews.cz/clanky/?pi=1"
         self.max_scrolls = 42
-        self.max_links = 1400
+        self.max_links = 2500
         self.is_ad = False
 
     def get_article_urls(self, soup, base_url):

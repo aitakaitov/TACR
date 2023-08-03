@@ -12,7 +12,7 @@ class CrawlerChipAd:
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.chip.cz/komercni-sdeleni/"
         self.max_scrolls = 42
-        self.max_links = 250
+        self.max_links = 1000
         self.is_ad = True
 
     def get_article_urls(self, soup, base_url):

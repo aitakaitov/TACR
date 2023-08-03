@@ -13,7 +13,7 @@ class CrawlerAktualneArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.aktualne.cz/prave-se-stalo/"
         self.max_scrolls = 42
-        self.max_links = 2000
+        self.max_links = 2500
         self.is_ad = False
 
     def get_article_urls(self, soup, url):
@@ -117,6 +117,9 @@ class CrawlerAktualneArt:
                 return None
 
     def check_soup(self, soup):
+        if soup.find('div', {'class': 'article-subtitle--commercial'}) is not None:
+            return False
+
         taglist = soup.find("div", {"class": "taglist"})
         if taglist is not None:
             if "online" in taglist.get_text():
