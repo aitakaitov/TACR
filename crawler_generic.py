@@ -147,11 +147,11 @@ class GenericCrawler():
 
             self.crawler.remove_article_heading(soup)
 
-            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+            with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 d['data'] = self.crawler.get_relevant_text(soup)
                 f.write(json.dumps(d))
 
-            with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
+            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
                 d['data'] = soup.prettify()
                 f.write(json.dumps(d))
