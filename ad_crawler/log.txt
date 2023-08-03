@@ -1,0 +1,1 @@
+[CRAWLER - PERSISTENT] File persistent/aktualne-ad-TO_VISIT.PERSISTENT not found, creating the file.

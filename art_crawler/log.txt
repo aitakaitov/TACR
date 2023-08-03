@@ -1,0 +1,2 @@
+[CRAWLER - PERSISTENT] Persistent folder already exists.
+[CRAWLER - PERSISTENT] File persistent/aktualne-art-TO_VISIT.PERSISTENT found, loading the file.

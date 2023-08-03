@@ -1,0 +1,8 @@
+﻿art_crawler/persistent
+art_crawler/art_pages
+art_crawler/__pycache__
+ad_crawler/__pycache__
+ad_crawler/ad_pages
+ad_crawler/persistent
+.idea
+art_crawler/chromedriver.exe

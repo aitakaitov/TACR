@@ -14,14 +14,18 @@ import os
 import traceback
 import random
 
+import json
+from hashlib import sha256
+
+
 root_folder = "art_pages"
 site_folder = "aktualne"
 log_path = "log_aktualne.log"
 chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
+to_visit_file = site_folder + "-art-TO_VISIT.PERSISTENT"
 visited_file = "VISITED.PERSISTENT"
 starting_page = "https://www.aktualne.cz/prave-se-stalo/"
-max_scrolls = 1500
+max_scrolls = 5
 filename_length = 255
 
 
@@ -36,11 +40,11 @@ class Crawler:
 
         ''' Selenium driver for chrome'''
         try:
-            self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
+            self.driver = webdriver.Chrome(options=chrome_options)
         except WebDriverException:
             self.log.log("[CRAWLER] Chromedriver '" + chromedriver_path + "' not found, trying .exe")
             try:
-                self.driver = webdriver.Chrome(executable_path=chromedriver_path + ".exe", options=chrome_options)
+                self.driver = webdriver.Chrome(options=chrome_options)
             except WebDriverException:
                 self.log.log("[CRAWLER] No chromedriver found, exiting")
                 exit(1)
@@ -73,8 +77,7 @@ class Crawler:
 
         # Test if we have no links from previous run
         try:
-            #self.collect_links(starting_page)
-            print(len(self.links_to_visit))
+            self.collect_links(starting_page)
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -94,7 +97,7 @@ class Crawler:
 
             tags = soup.find("div", {"class": "timeline"}).find_all("div")
             article_tags = []
-            valid_classes = ["small-box", "gallery-box"]
+            valid_classes = ["small-box", "swift-box__wrapper"]
             for div in tags:
                 if div.has_attr('class') and any(clss in div['class'] for clss in valid_classes):
                     article_tags.append(div)
@@ -161,31 +164,38 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
+            filename = sha256(url.encode()).hexdigest() + '.json'
 
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
+
+            d = {
+                'url': url,
+                'site': site_folder,
+                'data': None,
+                'ad': True
+            }
 
             if os.path.exists(html_folder + "/" + filename):
                 self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
                 continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(soup.prettify())
+                d['data'] = soup.prettify()
+                f.write(json.dumps(d))
 
             with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
+                d['data'] = self.get_relevant_text(soup)
+                f.write(json.dumps(d))
 
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(BeautifulSoup(soup.prettify()).getText())
+                d['data'] = BeautifulSoup(soup.prettify()).getText()
+                f.write(json.dumps(d))
 
             with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
-                f.write(soup.prettify())
+                d['data'] = soup.prettify()
+                f.write(json.dumps(d))
 
     def get_relevant_text(self, soup):
         try:

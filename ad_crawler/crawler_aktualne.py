@@ -1,3 +1,6 @@
+import json
+from hashlib import sha256
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
@@ -13,12 +16,12 @@ import urllib.parse
 import os
 import traceback
 
+
 root_folder = "ad_pages"
 site_folder = "aktualne"
 log_path = "log_aktualne.log"
 chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
-visited_file = "VISITED.PERSISTENT"
+to_visit_file = site_folder + "-ad-TO_VISIT.PERSISTENT"
 starting_page = "https://www.aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/"
 max_scrolls = 42
 filename_length = 255
@@ -35,11 +38,11 @@ class Crawler:
 
         ''' Selenium driver for chrome'''
         try:
-            self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
+            self.driver = webdriver.Chrome(options=chrome_options)
         except WebDriverException:
             self.log.log("[CRAWLER] Chromedriver '" + chromedriver_path + "' not found, trying .exe")
             try:
-                self.driver = webdriver.Chrome(executable_path=chromedriver_path + ".exe", options=chrome_options)
+                self.driver = webdriver.Chrome(options=chrome_options)
             except WebDriverException:
                 self.log.log("[CRAWLER] No chromedriver found, exiting")
                 exit(1)
@@ -111,8 +114,6 @@ class Crawler:
                 else:
                     break
 
-
-
     def download_links(self):
         self.log.log("Downloading pages")
         html_folder = root_folder + "/" + site_folder + "/html"
@@ -143,31 +144,39 @@ class Crawler:
             for comment in comments:
                 comment.extract()
 
-            filename = url.replace("/", "_")
-            parts = filename.split("-")
-            filename = ""
-            for part in parts[0:len(parts) - 1]:
-                filename += part + "-"
+            filename = sha256(url.encode()).hexdigest() + '.json'
 
             if len(filename) > filename_length:
                 filename = filename[0:filename_length]
+
+            d = {
+                'url': url,
+                'site': site_folder,
+                'data': None,
+                'ad': False
+            }
 
             if os.path.exists(html_folder + "/" + filename):
                 self.log.log("File " + html_folder + "/" + filename + " exists, skipping")
                 continue
 
             with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(soup.prettify())
+                d['data'] = soup.prettify()
+                f.write(json.dumps(d))
 
             with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
+                d['data'] = self.get_relevant_text(soup)
+                f.write(json.dumps(d))
 
             with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(BeautifulSoup(soup.prettify()).getText())
+                d['data'] = BeautifulSoup(soup.prettify()).getText()
+                f.write(json.dumps(d))
 
             with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
-                f.write(soup.prettify())
+                d['data'] = soup.prettify()
+                f.write(json.dumps(d))
+
 
     def get_relevant_text(self, soup):
         title = soup.find("h1", {"class": "article-title"}).get_text()
@@ -203,9 +212,14 @@ class Crawler:
         if tag is not None:
             tag.extract()
 
+        tag = soup.find('div', {"class": "advert__name"})
+        if tag is not None:
+            tag.extract()
+
         tag = soup.find("div", {"class": "taglist"})
         if tag is not None:
             tag.extract()
 
 
-Crawler().start_crawler()
+if __name__ == '__main__':
+    Crawler().start_crawler()
