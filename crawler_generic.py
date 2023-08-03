@@ -6,10 +6,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
 
-from crawler_aktualne import CrawlerAktualneArt
-from library_methods import LibraryMethods
-from log import Log
-from persistent_list import PersistentList
+from art_crawler.crawler_aktualne import CrawlerAktualneArt
+from ad_crawler.crawler_aktualne import CrawlerAktualneAd
+from ad_crawler.library_methods import LibraryMethods
+from ad_crawler.log import Log
+from ad_crawler.persistent_list import PersistentList
 
 from bs4 import BeautifulSoup, Comment
 
@@ -157,14 +158,23 @@ class GenericCrawler():
                 f.write(json.dumps(d))
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--site')
     args = vars(parser.parse_args())
 
-    if args['site'].lower() == 'aktualne':
+    if args['site'].lower() == 'aktualne-art':
         crawler = GenericCrawler(CrawlerAktualneArt())
+    elif args['site'].lower() == 'aktualne-ad':
+        crawler = GenericCrawler(CrawlerAktualneAd())
+
+    elif args['site'].lower() == 'banky-art':
+        # unable to crawl
+        exit(0)
+    elif args['site'].lower() == 'banky-ad':
+        # unable to crawl
+        exit(0)
+
     elif args['site'].lower() == None:
         exit(0)
 
