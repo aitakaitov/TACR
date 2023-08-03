@@ -1,17 +1,16 @@
 import _pickle as pickle
 import os.path
-from log import Log
-from config import Config
+from .log import Log
 
 
 class PersistentList:
     def __init__(self, file_path):
-        self.path = Config.persistent_path + "/" + file_path
+        self.path = 'persistence_temp/' + file_path
         self.list = []
-        self.log = Log(Config.log_path)
+        self.log = Log('log.txt')
 
         try:
-            os.mkdir("./" + Config.persistent_path)
+            os.mkdir('persistence_temp')
         except OSError:
             self.log.log("[CRAWLER - PERSISTENT] Persistent folder already exists.")
 

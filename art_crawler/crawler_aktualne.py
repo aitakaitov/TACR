@@ -1,4 +1,4 @@
-from library_methods import LibraryMethods
+from utils.library_methods import LibraryMethods
 import urllib.parse
 import random
 
@@ -6,7 +6,7 @@ import random
 class CrawlerAktualneArt:
 
     def __init__(self):
-        self.root_folder = "art_crawler/art_pages"
+        self.root_folder = "art_pages"
         self.site_folder = "aktualne"
         self.log_path = "log_aktualne_art.log"
         self.chromedriver_path = "./chromedriver"

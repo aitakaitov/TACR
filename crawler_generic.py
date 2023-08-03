@@ -6,11 +6,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
 
+from ad_crawler.crawler_chip import CrawlerChipAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
-from ad_crawler.library_methods import LibraryMethods
-from ad_crawler.log import Log
-from ad_crawler.persistent_list import PersistentList
+from art_crawler.crawler_chip import CrawlerChipArt
+
+from utils.library_methods import LibraryMethods
+from utils.log import Log
+from utils.persistent_list import PersistentList
 
 from bs4 import BeautifulSoup, Comment
 
@@ -18,7 +21,10 @@ import os
 import traceback
 import argparse
 
+os.chdir(os.path.dirname(__file__))
+
 filename_length = 255
+
 
 class GenericCrawler():
     def __init__(self, crawler):
@@ -102,9 +108,9 @@ class GenericCrawler():
         relevant_p_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/relevant_with_p"
 
         try:
-            os.mkdir(html_folder)
-            os.mkdir(relevant_plaintext_folder)
-            os.mkdir(relevant_p_folder)
+            os.makedirs(html_folder)
+            os.makedirs(relevant_plaintext_folder)
+            os.makedirs(relevant_p_folder)
         except FileExistsError:
             pass
 
@@ -168,12 +174,17 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'aktualne-ad':
         crawler = GenericCrawler(CrawlerAktualneAd())
 
+    # -- Banky.cz not crawl-able
     elif args['site'].lower() == 'banky-art':
-        # unable to crawl
         exit(0)
     elif args['site'].lower() == 'banky-ad':
-        # unable to crawl
         exit(0)
+
+    elif args['site'].lower() == 'chip-art':
+        crawler = GenericCrawler(CrawlerChipArt())
+    elif args['site'].lower() == 'chip-ad':
+        crawler = GenericCrawler(CrawlerChipAd())
+
 
     elif args['site'].lower() == None:
         exit(0)

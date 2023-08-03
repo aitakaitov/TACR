@@ -4,7 +4,7 @@ import urllib.parse
 class CrawlerAktualneAd:
 
     def __init__(self):
-        self.root_folder = "ad_crawler/ad_pages"
+        self.root_folder = "ad_pages"
         self.site_folder = "aktualne"
         self.log_path = "log_aktualne_ad.log"
         self.chromedriver_path = "./chromedriver"
