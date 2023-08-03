@@ -1,26 +1,29 @@
 import urllib.parse
 
 
-class CrawlerCnewsAd:
+class CrawlerCnewsArt:
     def __init__(self):
-        self.root_folder = "ad_pages"
+        self.root_folder = "art_pages"
         self.site_folder = "cnews"
-        self.log_path = "log_cnews_ad.log"
+        self.log_path = "log_cnews_art.log"
         self.chromedriver_path = "./chromedriver"
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
-        self.starting_page = "https://www.cnews.cz/komercni-clanek/?pi=1"
+        self.starting_page = "https://www.cnews.cz/clanky/?pi=1"
         self.max_scrolls = 42
-        self.max_links = 600
-        self.is_ad = True
+        self.max_links = 1400
+        self.is_ad = False
 
     def get_article_urls(self, soup, base_url):
         links = []
-        article_tags = soup.find_all("div", {"class": "element-print-hidden design-article__image-outer"})
-
+        article_tags = soup.find_all("div", {"class": "design-article--with-image design-article design-tile design-article__category-article"})
         for tag in article_tags:
             a_tag = tag.find("a")
 
             if a_tag is None:
+                continue
+
+            ad_tag = tag.find('a', {'class': 'design-impressum__item--author design-impressum__item'})
+            if ad_tag.get_text() == 'Komerční článek':
                 continue
 
             tag_url = a_tag.get("href")
@@ -51,6 +54,7 @@ class CrawlerCnewsAd:
             title = title.get_text()
         else:
             title = ''
+
         perex = soup.find('div', {'class': 'o-article__perex-text'}).get_text()
         div_tag = soup.find("div", {"class": "layout-article-content"})
 

@@ -7,9 +7,11 @@ from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
 
 from ad_crawler.crawler_chip import CrawlerChipAd
+from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
+from art_crawler.crawler_cnews import CrawlerCnewsArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -185,6 +187,10 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'chip-ad':
         crawler = GenericCrawler(CrawlerChipAd())
 
+    elif args['site'].lower() == 'cnews-art':
+        crawler = GenericCrawler(CrawlerCnewsArt())
+    elif args['site'].lower() == 'cnews-ad':
+        crawler = GenericCrawler(CrawlerCnewsAd())
 
     elif args['site'].lower() == None:
         exit(0)
