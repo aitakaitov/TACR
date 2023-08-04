@@ -1,6 +1,6 @@
 import urllib.parse
 
-class Crawler:
+class CrawlerCtkArt:
 
     def __init__(self):
         self.root_folder = "art_pages"
@@ -8,8 +8,8 @@ class Crawler:
         self.log_path = "ctk_log_art.log"
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.ceskenoviny.cz/prehled-zprav/"
-        self.max_scrolls = 50
-        self.max_links = 5000##
+        self.max_scrolls = 1000  # should be about 10k links
+        self.max_links = 10000
         self.is_ad = False
 
     def get_article_urls(self, soup, url):

@@ -8,10 +8,12 @@ from selenium.common.exceptions import JavascriptException
 
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
+from ad_crawler.crawler_ctk import CrawlerCtkAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
+from art_crawler.crawler_ctk import CrawlerCtkArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -42,7 +44,7 @@ class GenericCrawler():
         try:
             self.driver = webdriver.Chrome(options=chrome_options)
         except WebDriverException:
-            self.log.log("[CRAWLER] Chromedriver '" + crawler.chromedriver_path + "' not found, trying .exe")
+            self.log.log("[CRAWLER] Chromedriver not found, trying .exe")
             try:
                 self.driver = webdriver.Chrome(options=chrome_options)
             except WebDriverException:
@@ -177,12 +179,6 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'aktualne-ad':
         crawler = GenericCrawler(CrawlerAktualneAd())
 
-    # -- Banky.cz not crawl-able
-    elif args['site'].lower() == 'banky-art':
-        exit(0)
-    elif args['site'].lower() == 'banky-ad':
-        exit(0)
-
     elif args['site'].lower() == 'chip-art':
         crawler = GenericCrawler(CrawlerChipArt())
     elif args['site'].lower() == 'chip-ad':
@@ -192,6 +188,11 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerCnewsArt())
     elif args['site'].lower() == 'cnews-ad':
         crawler = GenericCrawler(CrawlerCnewsAd())
+
+    elif args['site'].lower() == 'ctk-art':
+        crawler = GenericCrawler(CrawlerCtkArt())
+    elif args['site'].lower() == 'ctk-ad':
+        crawler = GenericCrawler(CrawlerCtkAd())
 
     elif args['site'].lower() == None:
         exit(0)

@@ -1,30 +1,7 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.common.exceptions import JavascriptException
-
-from utils.library_methods import LibraryMethods
-from utils.log import Log
-from utils.persistent_list import PersistentList
-
-from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
-import os
-import traceback
 
-root_folder = "ad_pages"
-site_folder = "ctk"
-log_path = "log_ctk.log"
-chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
-visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.ceskenoviny.cz/pr/"
-max_scrolls = 1000
-filename_length = 255
-
-
-class Crawler:
+class CrawlerCtkAd:
 
     def __init__(self):
         self.root_folder = "ad_pages"
@@ -32,7 +9,7 @@ class Crawler:
         self.log_path = "ctk_log_ad.log"
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.ceskenoviny.cz/pr/"
-        self.max_scrolls = 50
+        self.max_scrolls = 500  # should be about 5k links
         self.max_links = 5000
         self.is_ad = True
 
