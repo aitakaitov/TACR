@@ -37,19 +37,16 @@ class GenericCrawler():
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--incognito")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument('--disable-gpu')
 
         self.log = Log(crawler.log_path)
 
         ''' Selenium driver for chrome'''
         try:
             self.driver = webdriver.Chrome(options=chrome_options)
-        except WebDriverException:
-            self.log.log("[CRAWLER] Chromedriver not found, trying .exe")
-            try:
-                self.driver = webdriver.Chrome(options=chrome_options)
-            except WebDriverException:
-                self.log.log("[CRAWLER] No chromedriver found, exiting")
-                exit(1)
+        except WebDriverException as e:
+            print(e)
 
         ''' Page load timeout'''
         self.driver.set_page_load_timeout(20)
@@ -119,11 +116,14 @@ class GenericCrawler():
         except FileExistsError:
             pass
 
+        fails = 0
         for url in self.links_to_visit:
             self.log.log("Processing " + url)
             try:
                 html = LibraryMethods.download_page_html(self.driver, url, 20)
-            except WebDriverException:
+            except Exception as e:
+                print(f'unable to download {url}')
+                fails = fails + 1
                 continue
 
             soup = BeautifulSoup(html)
@@ -167,6 +167,8 @@ class GenericCrawler():
                 LibraryMethods.keep_paragraphs(soup)
                 d['data'] = soup.prettify()
                 f.write(json.dumps(d))
+
+        print(f'Failed to download {fails}')
 
 
 if __name__ == '__main__':
