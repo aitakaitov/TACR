@@ -11,10 +11,13 @@ class CrawlerAktualneArt:
         self.log_path = "log_aktualne_art.log"
         self.chromedriver_path = "./chromedriver"
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
-        self.starting_page = "https://www.aktualne.cz/prave-se-stalo/"
+        self.starting_page = "https://www.aktualne.cz/prave-se-stalo/?offset=0"
         self.max_scrolls = 42
         self.max_links = 5000
         self.is_ad = False
+
+        self.offset = 0
+        self.offset_max = 10000
 
     def get_article_urls(self, soup, url):
         links = []
@@ -106,15 +109,12 @@ class CrawlerAktualneArt:
             tag.extract()
 
     def get_next_page(self, soup, url):
-        tag = soup.find("a", {"class": "more-btn"})
-        if tag is not None:
-            return urllib.parse.urljoin(url, tag.get("href"))
+        address, num = url.split('=')
+        self.offset = self.offset + 20
+        if self.offset > self.offset_max:
+            return None
         else:
-            tag = soup.find("a", {"class": "listing-nav__btn listing-nav__btn--right"})
-            if tag is not None:
-                return urllib.parse.urljoin(url, tag.get("href"))
-            else:
-                return None
+            return f'{address}={self.offset}'
 
     def check_soup(self, soup):
         if soup.find('div', {'class': 'article-subtitle--commercial'}) is not None:

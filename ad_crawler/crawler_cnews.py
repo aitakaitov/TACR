@@ -12,6 +12,8 @@ class CrawlerCnewsAd:
         self.max_scrolls = 42
         self.max_links = 600
         self.is_ad = True
+        self.pi_max = 19
+        self.pi = 1
 
     def get_article_urls(self, soup, base_url):
         links = []
@@ -30,15 +32,13 @@ class CrawlerCnewsAd:
         return links
 
     def get_next_page(self, soup, url):
-        tag = soup.find('div', {'class': 'pagination'})
-        if tag is None:
-            return None
-
-        tag = tag.find('a', {'class': 'next arrow'})
-        if tag is None:
+        address, num = url.split('=')
+        self.pi += 1
+        if self.pi > self.pi_max:
             return None
         else:
-            return tag.get('href')
+            return f'{address}={self.pi}'
+
 
     def check_soup(self, soup):
         return True

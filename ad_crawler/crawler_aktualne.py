@@ -13,7 +13,8 @@ class CrawlerAktualneAd:
         self.max_links = 830
         self.is_ad = True
 
-        self.offset=0
+        self.offset = 0
+        self.offset_max = 820
 
     def get_article_urls(self, soup, url):
         links = []
@@ -90,7 +91,7 @@ class CrawlerAktualneAd:
     def get_next_page(self, soup, url):
         address, num = url.split('=')
         self.offset = self.offset + 20
-        if self.offset > 820:
+        if self.offset > self.offset_max:
             return None
         else:
             return f'{address}={self.offset}'
