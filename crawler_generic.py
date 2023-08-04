@@ -125,7 +125,7 @@ class GenericCrawler():
             try:
                 html = LibraryMethods.download_page_html(self.driver, url, 20)
             except Exception as e:
-                print(f'unable to download {url}')
+                print(f'unable to download {url} \n {e}')
                 fails = fails + 1
                 continue
 
