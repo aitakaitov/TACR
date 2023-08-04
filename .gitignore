@@ -7,3 +7,6 @@ ad_crawler/persistent
 .idea
 art_crawler/chromedriver.exe
 utils/__pycache__
+ad_pages
+art_pages
+persistence_temp
