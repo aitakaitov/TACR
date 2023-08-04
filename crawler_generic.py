@@ -99,6 +99,7 @@ class GenericCrawler():
                         len(self.links_to_visit) < self.crawler.max_links:
                     self.links_to_visit.append(article_url)
 
+            print(f'Collected {len(self.links_to_visit)} links in total')
             url = self.crawler.get_next_page(soup, page)
             if url is None:
                 break
@@ -107,12 +108,12 @@ class GenericCrawler():
         self.log.log("Downloading pages")
         html_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/html"
         relevant_plaintext_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/relevant_plaintext"
-        relevant_p_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/relevant_with_p"
+        fullpage_p_only = self.crawler.root_folder + "/" + self.crawler.site_folder + "/full_only_p"
 
         try:
             os.makedirs(html_folder)
             os.makedirs(relevant_plaintext_folder)
-            os.makedirs(relevant_p_folder)
+            os.makedirs(fullpage_p_only)
         except FileExistsError:
             pass
 
@@ -157,10 +158,10 @@ class GenericCrawler():
             self.crawler.remove_article_heading(soup)
 
             with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                d['data'] = self.crawler.get_relevant_text(soup)
+                d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
                 f.write(json.dumps(d))
 
-            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
+            with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
                 LibraryMethods.keep_paragraphs(soup)
                 d['data'] = soup.prettify()
                 f.write(json.dumps(d))

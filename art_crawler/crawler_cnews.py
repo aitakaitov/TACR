@@ -10,7 +10,7 @@ class CrawlerCnewsArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.cnews.cz/clanky/?pi=1"
         self.max_scrolls = 42
-        self.max_links = 2500
+        self.max_links = 5000
         self.is_ad = False
 
     def get_article_urls(self, soup, base_url):
@@ -46,7 +46,7 @@ class CrawlerCnewsArt:
     def check_soup(self, soup):
         return True
 
-    def get_relevant_text(self, soup):
+    def get_relevant_text(self, soup, keep_paragraphs=True):
         title = soup.find("h1", {"class": "design-article--with-image design-article design-tile design-article__category-article"})
         if title is None:
             title = soup.find('h1', {'class': 'design-heading--level-1 design-heading'})
@@ -61,7 +61,7 @@ class CrawlerCnewsArt:
         tags = div_tag.find_all()
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
-            if tag.name == "p":
+            if tag.name == "p" and keep_paragraphs:
                 tag.attrs = {}
             elif tag.name in valid_tags:
                 tag.unwrap()

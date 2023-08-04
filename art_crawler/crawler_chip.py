@@ -10,7 +10,7 @@ class CrawlerChipArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.chip.cz/novinky/"
         self.max_scrolls = 42
-        self.max_links = 2500
+        self.max_links = 5000
         self.is_ad = False
 
     def get_article_urls(self, soup, base_url):
@@ -38,14 +38,14 @@ class CrawlerChipArt:
 
         return True
 
-    def get_relevant_text(self, soup):
+    def get_relevant_text(self, soup, keep_paragraphs=True):
         title = soup.find("div", {"class": "post-header__title"}).get_text()
         article_tag = soup.find("div", {"class": "post article"})
         tags = article_tag.find_all()
 
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
-            if tag.name == "p":
+            if tag.name == "p" and keep_paragraphs:
                 tag.attrs = {}
             elif tag.name in valid_tags:
                 tag.unwrap()
