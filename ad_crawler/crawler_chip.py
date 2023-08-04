@@ -17,7 +17,12 @@ class CrawlerChipAd:
 
     def get_article_urls(self, soup, base_url):
         links = []
-        main_div = soup.find("div", {"class": "post"})
+        try:
+            main_div = soup.find("div", {"class": "post"})
+        except Exception as e:
+            print(e)
+            print(soup)
+
         div_tags = main_div.find_all("div", {"class": "actuality-wrap actuality-wrap--small"})
 
         for tag in div_tags:

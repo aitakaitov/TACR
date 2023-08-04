@@ -91,7 +91,10 @@ class GenericCrawler():
                 break
             soup = BeautifulSoup(html)
 
-            article_urls = self.crawler.get_article_urls(soup, page)
+            try:
+                article_urls = self.crawler.get_article_urls(soup, page)
+            except Exception as e:
+                print(e)
 
             for article_url in article_urls:
                 if article_url not in self.links_to_visit and \
