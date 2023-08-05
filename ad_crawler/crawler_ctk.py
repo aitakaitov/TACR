@@ -9,8 +9,8 @@ class CrawlerCtkAd:
         self.log_path = "ctk_log_ad.log"
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.ceskenoviny.cz/pr/"
-        self.max_scrolls = 500  # should be about 5k links
-        self.max_links = 5000
+        self.max_scrolls = 1000  # should be about 10k links
+        self.max_links = 10000
         self.is_ad = True
 
     def get_article_urls(self, soup, url):

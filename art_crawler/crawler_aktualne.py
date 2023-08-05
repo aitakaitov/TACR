@@ -13,7 +13,7 @@ class CrawlerAktualneArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.aktualne.cz/prave-se-stalo/?offset=0"
         self.max_scrolls = 42
-        self.max_links = 5000
+        self.max_links = 10000
         self.is_ad = False
 
         self.offset = 0
