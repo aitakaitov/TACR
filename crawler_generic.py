@@ -210,7 +210,7 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'garaz-ad':
         print('Crawling ads in Garaz.cz is not supported')
 
-    
+
 
     elif args['site'].lower() == None:
         exit(0)
