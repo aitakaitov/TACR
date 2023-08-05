@@ -9,11 +9,13 @@ from selenium.common.exceptions import JavascriptException
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
+from ad_crawler.crawler_garaz import CrawlerGarazAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
+from art_crawler.crawler_garaz import CrawlerGarazArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -73,7 +75,14 @@ class GenericCrawler():
 
         # Test if we have no links from previous run
         try:
-            self.collect_links(self.crawler.starting_page)
+            try:
+                links = self.crawler.collect_links(self.driver)
+                for link in links:
+                    self.links_to_visit.append(link)
+            except Exception as e:
+                print('custom link collection not implemented, using the default one')
+                self.collect_links(self.crawler.starting_page)
+
             self.download_links()
         except (WebDriverException, JavascriptException):
             self.log.log("Error loading starting page, will exit.")
@@ -195,6 +204,13 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerCtkArt())
     elif args['site'].lower() == 'ctk-ad':
         crawler = GenericCrawler(CrawlerCtkAd())
+
+    elif args['site'].lower() == 'garaz-art':
+        crawler = GenericCrawler(CrawlerGarazArt())
+    elif args['site'].lower() == 'garaz-ad':
+        print('Crawling ads in Garaz.cz is not supported')
+
+    
 
     elif args['site'].lower() == None:
         exit(0)
