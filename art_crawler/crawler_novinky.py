@@ -8,7 +8,7 @@ class CrawlerNovinkyArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.novinky.cz/stalo-se"
         self.max_scrolls = 42
-        self.max_links = 10000
+        self.max_links = 100
         self.is_ad = False
 
     def get_article_urls(self, soup, url):
@@ -29,8 +29,8 @@ class CrawlerNovinkyArt:
         return links
 
     def get_relevant_text(self, soup, keep_paragraphs=True):
-        title = soup.find("div", {"data-qipojriimlnpiljnkqo": "ogm-article-header"}).get_text()
-        header = soup.find("p", {"data-qipojriimlnpiljnkqo": "ogm-article-perex"}).get_text()
+        title = soup.find("div", {"data-dot": "ogm-article-header"}).get_text()
+        header = soup.find("p", {"data-dot": "ogm-article-perex"}).get_text()
         article_tag = soup.find("article", {"aria-labelledby": "accessibility-article"})
         tags = article_tag.find_all()
 
