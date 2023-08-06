@@ -1,22 +1,7 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.common.exceptions import JavascriptException
-
-from library_methods import LibraryMethods
-from log import Log
-from persistent_list import PersistentList
-
-from bs4 import BeautifulSoup, Comment
-import urllib.parse
-
-import os
-import traceback
-import re
+from utils import LibraryMethods
 
 
 class CrawlerIdnesArt:
-
     def __init__(self):
         self.root_folder = "art_pages"
         self.site_folder = "idnes"
@@ -24,6 +9,7 @@ class CrawlerIdnesArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.idnes.cz/zpravy/archiv/"
         self.max_links = 10000
+        self.max_scrolls = 10
         self.is_ad = False
         self.page = 1
 
@@ -57,7 +43,7 @@ class CrawlerIdnesArt:
         self.page += 1
         return self.starting_page + str(self.page)
 
-    def get_relevant_text(self, soup):
+    def get_relevant_text(self, soup, keep_paragraphs=True):
         try:
             title = soup.find("div", {"class": "art-full"}).find("h1").get_text()
         except AttributeError:
@@ -74,10 +60,9 @@ class CrawlerIdnesArt:
         except AttributeError:
             return title + header
 
-
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
-            if tag.name == "p":
+            if tag.name == "p" and keep_paragraphs:
                 tag.attrs = {}
             elif tag.name in valid_tags:
                 tag.unwrap()

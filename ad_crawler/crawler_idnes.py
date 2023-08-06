@@ -50,8 +50,10 @@ class CrawlerIdnesAd:
 
                     tag_url = a_tag.get("href")
                     if tag_url not in links:
-                        links.append(tag_url)
+                        if "idnes.cz" in LibraryMethods.strip_url(tag_url):
+                            links.append(tag_url)
 
+        print(len(links))
         return links
 
     def get_relevant_text(self, soup, keep_paragraphs=True):
