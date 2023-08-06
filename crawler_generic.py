@@ -11,6 +11,7 @@ from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
+from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
@@ -19,6 +20,7 @@ from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
+from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -108,6 +110,7 @@ class GenericCrawler():
             except Exception as e:
                 print('Error collecting links from the page. Trace:')
                 print(e)
+                continue
 
             for article_url in article_urls:
                 if article_url not in self.links_to_visit and \
@@ -243,7 +246,9 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'investicniweb-ad':
         crawler = GenericCrawler(CrawlerInvesticniwebAd())
 
-    elif args['site'].lower() == None:
-        exit(0)
+    elif args['site'].lower() == 'lidovky-art':
+        crawler = GenericCrawler(CrawlerLidovkyArt())
+    elif args['site'].lower() == 'lidovky-ad':
+        crawler = GenericCrawler(CrawlerLidovkyAd())
 
     crawler.start_crawler()

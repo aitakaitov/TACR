@@ -1,4 +1,4 @@
-class Crawler:
+class CrawlerLidovkyAd:
     def __init__(self):
         self.root_folder = "ad_pages"
         self.site_folder = "lidovky"
@@ -7,7 +7,7 @@ class Crawler:
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.lidovky.cz/pr/sdeleni-komercni/"
         self.max_scrolls = 10
-        self.max_links = 10000
+        self.max_links = 100
         self.is_ad = True
 
         self.page = 1
@@ -15,7 +15,7 @@ class Crawler:
 
     def get_article_urls(self, soup, url):
         links = []
-        tags = soup.find("a", {"class": "art-link"})
+        tags = soup.find_all("a", {"class": "art-link"})
 
         for tag in tags:
             href = tag.get('href')

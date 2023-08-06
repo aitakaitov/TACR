@@ -1,4 +1,4 @@
-class Crawler:
+class CrawlerLidovkyArt:
     def __init__(self):
         self.root_folder = "art_pages"
         self.site_folder = "lidovky"
@@ -8,14 +8,14 @@ class Crawler:
         self.starting_page = "https://www.lidovky.cz/archiv/"
         self.max_scrolls = 10
         self.max_links = 10000
-        self.is_ad = True
+        self.is_ad = False
 
         self.page = 1
-        self.page_max = int('max')
+        self.page_max = 1_000_000
 
     def get_article_urls(self, soup, url):
         links = []
-        tags = soup.find("div", {"class": "art"})
+        tags = soup.find_all("div", {"class": "art"})
 
         for tag in tags:
             brisk = tag.find('span', {'class': 'brisk'})
