@@ -86,7 +86,7 @@ class GenericCrawler():
                 links = self.crawler.collect_links(self.driver)
                 for link in links:
                     self.links_to_visit.append(link)
-            except Exception:
+            except Exception as a:
                 print('custom link collection not implemented, using the default one')
                 self.collect_links(self.crawler.starting_page)
 

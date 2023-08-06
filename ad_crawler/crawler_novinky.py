@@ -1,5 +1,13 @@
-class CrawlerNovinkyAd:
+import time
 
+from bs4 import BeautifulSoup
+from selenium.common import WebDriverException
+from selenium.webdriver.common.by import By
+
+from utils import LibraryMethods
+
+
+class CrawlerNovinkyAd:
     def __init__(self):
         self.root_folder = "ad_pages"
         self.site_folder = "novinky"
@@ -8,8 +16,24 @@ class CrawlerNovinkyAd:
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.novinky.cz/komercni-clanky"
         self.max_scrolls = 42
-        self.max_links = 49 # for some reason it is impossible to crawl more links, dont know why
+        self.max_links = 100  #49 # for some reason it is impossible to crawl more links, dont know why
         self.is_ad = True
+
+        self.list_pages = 50
+
+    def collect_links(self, driver):
+        for i in range(self.list_pages):
+            element = driver.find_element(By.LINK_TEXT, 'Zobrazit další')
+            element.click()
+            time.sleep(3)
+
+        try:
+            html = LibraryMethods.download_page_html(driver, self.starting_page, self.max_scrolls)
+        except WebDriverException:
+            exit(-1)
+
+        soup = BeautifulSoup(html)
+        return self.get_article_urls(soup, self.starting_page)
 
     def get_article_urls(self, soup, url):
         links = []
