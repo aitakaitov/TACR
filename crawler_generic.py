@@ -10,6 +10,7 @@ from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
+from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
@@ -17,6 +18,7 @@ from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
+from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -80,7 +82,7 @@ class GenericCrawler():
                 links = self.crawler.collect_links(self.driver)
                 for link in links:
                     self.links_to_visit.append(link)
-            except Exception as e:
+            except Exception:
                 print('custom link collection not implemented, using the default one')
                 self.collect_links(self.crawler.starting_page)
 
@@ -101,7 +103,11 @@ class GenericCrawler():
                 break
             soup = BeautifulSoup(html)
 
-            article_urls = self.crawler.get_article_urls(soup, page)
+            try:
+                article_urls = self.crawler.get_article_urls(soup, page)
+            except Exception as e:
+                print('Error collecting links from the page. Trace:')
+                print(e)
 
             for article_url in article_urls:
                 if article_url not in self.links_to_visit and \
@@ -109,9 +115,14 @@ class GenericCrawler():
                     self.links_to_visit.append(article_url)
 
             print(f'Collected {len(self.links_to_visit)} links in total')
-            url = self.crawler.get_next_page(soup, page)
-            if url is None:
-                break
+
+            try:
+                url = self.crawler.get_next_page(soup, page)
+                if url is None:
+                    break
+            except Exception as e:
+                print('Could not get the next page, ending collection')
+                print(e)
 
     def download_links(self):
         self.log.log("Downloading pages")
@@ -167,10 +178,21 @@ class GenericCrawler():
                 d['data'] = soup.prettify()
                 f.write(json.dumps(d))
 
-            self.crawler.remove_article_heading(soup)
+            try:
+                self.crawler.remove_article_heading(soup)
+            except Exception as e:
+                print('Could not remove ad-related stuff from article, skipping')
+                print(e)
+                continue
 
             with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
+                try:
+                    d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
+                except Exception as e:
+                    print('Could not extract relevant text, skipping')
+                    print(e)
+                    continue
+
                 f.write(json.dumps(d))
 
             with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
@@ -216,7 +238,10 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'idnes-ad':
         crawler = GenericCrawler(CrawlerIdnesAd())
 
-
+    elif args['site'].lower() == 'investicniweb-art':
+        crawler = GenericCrawler(CrawlerInvesticniwebArt())
+    elif args['site'].lower() == 'investicniweb-ad':
+        crawler = GenericCrawler(CrawlerInvesticniwebAd())
 
     elif args['site'].lower() == None:
         exit(0)
