@@ -1,171 +1,41 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.common.exceptions import JavascriptException
-
-from library_methods import LibraryMethods
-from log import Log
-from persistent_list import PersistentList
-
-from bs4 import BeautifulSoup, Comment
-import urllib.parse
-
-import os
-import traceback
-
-root_folder = "ad_pages"
-site_folder = "lidovky"
-log_path = "log_lidovky.log"
-chromedriver_path = "./chromedriver"
-to_visit_file = "TO_VISIT.PERSISTENT"
-visited_file = "VISITED.PERSISTENT"
-starting_page = "https://www.lidovky.cz/pr/sdeleni-komercni/"
-max_scrolls = 26
-filename_length = 255
-
-
 class Crawler:
-
     def __init__(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--incognito")
+        self.root_folder = "ad_pages"
+        self.site_folder = "lidovky"
+        self.log_path = "log_lidovky_ad.log"
+        self.chromedriver_path = "./chromedriver"
+        self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
+        self.starting_page = "https://www.lidovky.cz/pr/sdeleni-komercni/"
+        self.max_scrolls = 10
+        self.max_links = 10000
+        self.is_ad = True
 
-        self.log = Log(log_path)
+        self.page = 1
+        self.page_max = 38
 
-        ''' Selenium driver for chrome'''
-        try:
-            self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
-        except WebDriverException:
-            self.log.log("[CRAWLER] Chromedriver '" + chromedriver_path + "' not found, trying .exe")
-            try:
-                self.driver = webdriver.Chrome(executable_path=chromedriver_path + ".exe", options=chrome_options)
-            except WebDriverException:
-                self.log.log("[CRAWLER] No chromedriver found, exiting")
-                exit(1)
+    def get_article_urls(self, soup, url):
+        links = []
+        tags = soup.find("a", {"class": "art-link"})
 
-        ''' Page load timeout'''
-        self.driver.set_page_load_timeout(20)
+        for tag in tags:
+            href = tag.get('href')
+            if href not in links:
+                links.append(href)
 
-        ''' List of links to visit '''
-        self.links_to_visit = PersistentList(to_visit_file)
+        return links
 
-        ''' List of visited links '''
-        #self.visited_links = PersistentList(visited_file)
-
-        try:
-            os.mkdir("./" + root_folder)
-        except OSError:
-            self.log.log("[CRAWLER] Pages directory already exists.")
-
-        try:
-            os.mkdir("./" + root_folder + "/" + site_folder)
-        except OSError:
-            pass
-
-    def start_crawler(self):
-        """
-        Starts the crawler from a starting url. The crawler will collect all usable links and then place then in a queue,
-        collecting more links as it goes.
-        :return:
-        """
-
-        # Test if we have no links from previous run
-        try:
-            #self.collect_links(starting_page)
-            print(len(self.links_to_visit))
-            self.download_links()
-        except (WebDriverException, JavascriptException):
-            self.log.log("Error loading starting page, will exit.")
-            traceback.print_exc()
-            return
-
-    def collect_links(self, page):
-        self.log.log("Collecting links")
-        url = page
-
-        for i in range(max_scrolls):
-            try:
-                html = LibraryMethods.download_page_html(self.driver, url, max_scrolls)
-            except WebDriverException:
-                break
-            soup = BeautifulSoup(html)
-
-            div_tags = soup.find_all("div", {"class": "art"}) + soup.find_all("div", {"class": "art opener"})
-            for tag in div_tags:
-                a_tag = tag.find("a")
-
-                if a_tag is None:
-                    continue
-
-                tag_url = a_tag.get("href")
-                if urllib.parse.urljoin(page, tag_url) not in self.links_to_visit:
-                    self.links_to_visit.append(urllib.parse.urljoin(page, tag_url))
-
-            url = page + str(i + 2)
-
-    def download_links(self):
-        self.log.log("Downloading pages")
-        html_folder = root_folder + "/" + site_folder + "/html"
-        plaintext_folder = root_folder + "/" + site_folder + "/plaintext"
-        p_folder = root_folder + "/" + site_folder + "/plaintext_with_p"
-        relevant_p_folder = root_folder + "/" + site_folder + "/relevant_with_p"
-
-        try:
-            os.mkdir(html_folder)
-            os.mkdir(plaintext_folder)
-            os.mkdir(p_folder)
-            os.mkdir(relevant_p_folder)
-        except FileExistsError:
-            pass
-
-        for url in self.links_to_visit:
-            self.log.log("Processing " + url)
-            try:
-                html = LibraryMethods.download_page_html(self.driver, url, 20)
-            except WebDriverException:
-                continue
-
-            soup = BeautifulSoup(html)
-            LibraryMethods.filter_html(soup)
-            self.remove_article_heading(soup)
-
-            comments = soup.find_all(text=lambda text: isinstance(text, Comment))
-            for comment in comments:
-                comment.extract()
-
-            filename = url.replace("/", "_")
-            if len(filename) > filename_length:
-                filename = filename[0:filename_length]
-
-            if filename in os.listdir(html_folder):
-                continue
-
-            with open(html_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(soup.prettify())
-
-            with open(relevant_p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(self.get_relevant_text(soup))
-
-            with open(plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                f.write(BeautifulSoup(soup.prettify()).getText())
-
-            with open(p_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                LibraryMethods.keep_paragraphs(soup)
-                f.write(soup.prettify())
-
-    def get_relevant_text(self, soup):
+    def get_relevant_text(self, soup, keep_paragraphs=True):
         try:
             title = soup.find("h1", {"itemprop": "name headline"}).get_text()
         except AttributeError:
             title = ""
         header = soup.find("div", {"class": "opener"}).get_text()
-        article_tag = soup.find("div", {"id": "art-text"})
+        article_tag = soup.find("div", {"class": "bbtext"})
         tags = article_tag.find_all()
 
         valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
-            if tag.name == "p":
+            if tag.name == "p" and keep_paragraphs:
                 tag.attrs = {}
             elif tag.name in valid_tags:
                 tag.unwrap()
@@ -187,13 +57,14 @@ class Crawler:
         return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"class": "art-info"})
-        if tag is not None:
-            tag.extract()
+        return
 
-        tag = soup.find("div", {"id": "komercni-sdeleni"})
-        if tag is not None:
-            tag.extract()
+    def get_next_page(self, soup, url):
+        self.page += 1
+        if self.page > self.page_max:
+            return None
+        else:
+            return f'{self.starting_page}{self.page}'
 
-
-Crawler().start_crawler()
+    def check_soup(self, soup):
+        return True
