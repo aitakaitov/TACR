@@ -1,3 +1,4 @@
+import copy
 import json
 from hashlib import sha256
 
@@ -185,6 +186,8 @@ class GenericCrawler():
                 d['data'] = soup.prettify()
                 f.write(json.dumps(d))
 
+            soup_backup = copy.copy(soup)
+
             try:
                 self.crawler.remove_article_heading(soup)
             except Exception as e:
@@ -203,8 +206,8 @@ class GenericCrawler():
                 f.write(json.dumps(d))
 
             with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
-                LibraryMethods.keep_paragraphs(soup)
-                d['data'] = soup.prettify()
+                LibraryMethods.keep_paragraphs(soup_backup)
+                d['data'] = soup_backup.prettify()
                 f.write(json.dumps(d))
 
         print(f'Failed to download {fails}')
@@ -265,5 +268,7 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerPrimareceptarArt())
     elif args['site'].lower() == 'primareceptar-ad':
         crawler = GenericCrawler(CrawlerPrimareceptarAd())
+
+    
 
     crawler.start_crawler()

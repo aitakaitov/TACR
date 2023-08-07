@@ -114,9 +114,10 @@ class LibraryMethods:
 
         for tag in tags:
             if tag.name != "p":
-                tag.unwrap()
+                tag.extract()
             else:
                 tag.attrs = {}
+                tag.unwrap()
 
         comments = soup.find_all(text=lambda text: isinstance(text, Comment))
         for comment in comments:
