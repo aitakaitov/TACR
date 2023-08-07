@@ -13,6 +13,7 @@ from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_novinky import CrawlerNovinkyAd
+from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
@@ -23,6 +24,7 @@ from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
 from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
+from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -237,6 +239,7 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerGarazArt())
     elif args['site'].lower() == 'garaz-ad':
         print('Crawling ads in Garaz.cz is not supported')
+        exit(1)
 
     elif args['site'].lower() == 'idnes-art':
         crawler = GenericCrawler(CrawlerIdnesArt())
@@ -257,5 +260,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerNovinkyArt())
     elif args['site'].lower() == 'novinky-ad':
         crawler = GenericCrawler(CrawlerNovinkyAd())
+
+    elif args['site'].lower() == 'primareceptar-art':
+        crawler = GenericCrawler(CrawlerPrimareceptarArt())
+    elif args['site'].lower() == 'primareceptar-ad':
+        crawler = GenericCrawler(CrawlerPrimareceptarAd())
 
     crawler.start_crawler()
