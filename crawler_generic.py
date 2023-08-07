@@ -10,6 +10,7 @@ from selenium.common.exceptions import JavascriptException
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
+from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
@@ -20,6 +21,7 @@ from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
+from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
@@ -158,6 +160,7 @@ class GenericCrawler():
             soup = BeautifulSoup(html)
 
             if not self.crawler.check_soup(soup):
+                print()
                 continue
 
             LibraryMethods.filter_html(soup)
@@ -206,8 +209,8 @@ class GenericCrawler():
                 f.write(json.dumps(d))
 
             with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
-                LibraryMethods.keep_paragraphs(soup_backup)
-                d['data'] = soup_backup.prettify()
+                content = LibraryMethods.keep_paragraphs(soup_backup)
+                d['data'] = content
                 f.write(json.dumps(d))
 
         print(f'Failed to download {fails}')
@@ -269,6 +272,9 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'primareceptar-ad':
         crawler = GenericCrawler(CrawlerPrimareceptarAd())
 
-    
+    elif args['site'].lower() == 'extra-art':
+        crawler = GenericCrawler(CrawlerExtraArt())
+    elif args['site'].lower() == 'extra-ad':
+        crawler = GenericCrawler(CrawlerExtraAd())
 
     crawler.start_crawler()

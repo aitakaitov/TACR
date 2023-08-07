@@ -110,18 +110,12 @@ class LibraryMethods:
 
     @staticmethod
     def keep_paragraphs(soup: BeautifulSoup):
-        tags = soup.find_all()
-
+        tags = soup.find_all('p')
+        content = ''
         for tag in tags:
-            if tag.name != "p":
-                tag.extract()
-            else:
-                tag.attrs = {}
-                tag.unwrap()
+            content += tag.get_text(strip=True) + '\n'
 
-        comments = soup.find_all(text=lambda text: isinstance(text, Comment))
-        for comment in comments:
-            comment.extract()
+        return content
 
     @staticmethod
     def unescape_chars(string):
