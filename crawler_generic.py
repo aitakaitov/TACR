@@ -16,6 +16,7 @@ from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_novinky import CrawlerNovinkyAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
+from ad_crawler.crawler_super import CrawlerSuperAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
@@ -28,6 +29,7 @@ from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
 from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
+from art_crawler.crawler_super import CrawlerSuperArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -276,5 +278,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerExtraArt())
     elif args['site'].lower() == 'extra-ad':
         crawler = GenericCrawler(CrawlerExtraAd())
+
+    elif args['site'].lower() == 'super-art':
+        crawler = GenericCrawler(CrawlerSuperArt())
+    elif args['site'].lower() == 'super-ad':
+        crawler = GenericCrawler(CrawlerSuperAd())
 
     crawler.start_crawler()

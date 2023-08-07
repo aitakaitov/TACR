@@ -77,7 +77,6 @@ class CrawlerPrimareceptarArt:
         return content_string
 
     def remove_article_heading(self, soup):
-        pass
         tag = soup.find("div", {"class": "preview c"})
         if tag is not None:
             tag.extract()
