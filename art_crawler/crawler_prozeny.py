@@ -1,22 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.common.exceptions import JavascriptException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-
-from library_methods import LibraryMethods
-from log import Log
-from persistent_list import PersistentList
-
-from bs4 import BeautifulSoup, Comment
-import urllib.parse
-
-import os
-import traceback
-import time
 
 root_folder = "art_pages"
 site_folder = "prozeny"
@@ -28,43 +9,20 @@ starting_page = "https://prozeny.cz/sekce"
 max_scrolls = 2
 filename_length = 255
 
-class Crawler:
+class CrawlerProzenyArt:
     def __init__(self):
-        chrome_options = Options()
-        #chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--incognito")
+        self.root_folder = "art_pages"
+        self.site_folder = "prozeny"
+        self.log_path = "log_prozeny_art.log"
+        self.chromedriver_path = "./chromedriver"
+        self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
+        self.starting_page = "https://prozeny.cz/sekce"
+        self.max_scrolls = 42
+        self.max_links = 10000
+        self.is_ad = False
 
-        self.log = Log(log_path)
-
-        ''' Selenium driver for chrome'''
-        try:
-            self.driver = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
-        except WebDriverException:
-            self.log.log("[CRAWLER] Chromedriver '" + chromedriver_path + "' not found, trying .exe")
-            try:
-                self.driver = webdriver.Chrome(executable_path=chromedriver_path + ".exe", options=chrome_options)
-            except WebDriverException:
-                self.log.log("[CRAWLER] No chromedriver found, exiting")
-                exit(1)
-
-        ''' Page load timeout'''
-        self.driver.set_page_load_timeout(20)
-
-        ''' List of links to visit '''
-        self.links_to_visit = PersistentList(to_visit_file)
-
-        ''' List of visited links '''
-        #self.visited_links = PersistentList(visited_file)
-
-        try:
-            os.mkdir("./" + root_folder)
-        except OSError:
-            self.log.log("[CRAWLER] Pages directory already exists.")
-
-        try:
-            os.mkdir("./" + root_folder + "/" + site_folder)
-        except OSError:
-            pass
+        self.offset = 0
+        self.offset_max = 10000
 
     def start_crawler(self):
         """

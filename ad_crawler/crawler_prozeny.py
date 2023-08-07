@@ -3,9 +3,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
 
-from library_methods import LibraryMethods
-from log import Log
-from persistent_list import PersistentList
+from utils.library_methods import LibraryMethods
+from utils.log import Log
+from utils.persistent_list import PersistentList
 
 from bs4 import BeautifulSoup, Comment
 import urllib.parse
@@ -23,7 +23,7 @@ starting_page = "https://www.prozeny.cz/autor/komercni-sdeleni-41"
 max_scrolls = 1000
 filename_length = 255
 
-class Crawler:
+class CrawlerProzenyAd:
 
     def __init__(self):
         chrome_options = Options()
