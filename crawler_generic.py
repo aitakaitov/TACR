@@ -11,6 +11,7 @@ from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_extra import CrawlerExtraAd
+from ad_crawler.crawler_forbes import CrawlerForbesAd
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
@@ -22,6 +23,7 @@ from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_extra import CrawlerExtraArt
+from art_crawler.crawler_forbes import CrawlerForbesArt
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
@@ -296,5 +298,13 @@ if __name__ == '__main__':
 
     elif args['site'].lower() == 'irozhlas-art':
         crawler = GenericCrawler(CrawlerIrozhlasArt())
+    elif args['site'].lower() == 'irozhlas-ad':
+        print('Crawling ads in Garaz.cz is not supported')
+        exit(1)
+
+    elif args['site'].lower() == 'forbes-art':
+        crawler = GenericCrawler(CrawlerForbesArt())
+    elif args['site'].lower() == 'forbes-ad':
+        crawler = GenericCrawler(CrawlerForbesAd())
 
     crawler.start_crawler()
