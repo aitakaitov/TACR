@@ -4,7 +4,6 @@ import random
 
 
 class CrawlerAktualneArt:
-
     def __init__(self):
         self.root_folder = "art_pages"
         self.site_folder = "aktualne"
@@ -100,13 +99,9 @@ class CrawlerAktualneArt:
         if tag is not None:
             tag.extract()
 
-        tags = soup.find_all('div', {'class': 'article__photo'})
-        for tag in tags:
-            tag.extract()
-
-        tags = soup.find_all('div', {'class': 'adsense'})
-        for tag in tags:
-            tag.extract()
+        # tags = soup.find_all('div', {'class': 'article__photo'})
+        # for tag in tags:
+        #     tag.extract()
 
     def get_next_page(self, soup, url):
         address, num = url.split('=')

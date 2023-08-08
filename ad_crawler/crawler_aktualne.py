@@ -68,10 +68,6 @@ class CrawlerAktualneAd:
         if tag is not None:
             tag.extract()
 
-        tag = soup.find('div', {"class": "advert__name"})
-        if tag is not None:
-            tag.extract()
-
         tag = soup.find("div", {"class": "taglist"})
         if tag is not None:
             tag.extract()
@@ -80,13 +76,9 @@ class CrawlerAktualneAd:
         if tag is not None:
             tag.extract()
 
-        tags = soup.find_all('div', {'class': 'article__photo'})
-        for tag in tags:
-            tag.extract()
-
-        tags = soup.find_all('div', {'class': 'adsense'})
-        for tag in tags:
-            tag.extract()
+        # tags = soup.find_all('div', {'class': 'article__photo'})
+        # for tag in tags:
+        #     tag.extract()
 
     def get_next_page(self, soup, url):
         address, num = url.split('=')

@@ -100,11 +100,3 @@ class CrawlerCnewsAd:
         tags = soup.find_all('a', {'class': 'design-label--default design-label'})
         for tag in tags:
             tag.extract()
-
-        tags = soup.find_all('div', {'class': 'ad-detail'})
-        for tag in tags:
-            tag.extract()
-
-        tags = soup.find_all('div', {'data-advert-marker': 'reklama'})
-        for tag in tags:
-            tag.extract()

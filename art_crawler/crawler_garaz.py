@@ -60,13 +60,14 @@ class CrawlerGarazArt:
         return title + "\n" + header + "\n" + content_string.replace("Seznam advertorial", "")
 
     def remove_article_heading(self, soup):
-        tag = soup.find("span", {"class": "c_e8"})
-        if tag is not None:
-            tag.extract()
-
-        tag = soup.find("a", {"class": "b_ap e_hj"})
-        if tag is not None:
-            tag.extract()
+        # tag = soup.find("span", {"class": "c_e8"})
+        # if tag is not None:
+        #     tag.extract()
+        #
+        # tag = soup.find("a", {"class": "b_ap e_hj"})
+        # if tag is not None:
+        #     tag.extract()
+        pass
 
     def get_next_page(self, soup, url):
         next_tag = soup.find('a', {'class': 'b_ap b_aM'})

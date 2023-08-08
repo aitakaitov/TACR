@@ -86,14 +86,11 @@ class CrawlerExtraArt:
         if author_tag is not None:
             author_tag.extract()
 
-        ad_tags = soup.find_all('div', {'class': 'cnc-ads cnc-ads--rectangle_480_1'})
-        for tag in ad_tags:
-            tag.extract()
+        # garbage = soup.find_all('div', {'class': 'post__gallery px-0'})
+        # for tag in garbage:
+        #     tag.extract()
+        #
+        # garbage = soup.find_all('div', {'class': 'post__pictures post__pictures--sm'})
+        # for tag in garbage:
+        #     tag.extract()
 
-        garbage = soup.find_all('div', {'class': 'post__gallery px-0'})
-        for tag in garbage:
-            tag.extract()
-
-        garbage = soup.find_all('div', {'class': 'post__pictures post__pictures--sm'})
-        for tag in garbage:
-            tag.extract()

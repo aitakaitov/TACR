@@ -1,3 +1,4 @@
+import re
 import urllib.parse
 
 
@@ -89,10 +90,16 @@ class CrawlerChipArt:
         if tag is not None:
             tag.extract()
 
-        tags = soup.find_all('div', {'id': 'ad_unit'})
-        for tag in tags:
-            tag.extract()
+        tag = soup.find('div', {'class': 'post article commercial-post'})
+        if tag is not None:
+            tag = tag.find('div', {'style': 'font-weight:bold;margin-bottom:15px;'})
+            tag_text = tag.getText()
+            tag_text = re.sub('Komerční sdělení -', '', tag_text)
+            tag_text = re.sub('KOMERČNÍ SDĚLENÍ -', '', tag_text)
+            tag_text = re.sub('komerční sdělení -', '', tag_text)
+            tag_text = re.sub('– KOMERČNÍ SDĚLENÍ –', '', tag_text)
+            tag.string = tag_text
 
-        tags = soup.find_all('div', {'class': 'adsposition'})
-        for tag in tags:
+        tag = soup.find('div', {'class': 'komercko-ad'})
+        if tag is not None:
             tag.extract()

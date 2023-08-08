@@ -90,16 +90,9 @@ class CrawlerChipAd:
             tag_text = re.sub('Komerční sdělení -', '', tag_text)
             tag_text = re.sub('KOMERČNÍ SDĚLENÍ -', '', tag_text)
             tag_text = re.sub('komerční sdělení -', '', tag_text)
+            tag_text = re.sub('– KOMERČNÍ SDĚLENÍ –', '', tag_text)
             tag.string = tag_text
 
         tag = soup.find('div', {'class': 'komercko-ad'})
         if tag is not None:
-            tag.extract()
-
-        tags = soup.find_all('div', {'id': 'ad_unit'})
-        for tag in tags:
-            tag.extract()
-
-        tags = soup.find_all('div', {'class': 'adsposition'})
-        for tag in tags:
             tag.extract()

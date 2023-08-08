@@ -78,15 +78,15 @@ class CrawlerNovinkyAd:
         return title + "\n" + header + "\n" + content_string
 
     def remove_article_heading(self, soup):
-        tag = soup.find("div", {"data-qipojriimlnpiljnkqo": "atm-label"})
+        # tag = soup.find("div", {"data-qipojriimlnpiljnkqo": "atm-label"})
+        # if tag is not None:
+        #     tag.extract()
+
+        tag = soup.find('div', {'data-dot': 'ogm-breadcrumb-navigation'})
         if tag is not None:
             tag.extract()
 
-        tag = soup.find('a', {'class': 'c_an g_eV'})
-        if tag is not None:
-            tag.extract()
-
-        tag = soup.find('div', {'class': 'data-qipojriimlnpiljnkqo'})
+        tag = soup.find('div', {'data-dot': 'ogm-article-author'})
         if tag is not None:
             tag.extract()
 

@@ -46,7 +46,7 @@ os.chdir(os.path.dirname(__file__))
 filename_length = 255
 
 
-class GenericCrawler():
+class GenericCrawler:
     def __init__(self, crawler):
         self.crawler = crawler
 
