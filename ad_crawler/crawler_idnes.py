@@ -53,7 +53,8 @@ class CrawlerIdnesAd:
                         if "idnes.cz" in LibraryMethods.strip_url(tag_url):
                             links.append(tag_url)
 
-        print(len(links))
+                print(f'Collected {len(links)} links')
+
         return links
 
     def get_relevant_text(self, soup, keep_paragraphs=True):
