@@ -25,6 +25,7 @@ from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
+from art_crawler.crawler_irozhlas import CrawlerIrozhlasArt
 from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
@@ -138,13 +139,13 @@ class GenericCrawler:
     def download_links(self):
         self.log.log("Downloading pages")
         html_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/html"
-        relevant_plaintext_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/relevant_plaintext"
-        fullpage_p_only = self.crawler.root_folder + "/" + self.crawler.site_folder + "/full_only_p"
+        sanitized_p_only_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/p_only_sanitized"
+        p_only_folder = self.crawler.root_folder + "/" + self.crawler.site_folder + "/p_only"
 
         try:
             os.makedirs(html_folder)
-            os.makedirs(relevant_plaintext_folder)
-            os.makedirs(fullpage_p_only)
+            os.makedirs(sanitized_p_only_folder)
+            os.makedirs(p_only_folder)
         except FileExistsError:
             pass
 
@@ -199,6 +200,11 @@ class GenericCrawler:
                 print(e)
                 continue
 
+            with open(sanitized_p_only_folder + "/" + filename, "w+", encoding='utf-8') as f:
+                content = LibraryMethods.keep_paragraphs(soup)
+                d['data'] = content
+                f.write(json.dumps(d))
+
             # with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
             #     try:
             #         d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
@@ -209,7 +215,7 @@ class GenericCrawler:
             #
             #     f.write(json.dumps(d))
 
-            with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
+            with open(p_only_folder + "/" + filename, "w+", encoding='utf-8') as f:
                 content = LibraryMethods.keep_paragraphs(soup_backup)
                 d['data'] = content
                 f.write(json.dumps(d))
@@ -282,5 +288,13 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerSuperArt())
     elif args['site'].lower() == 'super-ad':
         crawler = GenericCrawler(CrawlerSuperAd())
+
+    elif args['site'].lower() == 'cnn-iprima-art':
+        exit(-1)
+    elif args['site'].lower() == 'cnn-iprima-ad':
+        exit(-1)
+
+    elif args['site'].lower() == 'irozhlas-art':
+        crawler = GenericCrawler(CrawlerIrozhlasArt())
 
     crawler.start_crawler()

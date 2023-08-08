@@ -1,5 +1,6 @@
+import re
 import time
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup, Comment, NavigableString
 from urllib import parse
 import html
 
@@ -109,7 +110,7 @@ class LibraryMethods:
         return driver.page_source
 
     @staticmethod
-    def keep_paragraphs(soup: BeautifulSoup):
+    def keep_paragraphs_old(soup: BeautifulSoup):
         tags = soup.find_all('p')
         content = ''
         for tag in tags:
@@ -118,6 +119,24 @@ class LibraryMethods:
         return content
 
     @staticmethod
+    def keep_paragraphs(soup: BeautifulSoup):
+        result_list = []
+
+        p_tags = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+        for p_tag in p_tags:
+            LibraryMethods.process_contents(p_tag, result_list)
+
+        text = '\n'.join(result_list)
+        return re.sub('\n+', '\n', text)
+
+    @staticmethod
     def unescape_chars(string):
         return html.unescape(string)
 
+    @staticmethod
+    def process_contents(tag, string_list):
+        for item in tag.contents:
+            if isinstance(item, NavigableString):
+                string_list.append(str(item))
+            else:
+                LibraryMethods.process_contents(item, string_list)
