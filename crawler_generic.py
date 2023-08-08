@@ -14,7 +14,6 @@ from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
-from ad_crawler.crawler_novinky import CrawlerNovinkyAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
@@ -200,15 +199,15 @@ class GenericCrawler:
                 print(e)
                 continue
 
-            with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
-                try:
-                    d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
-                except Exception as e:
-                    print('Could not extract relevant text, skipping')
-                    print(e)
-                    continue
-
-                f.write(json.dumps(d))
+            # with open(relevant_plaintext_folder + "/" + filename, "w+", encoding='utf-8') as f:
+            #     try:
+            #         d['data'] = self.crawler.get_relevant_text(soup, keep_paragraphs=False)
+            #     except Exception as e:
+            #         print('Could not extract relevant text, skipping')
+            #         print(e)
+            #         continue
+            #
+            #     f.write(json.dumps(d))
 
             with open(fullpage_p_only + "/" + filename, "w+", encoding='utf-8') as f:
                 content = LibraryMethods.keep_paragraphs(soup_backup)
@@ -267,7 +266,7 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'novinky-art':
         crawler = GenericCrawler(CrawlerNovinkyArt())
     elif args['site'].lower() == 'novinky-ad':
-        crawler = GenericCrawler(CrawlerNovinkyAd())
+        exit(-1)
 
     elif args['site'].lower() == 'primareceptar-art':
         crawler = GenericCrawler(CrawlerPrimareceptarArt())

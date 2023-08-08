@@ -21,19 +21,19 @@ class CrawlerNovinkyAd:
 
         self.list_pages = 50
 
-    def collect_links(self, driver):
-        for i in range(self.list_pages):
-            element = driver.find_element(By.LINK_TEXT, 'Zobrazit další')
-            element.click()
-            time.sleep(3)
-
-        try:
-            html = LibraryMethods.download_page_html(driver, self.starting_page, self.max_scrolls)
-        except WebDriverException:
-            exit(-1)
-
-        soup = BeautifulSoup(html)
-        return self.get_article_urls(soup, self.starting_page)
+    # def collect_links(self, driver):
+    #     for i in range(self.list_pages):
+    #         element = driver.find_element(By.XPATH, "//a[@data-dot='atm-expand-button-link']")
+    #         element.click()
+    #         time.sleep(3)
+    #
+    #     try:
+    #         html = LibraryMethods.download_page_html(driver, self.starting_page, self.max_scrolls)
+    #     except WebDriverException:
+    #         exit(-1)
+    #
+    #     soup = BeautifulSoup(html)
+    #     return self.get_article_urls(soup, self.starting_page)
 
     def get_article_urls(self, soup, url):
         links = []

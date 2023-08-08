@@ -8,14 +8,14 @@ class CrawlerNovinkyArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.novinky.cz/stalo-se"
         self.max_scrolls = 42
-        self.max_links = 10000
+        self.max_links = 500
         self.is_ad = False
 
     def get_article_urls(self, soup, url):
         links = []
         tags = soup.find_all('article', {'class': 'q_gO q_hn n_gO document-item--default'})
         for tag in tags:
-            ad_tag = tag.find('span', {'data-qipojriimlnpiljnkqo': 'atm-label'})
+            ad_tag = tag.find('span', {'data-dot': 'atm-label'})
             if ad_tag is not None:
                 continue
 
