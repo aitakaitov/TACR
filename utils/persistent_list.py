@@ -38,6 +38,12 @@ class PersistentList:
         pickle.dump(self.list, file)
         file.close()
 
+    def extend(self, object) -> None:
+        file = open(self.path, "wb")
+        self.list.extend(object)
+        pickle.dump(self.list, file)
+        file.close()
+
     def __iter__(self):
         return iter(self.list)
 

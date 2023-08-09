@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import JavascriptException
 
+from ad_crawler.crawler_ahaonline import CrawlerAhaonlineAd
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
@@ -17,6 +18,7 @@ from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
+from art_crawler.crawler_ahaonline import CrawlerAhaonlineArt
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
@@ -93,8 +95,8 @@ class GenericCrawler:
         try:
             try:
                 links = self.crawler.collect_links(self.driver)
-                for link in links:
-                    self.links_to_visit.append(link)
+                self.links_to_visit.extend(links)
+
             except Exception as a:
                 print('custom link collection not implemented, using the default one')
                 self.collect_links(self.crawler.starting_page)
@@ -306,5 +308,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerForbesArt())
     elif args['site'].lower() == 'forbes-ad':
         crawler = GenericCrawler(CrawlerForbesAd())
+
+    elif args['site'].lower() == 'ahaonline-art':
+        crawler = GenericCrawler(CrawlerAhaonlineArt())
+    elif args['site'].lower() == 'ahaonline-ad':
+        crawler = GenericCrawler(CrawlerAhaonlineAd())
 
     crawler.start_crawler()
