@@ -11,6 +11,7 @@ from ad_crawler.crawler_ahaonline import CrawlerAhaonlineAd
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
+from ad_crawler.crawler_emimino import CrawlerEmiminoAd
 from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_forbes import CrawlerForbesAd
 from ad_crawler.crawler_forum24 import CrawlerForum24Ad
@@ -25,6 +26,7 @@ from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
+from art_crawler.crawler_emimino import CrawlerEmiminoArt
 from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_forbes import CrawlerForbesArt
 from art_crawler.crawler_forum24 import CrawlerForum24Art
@@ -320,5 +322,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerForum24Art())
     elif args['site'].lower() == 'forum24-ad':
         crawler = GenericCrawler(CrawlerForum24Ad())
+
+    elif args['site'].lower() == 'emimino-art':
+        crawler = GenericCrawler(CrawlerEmiminoArt())
+    elif args['site'].lower() == 'emimino-ad':
+        crawler = GenericCrawler(CrawlerEmiminoAd())
 
     crawler.start_crawler()
