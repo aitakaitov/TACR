@@ -20,6 +20,7 @@ from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
+from ad_crawler.crawler_vlasta import CrawlerVlastaAd
 from art_crawler.crawler_ahaonline import CrawlerAhaonlineArt
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
 from ad_crawler.crawler_aktualne import CrawlerAktualneAd
@@ -38,6 +39,7 @@ from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 from art_crawler.crawler_super import CrawlerSuperArt
+from art_crawler.crawler_vlasta import CrawlerVlastaArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -327,5 +329,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerEmiminoArt())
     elif args['site'].lower() == 'emimino-ad':
         crawler = GenericCrawler(CrawlerEmiminoAd())
+
+    elif args['site'].lower() == 'vlasta-art':
+        print('crawling articles in vlasta.cz is not supported')
+    elif args['site'].lower() == 'vlasta-ad':
+        crawler = GenericCrawler(CrawlerVlastaAd())
 
     crawler.start_crawler()
