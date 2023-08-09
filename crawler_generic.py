@@ -12,6 +12,7 @@ from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_emimino import CrawlerEmiminoAd
+from ad_crawler.crawler_evropa2 import CrawlerEvropa2Ad
 from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_forbes import CrawlerForbesAd
 from ad_crawler.crawler_forum24 import CrawlerForum24Ad
@@ -28,6 +29,7 @@ from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_emimino import CrawlerEmiminoArt
+from art_crawler.crawler_evropa2 import CrawlerEvropa2Art
 from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_forbes import CrawlerForbesArt
 from art_crawler.crawler_forum24 import CrawlerForum24Art
@@ -39,7 +41,6 @@ from art_crawler.crawler_lidovky import CrawlerLidovkyArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 from art_crawler.crawler_super import CrawlerSuperArt
-from art_crawler.crawler_vlasta import CrawlerVlastaArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -334,5 +335,15 @@ if __name__ == '__main__':
         print('crawling articles in vlasta.cz is not supported')
     elif args['site'].lower() == 'vlasta-ad':
         crawler = GenericCrawler(CrawlerVlastaAd())
+
+    elif args['site'].lower() == 'zenain-art':
+        crawler = GenericCrawler(CrawlerZenaInArt())
+    elif args['site'].lower() == 'zenain-ad':
+        crawler = GenericCrawler(CrawlerVlastaAd())
+
+    elif args['site'].lower() == 'evropa2-art':
+        crawler = GenericCrawler(CrawlerEvropa2Art())
+    elif args['site'].lower() == 'evropa2-ad':
+        crawler = GenericCrawler(CrawlerEvropa2Ad())
 
     crawler.start_crawler()
