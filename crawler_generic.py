@@ -13,6 +13,7 @@ from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_forbes import CrawlerForbesAd
+from ad_crawler.crawler_forum24 import CrawlerForum24Ad
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
@@ -26,6 +27,7 @@ from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_forbes import CrawlerForbesArt
+from art_crawler.crawler_forum24 import CrawlerForum24Art
 from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
@@ -166,7 +168,7 @@ class GenericCrawler:
             soup = BeautifulSoup(html)
 
             if not self.crawler.check_soup(soup):
-                print()
+                print('ad')
                 continue
 
             LibraryMethods.filter_html(soup)
@@ -313,5 +315,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerAhaonlineArt())
     elif args['site'].lower() == 'ahaonline-ad':
         crawler = GenericCrawler(CrawlerAhaonlineAd())
+
+    elif args['site'].lower() == 'forum24-art':
+        crawler = GenericCrawler(CrawlerForum24Art())
+    elif args['site'].lower() == 'forum24-ad':
+        crawler = GenericCrawler(CrawlerForum24Ad())
 
     crawler.start_crawler()
