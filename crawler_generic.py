@@ -23,6 +23,7 @@ from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_lifee import CrawlerLifeeAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
+from ad_crawler.crawler_toprecepty import CrawlerTopreceptyAd
 from ad_crawler.crawler_vlasta import CrawlerVlastaAd
 from art_crawler.crawler_ahaonline import CrawlerAhaonlineArt
 from art_crawler.crawler_aktualne import CrawlerAktualneArt
@@ -45,6 +46,7 @@ from art_crawler.crawler_lifee import CrawlerLifeeArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 from art_crawler.crawler_super import CrawlerSuperArt
+from art_crawler.crawler_toprecepty import CrawlerTopreceptyArt
 
 from utils.library_methods import LibraryMethods
 from utils.log import Log
@@ -354,5 +356,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerExpresArt())
     elif args['site'].lower() == 'expres-ad':
         crawler = GenericCrawler(CrawlerExpresAd())
+
+    elif args['site'].lower() == 'toprecepty-art':
+        crawler = GenericCrawler(CrawlerTopreceptyArt())
+    elif args['site'].lower() == 'toprecepty-ad':
+        crawler = GenericCrawler(CrawlerTopreceptyAd())
 
     crawler.start_crawler()
