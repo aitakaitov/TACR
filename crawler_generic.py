@@ -21,6 +21,7 @@ from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
 from ad_crawler.crawler_lifee import CrawlerLifeeAd
+from ad_crawler.crawler_lupa import CrawlerLupaAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
 from ad_crawler.crawler_toprecepty import CrawlerTopreceptyAd
@@ -361,5 +362,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerTopreceptyArt())
     elif args['site'].lower() == 'toprecepty-ad':
         crawler = GenericCrawler(CrawlerTopreceptyAd())
+
+    elif args['site'].lower() == 'lupa-art':
+        exit(-1)
+    elif args['site'].lower() == 'lupa-ad':
+        crawler = GenericCrawler(CrawlerLupaAd())
 
     crawler.start_crawler()
