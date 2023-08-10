@@ -13,6 +13,7 @@ from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
 from ad_crawler.crawler_emimino import CrawlerEmiminoAd
 from ad_crawler.crawler_evropa2 import CrawlerEvropa2Ad
+from ad_crawler.crawler_expres import CrawlerExpresAd
 from ad_crawler.crawler_extra import CrawlerExtraAd
 from ad_crawler.crawler_forbes import CrawlerForbesAd
 from ad_crawler.crawler_forum24 import CrawlerForum24Ad
@@ -31,6 +32,7 @@ from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
 from art_crawler.crawler_emimino import CrawlerEmiminoArt
 from art_crawler.crawler_evropa2 import CrawlerEvropa2Art
+from art_crawler.crawler_expres import CrawlerExpresArt
 from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_forbes import CrawlerForbesArt
 from art_crawler.crawler_forum24 import CrawlerForum24Art
@@ -347,5 +349,10 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerLifeeArt())
     elif args['site'].lower() == 'lifee-ad':
         crawler = GenericCrawler(CrawlerLifeeAd())
+
+    elif args['site'].lower() == 'expres-art':
+        crawler = GenericCrawler(CrawlerExpresArt())
+    elif args['site'].lower() == 'expres-ad':
+        crawler = GenericCrawler(CrawlerExpresAd())
 
     crawler.start_crawler()
