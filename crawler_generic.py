@@ -19,6 +19,7 @@ from ad_crawler.crawler_forum24 import CrawlerForum24Ad
 from ad_crawler.crawler_idnes import CrawlerIdnesAd
 from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
 from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
+from ad_crawler.crawler_lifee import CrawlerLifeeAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
 from ad_crawler.crawler_vlasta import CrawlerVlastaAd
@@ -38,6 +39,7 @@ from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
 from art_crawler.crawler_irozhlas import CrawlerIrozhlasArt
 from art_crawler.crawler_lidovky import CrawlerLidovkyArt
+from art_crawler.crawler_lifee import CrawlerLifeeArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 from art_crawler.crawler_super import CrawlerSuperArt
@@ -336,14 +338,14 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'vlasta-ad':
         crawler = GenericCrawler(CrawlerVlastaAd())
 
-    elif args['site'].lower() == 'zenain-art':
-        crawler = GenericCrawler(CrawlerZenaInArt())
-    elif args['site'].lower() == 'zenain-ad':
-        crawler = GenericCrawler(CrawlerVlastaAd())
-
     elif args['site'].lower() == 'evropa2-art':
         crawler = GenericCrawler(CrawlerEvropa2Art())
     elif args['site'].lower() == 'evropa2-ad':
         crawler = GenericCrawler(CrawlerEvropa2Ad())
+
+    elif args['site'].lower() == 'lifee-art':
+        crawler = GenericCrawler(CrawlerLifeeArt())
+    elif args['site'].lower() == 'lifee-ad':
+        crawler = GenericCrawler(CrawlerLifeeAd())
 
     crawler.start_crawler()
