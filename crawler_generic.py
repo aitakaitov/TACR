@@ -24,6 +24,7 @@ from ad_crawler.crawler_lifee import CrawlerLifeeAd
 from ad_crawler.crawler_lupa import CrawlerLupaAd
 from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
 from ad_crawler.crawler_super import CrawlerSuperAd
+from ad_crawler.crawler_tiscali import CrawlerTiscaliAd
 from ad_crawler.crawler_toprecepty import CrawlerTopreceptyAd
 from ad_crawler.crawler_vlasta import CrawlerVlastaAd
 from art_crawler.crawler_ahaonline import CrawlerAhaonlineArt
@@ -47,6 +48,7 @@ from art_crawler.crawler_lifee import CrawlerLifeeArt
 from art_crawler.crawler_novinky import CrawlerNovinkyArt
 from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
 from art_crawler.crawler_super import CrawlerSuperArt
+from art_crawler.crawler_tiscali import CrawlerTiscaliArt
 from art_crawler.crawler_toprecepty import CrawlerTopreceptyArt
 
 from utils.library_methods import LibraryMethods
@@ -367,5 +369,12 @@ if __name__ == '__main__':
         exit(-1)
     elif args['site'].lower() == 'lupa-ad':
         crawler = GenericCrawler(CrawlerLupaAd())
+
+    elif args['site'].lower() == 'tiscali-art':
+        crawler = GenericCrawler(CrawlerTiscaliArt())
+    elif args['site'].lower() == 'tiscali-ad':
+        crawler = GenericCrawler(CrawlerTiscaliAd())
+    else:
+        exit(-1)
 
     crawler.start_crawler()
