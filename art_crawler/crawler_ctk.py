@@ -1,14 +1,13 @@
 import urllib.parse
 
 class CrawlerCtkArt:
-
     def __init__(self):
         self.root_folder = "art_pages"
         self.site_folder = "ctk"
         self.log_path = "ctk_log_art.log"
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.ceskenoviny.cz/prehled-zprav/"
-        self.max_scrolls = 2000  # should be about 10k links
+        self.max_scrolls = 20000  # should be about 10k links
         self.max_links = 20000
         self.is_ad = False
 

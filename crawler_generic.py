@@ -319,8 +319,7 @@ if __name__ == '__main__':
     elif args['site'].lower() == 'irozhlas-art':
         crawler = GenericCrawler(CrawlerIrozhlasArt())
     elif args['site'].lower() == 'irozhlas-ad':
-        print('Crawling ads in Garaz.cz is not supported')
-        exit(1)
+        exit(-1)
 
     elif args['site'].lower() == 'forbes-art':
         crawler = GenericCrawler(CrawlerForbesArt())
@@ -343,7 +342,7 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerEmiminoAd())
 
     elif args['site'].lower() == 'vlasta-art':
-        print('crawling articles in vlasta.cz is not supported')
+        exit(-1)
     elif args['site'].lower() == 'vlasta-ad':
         crawler = GenericCrawler(CrawlerVlastaAd())
 
