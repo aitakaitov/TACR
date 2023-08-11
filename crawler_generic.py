@@ -11,6 +11,7 @@ from ad_crawler.crawler_ahaonline import CrawlerAhaonlineAd
 from ad_crawler.crawler_chip import CrawlerChipAd
 from ad_crawler.crawler_cnews import CrawlerCnewsAd
 from ad_crawler.crawler_ctk import CrawlerCtkAd
+from ad_crawler.crawler_drbna import CrawlerDrbnaAd
 from ad_crawler.crawler_emimino import CrawlerEmiminoAd
 from ad_crawler.crawler_evropa2 import CrawlerEvropa2Ad
 from ad_crawler.crawler_expres import CrawlerExpresAd
@@ -33,6 +34,7 @@ from ad_crawler.crawler_aktualne import CrawlerAktualneAd
 from art_crawler.crawler_chip import CrawlerChipArt
 from art_crawler.crawler_cnews import CrawlerCnewsArt
 from art_crawler.crawler_ctk import CrawlerCtkArt
+from art_crawler.crawler_drbna import CrawlerDrbnaArt
 from art_crawler.crawler_emimino import CrawlerEmiminoArt
 from art_crawler.crawler_evropa2 import CrawlerEvropa2Art
 from art_crawler.crawler_expres import CrawlerExpresArt
@@ -374,6 +376,12 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerTiscaliArt())
     elif args['site'].lower() == 'tiscali-ad':
         crawler = GenericCrawler(CrawlerTiscaliAd())
+
+    elif args['site'].lower() == 'drbna-art':
+        crawler = GenericCrawler(CrawlerDrbnaArt())
+    elif args['site'].lower() == 'drbna-ad':
+        crawler = GenericCrawler(CrawlerDrbnaAd())
+
     else:
         exit(-1)
 
