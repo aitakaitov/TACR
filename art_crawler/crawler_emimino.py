@@ -13,13 +13,12 @@ class CrawlerEmiminoArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.emimino.cz/"
         self.max_scrolls = 42
-        self.max_links = 100
+        self.max_links = 15000
         self.is_ad = False
 
         self.rubriky = [
-            ('clanky/pr', 1),
-            ('denicky', 2),
-            ('clanky', 2),
+            ('denicky', 678),
+            ('clanky', 129),
         ]
 
     def collect_links(self, driver):

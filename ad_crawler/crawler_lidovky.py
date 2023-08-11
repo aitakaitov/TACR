@@ -7,7 +7,7 @@ class CrawlerLidovkyAd:
         self.to_visit_file = self.site_folder + "-ad-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.lidovky.cz/pr/sdeleni-komercni/"
         self.max_scrolls = 10
-        self.max_links = 100
+        self.max_links = 10000
         self.is_ad = True
 
         self.page = 1

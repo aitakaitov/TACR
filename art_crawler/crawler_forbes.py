@@ -13,7 +13,7 @@ class CrawlerForbesArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://forbes.cz/tag/"
         self.max_scrolls = 42
-        self.max_links = 10000
+        self.max_links = 15000
         self.is_ad = False
 
         self.rubriky = [

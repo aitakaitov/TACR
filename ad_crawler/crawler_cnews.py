@@ -7,7 +7,7 @@ class CrawlerCnewsAd:
         self.site_folder = "cnews"
         self.log_path = "log_cnews_ad.log"
         self.chromedriver_path = "./chromedriver"
-        self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
+        self.to_visit_file = self.site_folder + "-aD-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.cnews.cz/komercni-clanek/?pi=1"
         self.max_scrolls = 42
         self.max_links = 600

@@ -8,7 +8,7 @@ class CrawlerGarazArt:
         self.to_visit_file = self.site_folder + "-art-TO_VISIT.PERSISTENT"
         self.starting_page = "https://www.garaz.cz/"
         self.max_scrolls = 42
-        self.max_links = 100
+        self.max_links = 10000
         self.is_ad = False
 
     def get_article_urls(self, soup, url):
