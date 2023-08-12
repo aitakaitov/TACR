@@ -32,7 +32,7 @@ class CrawlerDrbnaAd:
         links = []
         titles = []
 
-        for site, page_max in self.parts[:1]:
+        for site, page_max in self.parts:
             for i in range(1, page_max + 1):
                 url = f'{site}?strana={i}'
 
