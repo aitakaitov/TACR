@@ -25,8 +25,19 @@ class CrawlerCnewsArt:
                 continue
 
             ad_tag = tag.find('a', {'class': 'design-impressum__item--author design-impressum__item'})
-            if ad_tag.get_text() == 'Komerční článek':
-                continue
+            if ad_tag is not None:
+                if ad_tag.get_text() == 'Komerční článek':
+                    continue
+
+            title = tag.find('h2', {'class': 'element-heading-reset'})
+            if title is not None:
+                if 'Komerční' in title:
+                    continue
+
+            ad_tag = tag.find('span', {'class': 'element-non-critical element-print-hidden design-article__marker design-marker__item'})
+            if ad_tag is not None:
+                if 'Komerční' in ad_tag.get_text():
+                    continue
 
             tag_url = a_tag.get("href")
             if urllib.parse.urljoin(base_url, tag_url) not in links:

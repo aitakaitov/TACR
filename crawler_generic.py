@@ -41,7 +41,6 @@ from art_crawler.crawler_expres import CrawlerExpresArt
 from art_crawler.crawler_extra import CrawlerExtraArt
 from art_crawler.crawler_forbes import CrawlerForbesArt
 from art_crawler.crawler_forum24 import CrawlerForum24Art
-from art_crawler.crawler_garaz import CrawlerGarazArt
 from art_crawler.crawler_idnes import CrawlerIdnesArt
 from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
 from art_crawler.crawler_irozhlas import CrawlerIrozhlasArt
@@ -269,12 +268,6 @@ if __name__ == '__main__':
         crawler = GenericCrawler(CrawlerCtkArt())
     elif args['site'].lower() == 'ctk-ad':
         crawler = GenericCrawler(CrawlerCtkAd())
-
-    elif args['site'].lower() == 'garaz-art':
-        crawler = GenericCrawler(CrawlerGarazArt())
-    elif args['site'].lower() == 'garaz-ad':
-        print('Crawling ads in Garaz.cz is not supported')
-        exit(1)
 
     elif args['site'].lower() == 'idnes-art':
         crawler = GenericCrawler(CrawlerIdnesArt())
