@@ -108,21 +108,24 @@ class GenericCrawler:
         :return:
         """
 
-        # Test if we have no links from previous run
-        try:
+        if args['start_from_link_idx'] == -1:
             try:
-                links = self.crawler.collect_links(self.driver)
-                self.links_to_visit.extend(links)
+                try:
+                    links = self.crawler.collect_links(self.driver)
+                    self.links_to_visit.extend(links)
 
-            except Exception as a:
-                print('custom link collection not implemented, using the default one')
-                self.collect_links(self.crawler.starting_page)
+                except Exception as a:
+                    print('custom link collection not implemented, using the default one')
+                    self.collect_links(self.crawler.starting_page)
 
+                self.download_links()
+            except (WebDriverException, JavascriptException):
+                self.log.log("Error loading starting page, will exit.")
+                traceback.print_exc()
+                return
+        else:
+            self.links_to_visit = self.links_to_visit.list[args['start_from_link_idx']:]
             self.download_links()
-        except (WebDriverException, JavascriptException):
-            self.log.log("Error loading starting page, will exit.")
-            traceback.print_exc()
-            return
 
     def collect_links(self, page):
         self.log.log("Collecting links")
@@ -247,6 +250,7 @@ class GenericCrawler:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--site')
+    parser.add_argument('--start_from_link_idx', default=-1, type=int)
     args = vars(parser.parse_args())
 
     if args['site'].lower() == 'aktualne-art':
