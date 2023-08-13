@@ -16,7 +16,7 @@ class CrawlerAktualneArt:
         self.is_ad = False
 
         self.offset = 0
-        self.offset_max = 10000
+        self.offset_max = 20000
 
     def get_article_urls(self, soup, url):
         links = []
@@ -37,7 +37,7 @@ class CrawlerAktualneArt:
             if tag_url not in links:
                 if "aktualne.cz" in LibraryMethods.strip_url(tag_url):
                     if "sport.aktualne.cz" in LibraryMethods.strip_url(tag_url):
-                        rand = random.randint(0, 5)
+                        rand = random.randint(0, 10)
                         if rand == 0:
                             links.append(urllib.parse.urljoin(url, tag_url))
                     else:
