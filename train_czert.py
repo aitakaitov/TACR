@@ -2,17 +2,20 @@ import numpy as np
 import torch
 from datasets import load_dataset
 from datasets import load_metric
-from transformers import AutoTokenizer, DataCollatorForTokenClassification, DataCollatorWithPadding
+from transformers import AutoTokenizer, DataCollatorWithPadding
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 import argparse
 import wandb
 import time
 
+from datasets.utils.logging import disable_progress_bar
+disable_progress_bar()
+
 
 def compute_metrics(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=1)
-    results = accuracy_metric.compute(predictions=predictions, references=labels) | f1_metric.compute(predictions=predictions, references=labels)
+    results = {**accuracy_metric.compute(predictions=predictions, references=labels), **f1_metric.compute(predictions=predictions, references=labels)}
     wandb.log({"accuracy": results["accuracy"], "f1": results["f1"]})
     return results
 
@@ -22,18 +25,18 @@ def tokenize(examples):
 
 
 def main():
-
-    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:200]')\
+    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train')\
          .map(tokenize)
-    dataset = dataset.shuffle(seed=42)
 
-    split_dataset = dataset.train_test_split(test_size=args['test_split_size'], shuffle=True, seed=42)
+    split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
     train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+
+    train_dataset = train_dataset.shuffle(seed=42)
 
     model = AutoModelForSequenceClassification.from_pretrained(args['model'], num_labels=2)
 
     training_arguments = TrainingArguments(
-        f'{args["model"]}_{args["lr"]}',
+        f'{args["model"]}_{args["lr"]}_args["dataset_json_path"]',
         evaluation_strategy='epoch',
         learning_rate=args['lr'],
         per_device_train_batch_size=args['batch_size'],
@@ -86,4 +89,3 @@ if __name__ == '__main__':
     accuracy_metric = load_metric("accuracy")
     f1_metric = load_metric('f1')
 
-    main()
