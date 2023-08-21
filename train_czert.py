@@ -11,6 +11,8 @@ import time
 from datasets.utils.logging import disable_progress_bar
 disable_progress_bar()
 
+from ood_verify import run_verify
+
 
 def compute_metrics(p):
     predictions, labels = p
@@ -25,18 +27,15 @@ def tokenize(examples):
 
 
 def main():
-    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train')\
-         .map(tokenize)
-
+    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
     split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
     train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
-
     train_dataset = train_dataset.shuffle(seed=42)
 
     model = AutoModelForSequenceClassification.from_pretrained(args['model'], num_labels=2)
 
     training_arguments = TrainingArguments(
-        f'{args["model"]}_{args["lr"]}_args["dataset_json_path"]',
+        args['save_name'],
         evaluation_strategy='epoch',
         learning_rate=args['lr'],
         per_device_train_batch_size=args['batch_size'],
@@ -62,8 +61,10 @@ def main():
 
     trainer.train()
     trainer.evaluate()
+    trainer.save_model(args['save_name'])
 
-    trainer.save_model(h)
+    if ood_test:
+        run_verify(tokenizer, model, args['ood_test_json_path'])
 
 
 if __name__ == '__main__':
@@ -73,19 +74,26 @@ if __name__ == '__main__':
     parser.add_argument('--lr', required=True, default=1e-5, type=float)
     parser.add_argument('--batch_size', required=False, default=1, type=int)
     parser.add_argument('--test_split_size', required=False, default=0.1, type=float)
-    parser.add_argument('--dataset_json_path', required=True, type=str)
+    parser.add_argument('--dataset_json_path', required=True, default=None, type=str)
+    parser.add_argument('--ood_test_json_path', required=False, default=None, type=str)
+    parser.add_argument('--save_name', required=True, type=str)
 
     args = vars(parser.parse_args())
+
+    ood_test = args['ood_test_json_path'] is not None
 
     h = str(time.time_ns())
     wandb.init(project='tacr-reklama', entity='aitakaitov', tags=[h], config={
         'lr': args['lr'],
         'batch_size': args['batch_size'],
         'model': args['model'],
-        'dataset': args['dataset_json_path']
+        'dataset': args['dataset_json_path'],
+        'left_out_domain': args['dataset_json_path'][17:-9] if ood_test else None
     })
 
     tokenizer = AutoTokenizer.from_pretrained(args['model'])
     accuracy_metric = load_metric("accuracy")
     f1_metric = load_metric('f1')
+
+    main()
 

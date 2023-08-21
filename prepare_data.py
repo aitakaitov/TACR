@@ -83,7 +83,7 @@ def select_files(tld, counts):
 
 
 def write_dataset(art_files, ad_files, dataset_name):
-    with open(f'{dataset_name}.json', 'w+') as f:
+    with open(os.path.join(args["folder"], f'{dataset_name}.json'), 'w+') as f:
         for domain in art_files.keys():
             for file in art_files[domain]:
                 data = load_from_json(file)
@@ -124,7 +124,7 @@ def create_dataset(art_counts, ad_counts, dataset_name, subsample_ads_: bool):
     print(f'--- TOTAL ADS: {sum([len(v) for k, v in ad_files.items()])}')
 
 
-    write_to_json({'art_files': art_files, 'ad_files': ad_files}, f'{dataset_name}_files.json')
+    write_to_json({'art_files': art_files, 'ad_files': ad_files}, os.path.join(args['folder'], f'{dataset_name}_files.json'))
 
     write_dataset(art_files, ad_files, dataset_name)
 
@@ -146,11 +146,11 @@ def main():
         create_dataset(art_counts, ad_counts, f'{dataset_name}_full_{args["leave_out_domain"]}-only', subsample_ads_=False)
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--arts_per_ad', default=2, type=int)
     parser.add_argument('--leave_out_domain', default=None)
+    parser.add_argument('--folder', required=True, default='', type=str)
     args = vars(parser.parse_args())
 
     main()
