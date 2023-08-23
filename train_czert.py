@@ -88,7 +88,8 @@ if __name__ == '__main__':
         'batch_size': args['batch_size'],
         'model': args['model'],
         'dataset': args['dataset_json_path'],
-        'left_out_domain': args['dataset_json_path'][17:-9] if ood_test else None
+        'left_out_domain': args['dataset_json_path'][17:-9] if ood_test else None,
+        'model_save': args['save_name']
     })
 
     tokenizer = AutoTokenizer.from_pretrained(args['model'])
