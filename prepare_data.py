@@ -82,11 +82,38 @@ def select_files(tld, counts):
     return selected_files
 
 
+def trim_text_start_length(text):
+    MIN_TOKENS = 13
+    tag_texts = text.split('\n')
+    start = -1
+    for i, tag in enumerate(tag_texts):
+        if len(tag.split()) > MIN_TOKENS:
+            start = i
+            break
+
+    new_text = ''
+    for i in range(start, len(tag_texts)):
+        new_text += tag_texts[i]
+
+    return new_text
+
+
+def trim_text(text):
+    if args['trim_text'] is None:
+        return text
+    elif args['trim_text'] == 'start_length':
+        return trim_text_start_length(text)
+    else:
+        print(f'{args["trim_text"]} not valid')
+        exit(-1)
+
+
 def write_dataset(art_files, ad_files, dataset_name):
     with open(os.path.join(args["folder"], f'{dataset_name}.json'), 'w+') as f:
         for domain in art_files.keys():
             for file in art_files[domain]:
                 data = load_from_json(file)
+                data['data'] = trim_text(data['data'])
                 f.write(json.dumps(
                     {
                         'text': data['data'],
@@ -98,6 +125,7 @@ def write_dataset(art_files, ad_files, dataset_name):
         for domain in ad_files.keys():
             for file in ad_files[domain]:
                 data = load_from_json(file)
+                data['data'] = trim_text(data['data'])
                 f.write(json.dumps(
                     {
                         'text': data['data'],
@@ -122,7 +150,6 @@ def create_dataset(art_counts, ad_counts, dataset_name, subsample_ads_: bool):
 
     print(f'--- TOTAL ARTICLES: {sum([len(v) for k, v in art_files.items()])}')
     print(f'--- TOTAL ADS: {sum([len(v) for k, v in ad_files.items()])}')
-
 
     write_to_json({'art_files': art_files, 'ad_files': ad_files}, os.path.join(args['folder'], f'{dataset_name}_files.json'))
 
@@ -151,6 +178,7 @@ if __name__ == '__main__':
     parser.add_argument('--arts_per_ad', default=2, type=int)
     parser.add_argument('--leave_out_domain', default=None)
     parser.add_argument('--folder', required=True, default='', type=str)
+    parser.add_argument('--trim_text', required=False, default=None)
     args = vars(parser.parse_args())
 
     main()
