@@ -4,6 +4,8 @@ import os
 import argparse
 import random
 
+random.seed(42)
+
 
 def load_csv(path):
     res = {}
