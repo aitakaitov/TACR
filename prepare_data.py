@@ -83,7 +83,7 @@ def select_files(tld, counts):
 
 
 def trim_text_start_length(text):
-    MIN_TOKENS = 13
+    MIN_TOKENS = args['trim_length']
     tag_texts = text.split('\n')
     start = -1
     for i, tag in enumerate(tag_texts):
@@ -179,6 +179,7 @@ if __name__ == '__main__':
     parser.add_argument('--leave_out_domain', default=None)
     parser.add_argument('--folder', required=True, default='', type=str)
     parser.add_argument('--trim_text', required=False, default=None)
+    parser.add_argument('--trim_length', required=False, default=0, type=int)
     args = vars(parser.parse_args())
 
     main()
