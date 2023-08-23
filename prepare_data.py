@@ -182,4 +182,6 @@ if __name__ == '__main__':
     parser.add_argument('--trim_length', required=False, default=0, type=int)
     args = vars(parser.parse_args())
 
+    os.makedirs(args['folder'], exist_ok=True)
+
     main()
