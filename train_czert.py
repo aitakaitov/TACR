@@ -23,7 +23,10 @@ def compute_metrics(p):
 
 
 def tokenize(examples):
-    return tokenizer(examples['text'], truncation=True, max_length=512)
+    if 'intfloat' not in args['model']:
+        return tokenizer(examples['text'], truncation=True, max_length=512)
+    else:
+        return tokenizer('query: ' + examples['text'], truncation=True, max_length=512)
 
 
 def main():
