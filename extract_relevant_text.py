@@ -27,7 +27,7 @@ def process(_dir, crawlers):
     for crawler, pages_dir in crawlers:
         print(f'-- {pages_dir}')
         pages = os.listdir(os.path.join(_dir, pages_dir, 'html'))
-        os.mkdir(os.path.join(_dir, pages_dir, 'relevant_only'))
+        os.makedirs(os.path.join(_dir, pages_dir, 'relevant_only'), exist_ok=True)
         for page in pages:
             with open(os.path.join(_dir, pages_dir, 'html', page), 'r', encoding='utf-8') as f:
                 data = json.loads(f.read())
