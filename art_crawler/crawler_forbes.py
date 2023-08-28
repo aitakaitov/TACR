@@ -89,7 +89,7 @@ class CrawlerForbesArt:
         title = soup.find('h1', {'class': 'header__title header__title--colored'})
         title = '' if title is None else title.get_text()
 
-        article = soup.find('siv', {'class': 'gutenberg-content large-first-p postContent'})
+        article = soup.find('div', {'class': 'gutenberg-content large-first-p postContent'})
         tags = article.find_all()
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:

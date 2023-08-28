@@ -57,7 +57,7 @@ if __name__ == '__main__':
     art_crawlers = [
         (CrawlerAktualneArt(), 'aktualne'),
         (CrawlerIdnesArt(), 'idnes'),
-        (CrawlerExpresArt(), 'expres'),
+        #(CrawlerExpresArt(), 'expres'),
         (CrawlerSuperArt(), 'super'),
         (CrawlerForbesArt(), 'forbes'),
         (CrawlerInvesticniwebArt(), 'investicniweb'),
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     ad_crawlers = [
         (CrawlerAktualneAd(), 'aktualne'),
         (CrawlerIdnesAd(), 'idnes'),
-        (CrawlerExpresAd(), 'expres'),
+        #(CrawlerExpresAd(), 'expres'),
         (CrawlerSuperAd(), 'super'),
         (CrawlerForbesAd(), 'forbes'),
         (CrawlerInvesticniwebAd(), 'investicniweb'),
