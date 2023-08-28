@@ -46,6 +46,45 @@ class CrawlerExpresArt:
         else:
             return f'{self.base_url}/{self.page}'
 
+    def get_relevant_text(self, soup, keep_paragraphs=True):
+        title = soup.find('h1', {'itemprop': 'name headline'})
+        if title is not None:
+            title = title.get_text()
+        else:
+            title = ''
+
+        opener = soup.find('div', {'itemprop': 'description'})
+        if opener is not None:
+            opener = title.get_text()
+        else:
+            opener = ''
+
+        main_div = soup.find('div', {'itemprop': 'articleBody'})
+
+        tags = main_div.find_all()
+        valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
+        for tag in tags:
+            if tag.name == "p" and keep_paragraphs:
+                tag.attrs = {}
+            elif tag.name in valid_tags:
+                tag.unwrap()
+            else:
+                tag.extract()
+
+        content = main_div.contents
+        content_string = ""
+        for i in range(len(content)):
+
+            part = content[i]
+            if len(part) == 0:
+                continue
+            if str(part).isspace():
+                continue
+
+            content_string += "\n" + str(part) + "\n"
+
+        return title + '\n' + opener + '\n' + content_string
+
     def check_soup(self, soup):
         tag = soup.find("div", {"id": "komercni-sdeleni"})
         if tag is not None:
