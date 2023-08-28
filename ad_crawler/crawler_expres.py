@@ -41,7 +41,7 @@ class CrawlerExpresAd:
         else:
             title = ''
 
-        opener = soup.find('div', {'itemprop': 'description'})
+        opener = soup.find('div', {'class': 'bbtext'})
         if opener is not None:
             opener = title.get_text()
         else:

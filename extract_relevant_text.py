@@ -1,5 +1,7 @@
 import json
 import os
+import traceback
+
 from bs4 import BeautifulSoup
 
 from ad_crawler.crawler_forbes import CrawlerForbesAd
@@ -37,8 +39,9 @@ def process(_dir, crawlers):
             crawler.remove_article_heading(soup)
             try:
                 data['data'] = crawler.get_relevant_text(soup, keep_paragraphs=False)
-            except Exception:
+            except Exception as e:
                 print(f'unable to process {page}')
+                traceback.print_exception(e)
                 continue
 
             with open(os.path.join(_dir, pages_dir, 'relevant_only', page), 'w+', encoding='utf-8') as f:
