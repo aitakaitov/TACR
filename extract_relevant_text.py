@@ -2,29 +2,30 @@ import json
 import os
 from bs4 import BeautifulSoup
 
-from ad_crawler import crawler_forbes as ad_crawler_forbes
-from ad_crawler import crawler_investicniweb as ad_crawler_investicniweb
-from ad_crawler import crawler_lidovky as ad_crawler_lidovky
-from ad_crawler import crawler_novinky as ad_crawler_novinky
-from ad_crawler import crawler_primareceptar as ad_crawler_primareceptar
-from ad_crawler import crawler_super as ad_crawler_super
-from ad_crawler import crawler_expres as ad_crawler_expres
-from ad_crawler import crawler_idnes as ad_crawler_idnes
-from ad_crawler import crawler_aktualne as ad_crawler_aktualne
+from ad_crawler.crawler_forbes import CrawlerForbesAd
+from ad_crawler.crawler_investicniweb import CrawlerInvesticniwebAd
+from ad_crawler.crawler_lidovky import CrawlerLidovkyAd
+from ad_crawler.crawler_primareceptar import CrawlerPrimareceptarAd
+from ad_crawler.crawler_super import CrawlerSuperAd
+from ad_crawler.crawler_expres import CrawlerExpresAd
+from ad_crawler.crawler_idnes import CrawlerIdnesAd
+from ad_crawler.crawler_aktualne import CrawlerAktualneAd
+from ad_crawler.crawler_ctk import CrawlerCtkAd
 
-from art_crawler import crawler_forbes as art_crawler_forbes
-from art_crawler import crawler_investicniweb as art_crawler_investicniweb
-from art_crawler import crawler_lidovky as art_crawler_lidovky
-from art_crawler import crawler_novinky as art_crawler_novinky
-from art_crawler import crawler_primareceptar as art_crawler_primareceptar
-from art_crawler import crawler_super as art_crawler_super
-from art_crawler import crawler_expres as art_crawler_expres
-from art_crawler import crawler_idnes as art_crawler_idnes
-from art_crawler import crawler_aktualne as art_crawler_aktualne
+from art_crawler.crawler_forbes import CrawlerForbesArt
+from art_crawler.crawler_investicniweb import CrawlerInvesticniwebArt
+from art_crawler.crawler_lidovky import CrawlerLidovkyArt
+from art_crawler.crawler_primareceptar import CrawlerPrimareceptarArt
+from art_crawler.crawler_super import CrawlerSuperArt
+from art_crawler.crawler_expres import CrawlerExpresArt
+from art_crawler.crawler_idnes import CrawlerIdnesArt
+from art_crawler.crawler_aktualne import CrawlerAktualneArt
+from art_crawler.crawler_ctk import CrawlerCtkArt
 
 
 def process(_dir, crawlers):
     for crawler, pages_dir in crawlers:
+        print(f'-- {pages_dir}')
         pages = os.listdir(os.path.join(_dir, pages_dir, 'html'))
         os.mkdir(os.path.join(_dir, pages_dir, 'relevant_only'))
         for page in pages:
@@ -47,27 +48,27 @@ def main():
 
 if __name__ == '__main__':
     art_crawlers = [
-        (art_crawler_aktualne, 'aktualne'),
-        (art_crawler_idnes, 'idnes'),
-        (art_crawler_expres, 'expres'),
-        (art_crawler_super, 'super'),
-        (art_crawler_forbes, 'forbes'),
-        (art_crawler_investicniweb, 'investicniweb'),
-        (art_crawler_lidovky, 'lidovky'),
-        (art_crawler_novinky, 'novinky'),
-        (art_crawler_primareceptar, 'primareceptar')
+        (CrawlerAktualneArt(), 'aktualne'),
+        (CrawlerIdnesArt(), 'idnes'),
+        (CrawlerExpresArt(), 'expres'),
+        (CrawlerSuperArt(), 'super'),
+        (CrawlerForbesArt(), 'forbes'),
+        (CrawlerInvesticniwebArt(), 'investicniweb'),
+        (CrawlerLidovkyArt(), 'lidovky'),
+        (CrawlerPrimareceptarArt(), 'prima-receptar'),
+        (CrawlerCtkArt(), 'ctk')
     ]
 
     ad_crawlers = [
-        (ad_crawler_aktualne, 'aktualne'),
-        (ad_crawler_idnes, 'idnes'),
-        (ad_crawler_expres, 'expres'),
-        (ad_crawler_super, 'super'),
-        (ad_crawler_forbes, 'forbes'),
-        (ad_crawler_investicniweb, 'investicniweb'),
-        (ad_crawler_lidovky, 'lidovky'),
-        (ad_crawler_novinky, 'novinky'),
-        (ad_crawler_primareceptar, 'primareceptar')
+        (CrawlerAktualneAd(), 'aktualne'),
+        (CrawlerIdnesAd(), 'idnes'),
+        (CrawlerExpresAd(), 'expres'),
+        (CrawlerSuperAd(), 'super'),
+        (CrawlerForbesAd(), 'forbes'),
+        (CrawlerInvesticniwebAd(), 'investicniweb'),
+        (CrawlerLidovkyAd(), 'lidovky'),
+        (CrawlerPrimareceptarAd(), 'prima-receptar'),
+        (CrawlerCtkAd(), 'ctk')
     ]
 
     main()
