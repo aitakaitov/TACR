@@ -86,11 +86,12 @@ class CrawlerForbesArt:
         return True
 
     def get_relevant_text(self, soup, keep_paragraphs=True):
-        # getting only the relevant text is probably useless, so we wont bother with it for now
-        return
+        title = soup.find('h1', {'class': 'header__title header__title--colored'})
+        title = '' if title is None else title.get_text()
 
+        article = soup.find('siv', {'class': 'gutenberg-content large-first-p postContent'})
         tags = article.find_all()
-        valid_tags = ["div", "a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
+        valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
         for tag in tags:
             if tag.name == "p" and keep_paragraphs:
                 tag.attrs = {}
@@ -111,7 +112,7 @@ class CrawlerForbesArt:
 
             content_string += "\n" + str(part) + "\n"
 
-        return title + '\n' + perex + '\n' + content_string
+        return title + '\n' + content_string
 
     def remove_article_heading(self, soup):
         tag = soup.find("div", {"class": "article-footer__categories-wrapper"})

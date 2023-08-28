@@ -58,6 +58,14 @@ class CrawlerLidovkyAd:
 
     def remove_article_heading(self, soup):
         # some articles have a heading, e.g. https://www.lidovky.cz/pr/sdeleni-komercni/v-lcg-new-media-rostou-trzby-kancelare-i-zamestnanci.A220316_093955_komercni-sdeleni_jedli
+        tag = soup.find('span', {'class': 'brisk'})
+        if tag is not None:
+            tag.extract()
+
+        tag = soup.find('div', {'id': 'komercni-sdeleni'})
+        if tag is not None:
+            tag.extract()
+
         return
 
     def get_next_page(self, soup, url):
