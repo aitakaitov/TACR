@@ -37,7 +37,7 @@ def process(_dir, crawlers):
             crawler.remove_article_heading(soup)
             data['data'] = crawler.get_relevant_text(soup, keep_paragraphs=False)
 
-            with open(os.path.join(_dir, pages, 'relevant_only', page), 'w+', encoding='utf-8') as f:
+            with open(os.path.join(_dir, pages_dir, 'relevant_only', page), 'w+', encoding='utf-8') as f:
                 f.write(json.dumps(data))
 
 
