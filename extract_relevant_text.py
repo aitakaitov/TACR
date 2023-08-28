@@ -67,10 +67,10 @@ if __name__ == '__main__':
     ]
 
     ad_crawlers = [
-        (CrawlerAktualneAd(), 'aktualne'),
-        (CrawlerIdnesAd(), 'idnes'),
+        #(CrawlerAktualneAd(), 'aktualne'),
+        #(CrawlerIdnesAd(), 'idnes'),
         #(CrawlerExpresAd(), 'expres'),
-        (CrawlerSuperAd(), 'super'),
+        #(CrawlerSuperAd(), 'super'),
         (CrawlerForbesAd(), 'forbes'),
         (CrawlerInvesticniwebAd(), 'investicniweb'),
         (CrawlerLidovkyAd(), 'lidovky'),
