@@ -35,7 +35,11 @@ def process(_dir, crawlers):
             html = data['data']
             soup = BeautifulSoup(html)
             crawler.remove_article_heading(soup)
-            data['data'] = crawler.get_relevant_text(soup, keep_paragraphs=False)
+            try:
+                data['data'] = crawler.get_relevant_text(soup, keep_paragraphs=False)
+            except Exception:
+                print(f'unable to process {page}')
+                continue
 
             with open(os.path.join(_dir, pages_dir, 'relevant_only', page), 'w+', encoding='utf-8') as f:
                 f.write(json.dumps(data))
