@@ -41,13 +41,13 @@ class CrawlerExpresAd:
         else:
             title = ''
 
-        opener = soup.find('div', {'class': 'bbtext'})
+        opener = soup.find('div', {'class': 'description'})
         if opener is not None:
             opener = title.get_text()
         else:
             opener = ''
 
-        main_div = soup.find('div', {'itemprop': 'articleBody'})
+        main_div = soup.find('div', {'class': 'bbtext'})
 
         tags = main_div.find_all()
         valid_tags = ["a", "p", "h1", "h2", "h3", "h4", "h5", "strong", "b", "i", "em", "span", "ul", "li"]
