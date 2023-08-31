@@ -53,6 +53,32 @@ def keep_paragraphs(soup: BeautifulSoup):
     return re.sub('\n+', '\n', text)
 
 
+def trim_text_start_length(text):
+    MIN_TOKENS = args['trim_length']
+    tag_texts = text.split('\n')
+    start = -1
+    for i, tag in enumerate(tag_texts):
+        if len(tag.split()) > MIN_TOKENS:
+            start = i
+            break
+
+    new_text = ''
+    for i in range(start, len(tag_texts)):
+        new_text += tag_texts[i]
+
+    return new_text
+
+
+def trim_text(text):
+    if args['trim_text'] is None:
+        return text
+    elif args['trim_text'] == 'start_length':
+        return trim_text_start_length(text)
+    else:
+        print(f'{args["trim_text"]} not valid')
+        exit(-1)
+
+
 def load_csv():
     with open(os.path.join('datasets', '1_to_0_and_2_removed', f'{args["fraction"]}.csv'), 'r', encoding='utf-8') as f:
         df = pd.read_csv(f)
@@ -110,7 +136,7 @@ def export(data_dict):
         for sample in data_dict:
             f.write(json.dumps(
                 {
-                    'text': sample['text'],
+                    'text': trim_text(sample['text']),
                     'label': sample['label'],
                     'file': sample['url']
                 }
@@ -134,6 +160,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--fraction', type=str, required=True)
     parser.add_argument('--output_file', type=str, required=False, default='dataset_annotated.jsonl')
+    parser.add_argument('--trim_text', default=None, required=False)
+    parser.add_argument('--trim_length', default=0, required=False, type=int)
     args = vars(parser.parse_args())
 
     main()
