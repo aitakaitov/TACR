@@ -31,10 +31,10 @@ def tokenize(examples):
 
 
 def main():
-    # dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
-    # split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
-    # train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
-    # train_dataset = train_dataset.shuffle(seed=42)
+    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
+    split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
+    train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+    train_dataset = train_dataset.shuffle(seed=42)
 
     config = transformers.AutoConfig.from_pretrained(args['model'])
     if args['dropout'] is not None:
