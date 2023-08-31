@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import transformers
 from datasets import load_dataset
 from datasets import load_metric
 from transformers import AutoTokenizer, DataCollatorWithPadding
@@ -30,12 +31,20 @@ def tokenize(examples):
 
 
 def main():
-    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
-    split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
-    train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
-    train_dataset = train_dataset.shuffle(seed=42)
+    # dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
+    # split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
+    # train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+    # train_dataset = train_dataset.shuffle(seed=42)
 
-    model = AutoModelForSequenceClassification.from_pretrained(args['model'], num_labels=2)
+    config = transformers.AutoConfig.from_pretrained(args['model'])
+    if args['dropout'] is not None:
+        config.classifier_dropout = args['dropout']
+        config.hidden_dropout_prob = args['dropout']
+        config.attention_probs_dropout_prob = args['dropout']
+
+    config.num_labels = 2
+
+    model = AutoModelForSequenceClassification.from_pretrained(args['model'], config=config)
 
     training_arguments = TrainingArguments(
         args['save_name'],
@@ -79,6 +88,7 @@ if __name__ == '__main__':
     parser.add_argument('--test_split_size', required=False, default=0.1, type=float)
     parser.add_argument('--dataset_json_path', required=True, default=None, type=str)
     parser.add_argument('--ood_test_json_path', required=False, default=None, type=str)
+    parser.add_argument('--dropout', default=None, type=float, required=False)
     parser.add_argument('--save_name', required=True, type=str)
 
     args = vars(parser.parse_args())
@@ -95,7 +105,7 @@ if __name__ == '__main__':
         'model_save': args['save_name']
     })
 
-    tokenizer = AutoTokenizer.from_pretrained(args['model'])
+    tokenizer = AutoTokenizer.from_pretrained(args['model'], use_fast=False)
     accuracy_metric = load_metric("accuracy")
     f1_metric = load_metric('f1')
 
