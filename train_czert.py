@@ -17,6 +17,10 @@ from ood_verify import run_verify
 
 def compute_metrics(p):
     predictions, labels = p
+
+    if isinstance(predictions, tuple):
+        predictions = predictions[0]
+
     predictions = np.argmax(predictions, axis=1)
     results = {**accuracy_metric.compute(predictions=predictions, references=labels), **f1_metric.compute(predictions=predictions, references=labels)}
     wandb.log({"accuracy": results["accuracy"], "f1": results["f1"]})
@@ -101,7 +105,7 @@ if __name__ == '__main__':
         'batch_size': args['batch_size'],
         'model': args['model'],
         'dataset': args['dataset_json_path'],
-        'left_out_domain': args['dataset_json_path'][17:-9] if ood_test else None,
+        'left_out_domain': args['dataset_json_path'] if ood_test else None,
         'model_save': args['save_name']
     })
 
