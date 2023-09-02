@@ -25,10 +25,10 @@ def load_ads(dataset_file=None):
     return ads, domains, labels
 
 
-def get_predictions(model, tokenizer: BertTokenizer, ad_samples):
+def get_predictions(model, tokenizer: BertTokenizer, ad_samples, max_position_embeddings):
     predictions = []
     for sample in tqdm(ad_samples):
-        encoded = tokenizer(sample['text'], return_tensors='pt', max_length=512, truncation=True)
+        encoded = tokenizer(sample['text'], return_tensors='pt', max_length=max_position_embeddings, truncation=True)
         logits = model(input_ids=encoded['input_ids'].to(device), attention_mask=encoded['attention_mask'].to(device)).logits.to('cpu')
         predictions.append(int(torch.argmax(logits, dim=1)))
 
@@ -45,20 +45,11 @@ def print_results(predictions, labels, domains):
     print(results)
 
 
-def main():
-    tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
-    model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
-
-    ad_samples, domains, labels = load_ads()
-    predictions = get_predictions(model, tokenizer, ad_samples)
-    print_results(predictions, labels, domains)
-
-
 def run_verify(tokenizer, model, dataset_file):
     import wandb
 
     ad_samples, domains, labels = load_ads(dataset_file)
-    predictions = get_predictions(model, tokenizer, ad_samples)
+    predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
 
     f1 = load_metric('f1')
     acc = load_metric('accuracy')
@@ -69,10 +60,19 @@ def run_verify(tokenizer, model, dataset_file):
     })
 
 
+def main():
+    ad_samples, domains, labels = load_ads()
+    predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
+    print_results(predictions, labels, domains)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_save', type=str, required=True)
     parser.add_argument('--dataset_file', type=str, required=True)
     args = vars(parser.parse_args())
+
+    tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
+    model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
 
     main()
