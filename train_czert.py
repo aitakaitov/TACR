@@ -37,7 +37,7 @@ def tokenize(examples):
 
 
 def main():
-    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
+    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:15]').map(tokenize)
     split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
     train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
     train_dataset = train_dataset.shuffle(seed=42)
@@ -49,6 +49,9 @@ def main():
         config.attention_probs_dropout_prob = args['dropout']
 
     config.num_labels = 2
+    config.output_attentions = False
+    config.output_hidden_states = False
+    config.pooler_output = False
 
     model = AutoModelForSequenceClassification.from_pretrained(args['model'], config=config)
 
@@ -62,7 +65,8 @@ def main():
         weight_decay=1e-5,
         fp16=True,  # True,
         save_strategy='epoch',
-        group_by_length=True
+        group_by_length=True,
+        eval_accumulation_steps=1 if 'barticzech' in args['model'] else None
     )
 
     data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
