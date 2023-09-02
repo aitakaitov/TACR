@@ -37,7 +37,7 @@ def tokenize(examples):
 
 
 def main():
-    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:15]').map(tokenize)
+    dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
     split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
     train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
     train_dataset = train_dataset.shuffle(seed=42)
