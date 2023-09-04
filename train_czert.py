@@ -66,7 +66,7 @@ def main():
         fp16=True,  # True,
         save_strategy='epoch',
         group_by_length=True,
-        eval_accumulation_steps=1 if 'barticzech' in args['model'] else None
+        eval_accumulation_steps=128 if 'barticzech' in args['model'] else None
     )
 
     data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
