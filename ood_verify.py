@@ -1,4 +1,8 @@
 import json
+import random
+
+random.seed(42)
+
 import transformers
 import torch
 import argparse
@@ -15,7 +19,13 @@ def load_ads(dataset_file=None):
     domains = []
     labels = []
     with open(args['dataset_file'] if dataset_file is None else dataset_file, 'r', encoding='utf-8') as f:
-        for line in f.readlines():
+        lines = f.readlines()
+        if args['max_samples'] is not None:
+            if len(lines) > args['max_samples']:
+                random.shuffle(lines)
+                lines = lines[:args['max_samples']]
+
+        for line in lines:
             sample = json.loads(line)
             ads.append(sample)
             domain = sample['file'].split('/')[1]
@@ -70,6 +80,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_save', type=str, required=True)
     parser.add_argument('--dataset_file', type=str, required=True)
+    parser.add_argument('--max_samples', default=None, type=int, required=False)
     args = vars(parser.parse_args())
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
