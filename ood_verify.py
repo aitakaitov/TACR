@@ -1,6 +1,8 @@
 import json
 import random
 
+import wandb
+
 random.seed(42)
 
 import transformers
@@ -56,8 +58,6 @@ def print_results(predictions, labels, domains):
 
 
 def run_verify(tokenizer, model, dataset_file):
-    import wandb
-
     ad_samples, domains, labels = load_ads(dataset_file)
     predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
 
@@ -85,5 +85,8 @@ if __name__ == '__main__':
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
+    config = transformers.AutoConfig.from_pretrained(args['model_save'])
+
+    wandb.init(config={**vars(config), 'max_samples': args['max_samples']})
 
     main()
