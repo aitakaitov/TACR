@@ -51,10 +51,10 @@ def print_results(predictions, labels, domains):
     f1 = load_metric('f1')
     acc = load_metric('accuracy')
 
-    results = {**f1.compute(predictions=predictions, references=labels),
-               **acc.compute(predictions=predictions, references=labels)}
-
-    print(results)
+    wandb.log({
+        'ood_test_f1': f1.compute(predictions=predictions, references=labels)['f1'],
+        'ood_test_accuracy': acc.compute(predictions=predictions, references=labels)['accuracy']
+    })
 
 
 def run_verify(tokenizer, model, dataset_file):
@@ -87,6 +87,6 @@ if __name__ == '__main__':
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
     config = transformers.AutoConfig.from_pretrained(args['model_save'])
 
-    wandb.init(config={**vars(config), 'max_samples': args['max_samples']})
+    wandb.init(config={**vars(config), 'max_samples': args['max_samples']}, project='tacr-reklama', tags=['ood_500'])
 
     main()
