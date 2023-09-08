@@ -3,6 +3,8 @@ import random
 
 import wandb
 
+import openai_utils
+
 random.seed(42)
 
 import transformers
@@ -52,8 +54,8 @@ def print_results(predictions, labels, domains):
     acc = load_metric('accuracy')
 
     wandb.log({
-        'ood_test_f1': f1.compute(predictions=predictions, references=labels)['f1'],
-        'ood_test_accuracy': acc.compute(predictions=predictions, references=labels)['accuracy']
+         'ood_test_f1': f1.compute(predictions=predictions, references=labels)['f1'],
+         'ood_test_accuracy': acc.compute(predictions=predictions, references=labels)['accuracy']
     })
 
 
@@ -69,24 +71,57 @@ def run_verify(tokenizer, model, dataset_file):
         'ood_test_accuracy': acc.compute(predictions=predictions, references=labels)['accuracy']
     })
 
+    print({
+        'ood_test_f1': f1.compute(predictions=predictions, references=labels)['f1'],
+        'ood_test_accuracy': acc.compute(predictions=predictions, references=labels)['accuracy']
+    })
+
+
+def get_predictions_chatgpt(ad_samples):
+    predictions = []
+    for sample in tqdm(ad_samples):
+        text = openai_utils.shorten_text(sample['text'], 1000)
+        response = openai_utils.get_response(text)
+        predictions.append(openai_utils.decode_response_binary(response))
+
+    return predictions
+
 
 def main():
     ad_samples, domains, labels = load_ads()
-    predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
+
+    if not args['use_chatgpt']:
+        predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
+    else:
+        predictions = get_predictions_chatgpt(ad_samples)
     print_results(predictions, labels, domains)
+
+
+def check_bool(inp):
+    return inp.lower() == 'true'
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_save', type=str, required=True)
+    parser.add_argument('--model_save', type=str, default=None, required=False)
+    parser.add_argument('--use_chatgpt', default=False, type=check_bool, required=False)
     parser.add_argument('--dataset_file', type=str, required=True)
     parser.add_argument('--max_samples', default=None, type=int, required=False)
     args = vars(parser.parse_args())
 
-    tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
-    model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
-    config = transformers.AutoConfig.from_pretrained(args['model_save'])
+    if args['use_chatgpt']:
+        if args['model_save'] is not None:
+            print('using chatgpt while model_save is specified')
+            exit()
+        if args['max_samples'] is None or args['max_samples'] > 500:
+            print('using chatgpt with too many samples')
+            exit()
+        config = {}
+    else:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
+        model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
+        config = transformers.AutoConfig.from_pretrained(args['model_save'])
 
-    wandb.init(config={**vars(config), 'max_samples': args['max_samples']}, project='tacr-reklama', tags=['ood_500'])
+    wandb.init(config={**vars(config), 'max_samples': args['max_samples'], 'chatgpt': args['use_chatgpt'], 'dataset': args['dataset_file']}, project='tacr-reklama', tags=['ood_500'])
 
     main()
