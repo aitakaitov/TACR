@@ -5,7 +5,7 @@ import argparse
 import random
 
 random.seed(42)
-
+EXCLUDED_DOMAINS = ['forbes', 'expres']
 
 def load_csv(path):
     res = {}
@@ -44,8 +44,9 @@ def filter_domains(art_counts, ad_counts):
     if args['leave_out_domain'] is not None and args['leave_out_domain'] in valid_domains:
         valid_domains.remove(args['leave_out_domain'])
 
-    if 'expres' in valid_domains:
-        valid_domains.remove('expres')
+    for domain in valid_domains:
+        if domain in EXCLUDED_DOMAINS:
+            valid_domains.remove(domain)
 
     art_counts_new = {d: art_counts[d] for d in valid_domains}
     ad_counts_new = {d: ad_counts[d] for d in valid_domains}
