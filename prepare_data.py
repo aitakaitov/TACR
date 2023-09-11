@@ -99,7 +99,7 @@ def trim_text_start_length(text):
 
     new_text = ''
     for i in range(start, len(tag_texts)):
-        new_text += tag_texts[i]
+        new_text += tag_texts[i] + '\n'
 
     return new_text
 
