@@ -3,9 +3,10 @@ import json
 import os
 import argparse
 import random
+import time
 
 random.seed(42)
-EXCLUDED_DOMAINS = ['forbes', 'expres']
+
 
 def load_csv(path):
     res = {}
@@ -45,7 +46,7 @@ def filter_domains(art_counts, ad_counts):
         valid_domains.remove(args['leave_out_domain'])
 
     for domain in valid_domains:
-        if domain in EXCLUDED_DOMAINS:
+        if domain in args['invalid_domains']:
             valid_domains.remove(domain)
 
     art_counts_new = {d: art_counts[d] for d in valid_domains}
@@ -186,7 +187,14 @@ if __name__ == '__main__':
     parser.add_argument('--folder', required=True, default='', type=str)
     parser.add_argument('--trim_text', required=False, default=None)
     parser.add_argument('--trim_length', required=False, default=0, type=int)
+    parser.add_argument('--invalid_domains', required=False, default='expres,forbes', type=str)
+    parser.add_argument('--random_seed', required=False, default=False, type=bool)
     args = vars(parser.parse_args())
+
+    if args['random_seed']:
+        random.seed(time.process_time_ns())
+
+    args['invalid_domains'] = args['invalid_domains'].split()
 
     os.makedirs(args['folder'], exist_ok=True)
 
