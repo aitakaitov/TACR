@@ -104,19 +104,25 @@ if __name__ == '__main__':
     parser.add_argument('--ood_test_json_path', required=True, default=None, type=str)
     parser.add_argument('--dropout', default=None, type=float, required=False)
     parser.add_argument('--save_name', required=True, type=str)
+    parser.add_argument('--tags', required=False, default=None, type=str)
+    parser.add_argument('--domain', required=False, default=None, type=str)
 
     args = vars(parser.parse_args())
 
     ood_test = args['ood_test_json_path'] is not None
 
-    h = str(time.time_ns())
-    wandb.init(project='tacr-reklama', entity='aitakaitov', tags=[h], config={
+    domain_dict = {}
+    if args['domain'] is not None:
+        domain_dict = {'domain': args['domain']}
+
+    wandb.init(project='tacr-reklama', entity='aitakaitov', tags=None if args['tags'] is None else args['tags'].split(','), config={
         'lr': args['lr'],
         'batch_size': args['batch_size'],
         'model': args['model'],
         'dataset': args['dataset_json_path'],
         'left_out_domain': args['dataset_json_path'] if ood_test else None,
-        'model_save': args['save_name']
+        'model_save': args['save_name'],
+        **domain_dict
     })
 
     tokenizer = AutoTokenizer.from_pretrained(args['model'], use_fast=False)
