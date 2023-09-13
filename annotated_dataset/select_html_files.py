@@ -134,6 +134,7 @@ def transform_labels(data_dict):
 def export(data_dict):
     with open(args['output_file'], 'w+', encoding='utf-8') as f:
         for sample in data_dict:
+            print(sample['label'])
             f.write(json.dumps(
                 {
                     'text': trim_text(sample['text']),

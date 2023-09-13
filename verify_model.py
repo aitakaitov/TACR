@@ -11,15 +11,17 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 def load_ads():
     ads = []
     domains = []
-    with open('ads_dataset_full.json', 'r', encoding='utf-8') as f:
+    labels = []
+    with open('annotated_dataset/dataset_annotated.jsonl', 'r', encoding='utf-8') as f:
         for line in f.readlines():
             sample = json.loads(line)
-            if sample['label'] == 1:
-                ads.append(sample)
-                domain = sample['file'].split('/')[1]
-                domains.append(domain)
+            ads.append(sample)
+            file = sample['file']
+            domains.append(file)
+            label = sample['label']
+            labels.append(label)
 
-    return ads, domains
+    return ads, domains, labels
 
 
 def get_predictions(model, tokenizer: BertTokenizer, ad_samples):
@@ -32,23 +34,20 @@ def get_predictions(model, tokenizer: BertTokenizer, ad_samples):
     return predictions
 
 
-def print_results(predictions, domains):
-    domain_info = {d: [0, 0] for d in list(set(domains))}
-
-    for pred, domain in zip(predictions, domains):
-        domain_info[domain][pred] += 1
-
-    for domain, info in domain_info.items():
-        print(f'{domain}:\t {sum(info)} predictions, {info[1]} correct, {info[0]} incorrect')
+def print_results(predictions, files, labels):
+    with open('output.csv', 'w+', encoding='utf-8') as f:
+        f.write('prediction;label;file\n')
+        for p, l, fi in zip(predictions, labels, files):
+            f.write(f'{p};{l};{fi}\n')
 
 
 def main():
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model_save'])
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model_save']).to(device)
 
-    ad_samples, domains = load_ads()
+    ad_samples, files, labels = load_ads()
     predictions = get_predictions(model, tokenizer, ad_samples)
-    print_results(predictions, domains)
+    print_results(predictions, files, labels)
 
 
 if __name__ == '__main__':
