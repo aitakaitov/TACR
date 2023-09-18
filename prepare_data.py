@@ -231,19 +231,22 @@ def complete_ood():
 
     # dump the files as a training set
     write_to_json({'art_files': art_files, 'ad_files': ad_files}, os.path.join(args['folder'], f'training_full_files.json'))
-    write_dataset(art_files, ad_files, os.path.join(args['folder'], f'training_full.json'))
+    write_dataset(art_files, ad_files, f'training_full.json')
 
     # generate an 'out' file for each domain by cutting from the training pool
     for domain in ad_files.keys():
+        print('processing cut domain ' + domain)
         art_files_cut, ad_files_cut = remove_a_domain_temp(art_files, ad_files)
+        print('writing -out')
         write_to_json({'art_files': art_files_cut, 'ad_files': ad_files_cut},
                       os.path.join(args['folder'], f'{domain}-out_files.json'))
-        write_dataset(art_files_cut, ad_files_cut, os.path.join(args['folder'], f'{domain}-out.json'))
+        write_dataset(art_files_cut, ad_files_cut, f'{domain}-out.json')
 
+        print('writing -only')
         art_files_domain, ad_files_domain = get_domain_files(domain)
         write_to_json({'art_files': art_files_domain, 'ad_files': ad_files_domain},
                       os.path.join(args['folder'], f'{domain}-only_files.json'))
-        write_dataset(art_files_domain, ad_files_domain, os.path.join(args['folder'], f'{domain}-only.json'))
+        write_dataset(art_files_domain, ad_files_domain, f'{domain}-only.json')
 
 
 if __name__ == '__main__':
