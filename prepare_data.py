@@ -237,7 +237,7 @@ def complete_ood():
     # generate an 'out' file for each domain by cutting from the training pool
     for domain in ad_files.keys():
         print('processing cut domain ' + domain)
-        art_files_cut, ad_files_cut = remove_a_domain_temp(art_files, ad_files)
+        art_files_cut, ad_files_cut = remove_a_domain_temp(art_files, ad_files, domain)
         print('writing -out')
         write_to_json({'art_files': art_files_cut, 'ad_files': ad_files_cut},
                       os.path.join(args['folder'], f'{domain}-out_files.json'))
