@@ -216,6 +216,12 @@ def get_domain_files(domain):
     art_files = os.listdir(art_dir_path)
     ad_files = os.listdir(ad_dir_path)
 
+    expected_art_count = len(ad_files) * args['arts_per_ad']
+    actual_art_count = min(expected_art_count, len(art_files))
+
+    random.shuffle(art_files)
+    art_files = art_files[:actual_art_count]
+
     art_files = [str(os.path.join('art_pages', domain, 'p_only_sanitized', file)) for file in art_files]
     ad_files = [str(os.path.join('ad_pages', domain, 'p_only_sanitized', file)) for file in ad_files]
 
