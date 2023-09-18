@@ -203,10 +203,13 @@ def remove_a_domain_temp(art_files, ad_files, domain):
     art_files_new = copy.deepcopy(art_files)
     ad_files_new = copy.deepcopy(ad_files)
 
+    art_files_domain = copy.deepcopy(art_files_new[domain])
+    ad_files_domain = copy.deepcopy(ad_files_new[domain])
+
     art_files_new.pop(domain)
     ad_files_new.pop(domain)
 
-    return art_files_new, ad_files_new
+    return art_files_new, ad_files_new, art_files_domain, ad_files_domain
 
 
 def get_domain_files(domain):
@@ -243,14 +246,13 @@ def complete_ood():
     # generate an 'out' file for each domain by cutting from the training pool
     for domain in ad_files.keys():
         print('processing cut domain ' + domain)
-        art_files_cut, ad_files_cut = remove_a_domain_temp(art_files, ad_files, domain)
+        art_files_cut, ad_files_cut, art_files_domain, ad_files_domain = remove_a_domain_temp(art_files, ad_files, domain)
         print('writing -out')
         write_to_json({'art_files': art_files_cut, 'ad_files': ad_files_cut},
                       os.path.join(args['folder'], f'{domain}-out_files.json'))
         write_dataset(art_files_cut, ad_files_cut, f'{domain}-out')
 
         print('writing -only')
-        art_files_domain, ad_files_domain = get_domain_files(domain)
         write_to_json({'art_files': art_files_domain, 'ad_files': ad_files_domain},
                       os.path.join(args['folder'], f'{domain}-only_files.json'))
         write_dataset(art_files_domain, ad_files_domain, f'{domain}-only')
