@@ -224,7 +224,7 @@ def get_domain_files(domain):
 
 def complete_ood():
     art_counts_original, ad_counts_original = load_counts()
-    art_counts_original, ad_counts_original = filter_domains(art_counts_original, ad_counts_original)
+    art_counts_original, ad_counts_original = filter_domains_complete(art_counts_original, ad_counts_original)
     art_counts_matched = match_arts_to_ads(art_counts_original, ad_counts_original)
 
     art_files = select_files('art_pages', art_counts_matched)
