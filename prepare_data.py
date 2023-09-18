@@ -180,6 +180,72 @@ def main():
         create_dataset(art_counts, ad_counts, f'{dataset_name}_full_{args["leave_out_domain"]}-only', subsample_ads_=False)
 
 
+def filter_domains_complete(art_counts, ad_counts):
+    print('Filtering domains')
+    art_domains = set([d for d, c in art_counts.items()])
+    ad_domains = set([d for d, c in ad_counts.items()])
+
+    valid_domains = list(art_domains.intersection(ad_domains))
+    print(f'Valid domains: {valid_domains} ({len(valid_domains)})')
+
+    for domain in valid_domains:
+        if domain in args['invalid_domains']:
+            valid_domains.remove(domain)
+
+    art_counts_new = {d: art_counts[d] for d in valid_domains}
+    ad_counts_new = {d: ad_counts[d] for d in valid_domains}
+
+    return art_counts_new, ad_counts_new
+
+
+def remove_a_domain_temp(art_files, ad_files, domain):
+    art_files_new = copy.deepcopy(art_files)
+    ad_files_new = copy.deepcopy(ad_files)
+
+    art_files_new.pop(domain)
+    ad_files_new.pop(domain)
+
+    return art_files_new, ad_files_new
+
+
+def get_domain_files(domain):
+    art_dir_path = os.path.join('art_pages', domain, 'p_only_sanitized')
+    ad_dir_path = os.path.join('ad_pages', domain, 'p_only_sanitized')
+
+    art_files = os.listdir(art_dir_path)
+    ad_files = os.listdir(ad_dir_path)
+
+    art_files = [str(os.path.join('art_pages', domain, 'p_only_sanitized', file)) for file in art_files]
+    ad_files = [str(os.path.join('ad_pages', domain, 'p_only_sanitized', file)) for file in ad_files]
+
+    return {domain: art_files}, {domain: ad_files}
+
+
+def complete_ood():
+    art_counts_original, ad_counts_original = load_counts()
+    art_counts_original, ad_counts_original = filter_domains(art_counts_original, ad_counts_original)
+    art_counts_matched = match_arts_to_ads(art_counts_original, ad_counts_original)
+
+    art_files = select_files('art_pages', art_counts_matched)
+    ad_files = select_files('ad_pages', ad_counts_original)
+
+    # dump the files as a training set
+    write_to_json({'art_files': art_files, 'ad_files': ad_files}, os.path.join(args['folder'], f'training_full_files.json'))
+    write_dataset(art_files, ad_files, os.path.join(args['folder'], f'training_full.json'))
+
+    # generate an 'out' file for each domain by cutting from the training pool
+    for domain in ad_files.keys():
+        art_files_cut, ad_files_cut = remove_a_domain_temp(art_files, ad_files)
+        write_to_json({'art_files': art_files_cut, 'ad_files': ad_files_cut},
+                      os.path.join(args['folder'], f'{domain}-out_files.json'))
+        write_dataset(art_files_cut, ad_files_cut, os.path.join(args['folder'], f'{domain}-out.json'))
+
+        art_files_domain, ad_files_domain = get_domain_files(domain)
+        write_to_json({'art_files': art_files_domain, 'ad_files': ad_files_domain},
+                      os.path.join(args['folder'], f'{domain}-only_files.json'))
+        write_dataset(art_files_domain, ad_files_domain, os.path.join(args['folder'], f'{domain}-only.json'))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--arts_per_ad', default=2, type=int)
@@ -198,4 +264,7 @@ if __name__ == '__main__':
 
     os.makedirs(args['folder'], exist_ok=True)
 
-    main()
+    if args['leave_out_domain'] != 'all':
+        main()
+    else:
+        complete_ood()
