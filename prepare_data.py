@@ -186,12 +186,12 @@ def filter_domains_complete(art_counts, ad_counts):
     ad_domains = set([d for d, c in ad_counts.items()])
 
     valid_domains = list(art_domains.intersection(ad_domains))
-    print(f'Valid domains: {valid_domains} ({len(valid_domains)})')
 
     for domain in valid_domains:
         if domain in args['invalid_domains']:
             valid_domains.remove(domain)
 
+    print(f'Valid domains: {valid_domains} ({len(valid_domains)})')
     art_counts_new = {d: art_counts[d] for d in valid_domains}
     ad_counts_new = {d: ad_counts[d] for d in valid_domains}
 
@@ -231,7 +231,7 @@ def complete_ood():
 
     # dump the files as a training set
     write_to_json({'art_files': art_files, 'ad_files': ad_files}, os.path.join(args['folder'], f'training_full_files.json'))
-    write_dataset(art_files, ad_files, f'training_full.json')
+    write_dataset(art_files, ad_files, f'training_full')
 
     # generate an 'out' file for each domain by cutting from the training pool
     for domain in ad_files.keys():
@@ -240,13 +240,13 @@ def complete_ood():
         print('writing -out')
         write_to_json({'art_files': art_files_cut, 'ad_files': ad_files_cut},
                       os.path.join(args['folder'], f'{domain}-out_files.json'))
-        write_dataset(art_files_cut, ad_files_cut, f'{domain}-out.json')
+        write_dataset(art_files_cut, ad_files_cut, f'{domain}-out')
 
         print('writing -only')
         art_files_domain, ad_files_domain = get_domain_files(domain)
         write_to_json({'art_files': art_files_domain, 'ad_files': ad_files_domain},
                       os.path.join(args['folder'], f'{domain}-only_files.json'))
-        write_dataset(art_files_domain, ad_files_domain, f'{domain}-only.json')
+        write_dataset(art_files_domain, ad_files_domain, f'{domain}-only')
 
 
 if __name__ == '__main__':
