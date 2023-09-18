@@ -186,6 +186,7 @@ def filter_domains_complete(art_counts, ad_counts):
     ad_domains = set([d for d, c in ad_counts.items()])
 
     valid_domains = list(art_domains.intersection(ad_domains))
+    print(f'Domains pre-filtering: {valid_domains}')
 
     for domain in valid_domains:
         if domain in args['invalid_domains']:
@@ -264,6 +265,7 @@ if __name__ == '__main__':
         random.seed(time.process_time_ns())
 
     args['invalid_domains'] = args['invalid_domains'].split(',')
+    print(f'Invalid domains: {args["invalid_domains"]}')
 
     os.makedirs(args['folder'], exist_ok=True)
 
