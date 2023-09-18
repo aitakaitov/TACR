@@ -263,7 +263,7 @@ if __name__ == '__main__':
     if args['random_seed']:
         random.seed(time.process_time_ns())
 
-    args['invalid_domains'] = args['invalid_domains'].split()
+    args['invalid_domains'] = args['invalid_domains'].split(',')
 
     os.makedirs(args['folder'], exist_ok=True)
 
