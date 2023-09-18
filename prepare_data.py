@@ -203,8 +203,8 @@ def remove_a_domain_temp(art_files, ad_files, domain):
     art_files_new = copy.deepcopy(art_files)
     ad_files_new = copy.deepcopy(ad_files)
 
-    art_files_domain = copy.deepcopy(art_files_new[domain])
-    ad_files_domain = copy.deepcopy(ad_files_new[domain])
+    art_files_domain = {domain: copy.deepcopy(art_files_new[domain])}
+    ad_files_domain = {domain: copy.deepcopy(ad_files_new[domain])}
 
     art_files_new.pop(domain)
     ad_files_new.pop(domain)
