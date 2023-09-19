@@ -106,8 +106,14 @@ if __name__ == '__main__':
     parser.add_argument('--save_name', required=True, type=str)
     parser.add_argument('--tags', required=False, default=None, type=str)
     parser.add_argument('--domain', required=False, default=None, type=str)
+    parser.add_argument('--seed', default=-1, required=False, type=int)
 
     args = vars(parser.parse_args())
+
+    if args['seed'] == -1:
+        torch.seed()
+    else:
+        torch.manual_seed(args['seed'])
 
     ood_test = args['ood_test_json_path'] is not None
 
