@@ -12,3 +12,12 @@ art_pages
 persistence_temp
 wandb
 *.json
+annotated_dataset/html
+annotated_dataset/datasets
+annotated_dataset/*.json
+annotated_dataset/*.jsonl
+czert-complete-trim15-epochs1
+output.csv
+*.7z
+__pycache__
+wandb_stats.csv
