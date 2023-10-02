@@ -1,0 +1,508 @@
+﻿prediction;label;gold;;file
+0;1;0;;bad/forbes.cz/forbes.cz/cesko-slovensky-startup-se-behem-pandemie-propadl-na-nulu-ted-ziskal-ve-fuzi-pres-sto-milionu/index.html
+0;1;0;;parlamentnilisty.cz/www.parlamentnilisty.cz/arena/monitor/Dejte-duchodcum-rovnou-nohy-do-sadry-Profesora-Pirka-vytocil-navrat-rousek-630872.html
+0;0;0;;bad2/prozeny.cz/www.prozeny.cz/clanek/laska-z-titulni-strany-ci-vztahy-zacaly-jako-afery-53659.html
+0;1;0;;tyden.cz/t.tyden.cz/rubriky/sport/tenis/americanka-pegulaova-je-v-melbourne-prekvapive-ve-ctvrtfinale_550184.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/iphone-12-je-zde-jak-silne-jsou-nove-smartphony-od-apple/index.html
+0;0;0;;bad/hlidacipes.org/hlidacipes.org/pravoslavna-cirkev-jako-mekka-sila-kremlu-vyuziva-ji-ve-sve-propagande/index.html
+0;0;0;;betty/lupa.cz/www.lupa.cz/clanky/co-nam-dala-a-vzala-televizni-krize-jeji-nasledky-pocitujeme-dodnes/index.html
+1;0;0;spatne;parlamentnilisty.cz/www.parlamentnilisty.cz/profily/Ing-Lukas-Cernohorsky-120922/clanek/Tohle-budou-muset-rozhodnout-organy-cinne-v-trestnim-rizeni-101381.html
+0;0;0;;betty/vitalia.cz/www.vitalia.cz/clanky/dejiny-silenstvi-v-lepsim-pripade-vas-vyzenou-z-mesta-v-tom-horsim-upali/index4039.html
+0;0;0;;bad/forbes.cz/forbes.cz/o-vanocnich-svatcich-za-exotikou-pozor-na-vysoke-ceny-letenek/index.html
+1;0;0;spatne;betty/root.cz/www.root.cz/clanky/novy-mikrokod-pro-ryzeny-5000-ffmpeg-uz-bez-xvmc/index.html
+0;0;0;;ceskatelevize.cz/edu.ceskatelevize.cz/video/6869-gerundium-rad-chodim-ven-a1-a2.html
+0;0;0;;iprima.cz/zeny.iprima.cz/tema/ondrej-brzobohaty.html
+0;0;0;;iprima.cz/cnn.iprima.cz/stanou-se-elektromobily-za-par-let-elektroodpadem-ty-starsi-nejspise-ano-192993.html
+0;0;0;;blisty.cz/www.blisty.cz/art/110473-ruska-agrese-na-ukrajine-rusko-odvolava-dalsiho-generalplukovnika-2.html
+1;0;0;spatne;parlamentnilisty.cz/www.parlamentnilisty.cz/politika/obce-volicum/Praha-8-Den-zdravi-a-socialnich-sluzeb-716545.html
+0;0;0;;blisty.cz/legacy.blisty.cz/art/21121.html
+1;1;0;pochopitelne, spatne;betty/drevostavitel.cz/www.drevostavitel.cz/clanek/mimoradna-stavba-labyrintu-z-recyklovaneho-dreva-a-kamene-pripomina-skalni-kanon.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-05-2007/kratkodobe-testy-1-20/index.html
+0;0;0;;bad2/prozeny.cz/www.prozeny.cz/clanek/mezinarodni-den-prostitutek-kdo-si-je-zahral-ve-filmech-64453.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-07-2013/kam-smeruji-prohlizece/index.html
+0;0;0;;parlamentnilisty.cz/www.parlamentnilisty.cz/politika/obce-volicum/Uherske-Hradiste-Oprava-budovy-Knihovny-B-Benese-Buchlovana-je-hotova-720334.html
+0;0;0;;parlamentnilisty.cz/www.parlamentnilisty.cz/arena/monitor/Tak-nic-Cyril-Svoboda-to-odpiskal-Nesehnal-podpisy-Babisovina-Ne-717239.html
+0;0;0;;betty/podnikatel.cz/www.podnikatel.cz/clanky/velky-prehled-zmen-ktere-pro-podnikatele-prinasi-od-roku-2023-danovy-balicek/index.html
+0;1;0;;betty/drevostavitel.cz/www.drevostavitel.cz/clanek/rozhledny-na-vysocine.html
+0;0;0;;forum24.cz/www.forum24.cz/zarko-jovanovic-z-tv-raptor-podporuje-ruskou-okupacni-armadu-opravdu-muze-rozestvavat-cechy/index.html
+0;0;0;;bad2/aktualne.cz/zpravy.aktualne.cz/finance/co-kdyz-je-koronavirus-nemoc-z-povolani-zamestnavatelum-pomu/r_7c0b07947a5811eab115ac1f6b220ee8/index.html
+0;0;0;;bad2/irozhlas.cz/www.irozhlas.cz/node/5984693.html
+0;0;0;;ceskatelevize.cz/edu.ceskatelevize.cz/video/12703-valka-na-ukrajine-zahajeni-ruske-invaze-na-ukrajinu3bdf.html
+0;0;0;;betty/root.cz/blog.root.cz/cybersecurity-help/top-10-bezpecnostnich-incidentu-v-srpnu-2016/index.html
+1;1;1;;tyden.cz/www.tyden.cz/rubriky/byznys/philip-morris-uvadi-na-trh-v-ceske-republice-novou-generaci-zarizeni-na-nahrivani-tabaku-iqos-iluma_5596213507.html
+1;1;1;;betty/drevostavitel.cz/www.drevostavitel.cz/clanek/zvyseni-spotreby-drivi.html
+0;0;0;;reflex.cz/www.reflex.cz/clanek/komentare/113172/finsko-a-svedsko-smeruji-do-nato-a-dalsi-prohry-putinovy-specialni-vojenske-operace.html
+0;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/recenze-na-knihu-zuzana-strnadova-co-by-mel-vedet-prijemce-dotace-1vyd-praha-grada-publishing-as-2019-isbn-978-80-247-3076-9-111870b83a.html
+1;0;0;spatne;blisty.cz/www.blisty.cz/art/99331-o-podstate-jevu-jmenem-koronavirus.html
+0;0;0;;betty/podnikatel.cz/www.podnikatel.cz/zakony/zakon-c-121-2000-sb-autorsky-zakon/f6026434/index.html
+1;0;0;pochopitelne;bad2/garaz.cz/www.garaz.cz/clanek/zajimavosti-tuning-prestavby-obytnak-hot-rod-nebo-pick-up-bmw-vyberte-si-sveho-favorita-z-automobilove-vystavy-sema-2022-21009172.html
+1;0;0;pochopitelne;betty/vitalia.cz/www.vitalia.cz/clanky/domaci-pedikura-pri-nemoci/index.html
+0;0;0;;bad2/prozeny.cz/www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-mumie-po-20-letech-rachel-weisz-si-vzala-bonda-brendan-fraser-k-nepoznani-jak-se-herci-zmenili-84573.html
+1;0;0;spatne;rozhlas.cz/temata.rozhlas.cz/vladislav-vancura-5021025.html
+0;0;0;;iprima.cz/cnn.iprima.cz/ms-v-hokeji-2025-prehled-107250.html
+0;0;0;;forum24.cz/www.forum24.cz/vlastimil-vodruska-bojuje-s-poklonkujicimi-medii-patolizaly-a-ideology/index.html
+0;1;1;zadost o prospevek do OS projektu;betty/root.cz/www.root.cz/clanky/digitalni-svet-tradice-a-svoboda/index.html
+0;0;0;;iprima.cz/zeny.iprima.cz/astroclanky/zeny-podle-horoskopu-jake-jsou-zeny-narozene-ve-znameni-raka.html
+0;1;0;klasicke oznameni;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/microsoft-predstavil-nejvykonnejsi-herni-konzoli-project-scorpio-je-xbox-one-x/index.html
+0;1;0;klasicke oznameni;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/levnejsi-65w-procesory-intel-raptor-lake-a-b760-desky-vyjdou-hned-v-prvnich-dnech-noveho-roku/index.html
+0;0;0;;bad/forbes.cz/forbes.cz/mullholand-drive-se-vraci-do-kin-proc-se-znovu-ztratit-v-deliricke-verzi-los-angeles/index.html
+0;0;0;;bad2/irozhlas.cz/www.irozhlas.cz/zpravy-domov/overovna-daniela-kovarova-senat-manzelstvi-sex-deti-obcansky-zakonik_2210290500_ula.html
+0;0;0;;parlamentnilisty.cz/www.parlamentnilisty.cz/arena/monitor/Nove-jmeno-na-Hrad-Tak-jako-Pavel-mel-cosi-spolecneho-s-armadou-716714.html
+0;1;0;review;bad2/garaz.cz/www.garaz.cz/clanek/ferrari-308-gtbi-rudy-or-z-maranella-2429.html
+0;0;0;;betty/vlasta.cz/www.vlasta.cz/clanek/zeny-rozchod-muzi-nadobi-ponozky-terapie-manzelstvi-rozvod-mozek-stesti-20260525.html
+0;1;0;zaznam z rejstriku;betty/podnikatel.cz/www.podnikatel.cz/rejstrik/b-f-spol-s-r-o-49905201/index.html
+1;1;1;;tyden.cz/t.tyden.cz/rubriky/relax/5-1-tip-jak-v-detskem-pokoji-vytvorit-idealni-podminky-pro-uceni_559690.html
+1;0;0;spatne;betty/drevostavitel.cz/www.drevostavitel.cz/clanek/prizemni-dreveny-domek-ve-tvaru-otevreneho-l.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/deti-maji-prava-proto-ze-jsou-lidske-bytosti-113874.html/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-09-2013/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/jak-vydelat-na-zastropovani-cen-energii-reseni-ma-4-pismena-spot48f7.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2011/chip-02-2011/deti-web/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-12-2013/qubity-nevypocitatelna-logika-paralelnich-vypoctu/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dvoujadrovy-alder-lake-s-ht-si-dobre-promyslete-vykon-intel-pentium-g7400-ma-k-core-i3-daleko/10/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/5-informaci-ktere-byste-meli-vedet-o-informacnim-systemu-evolio-111147.html
+0;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-08-2006/chip-top-10-08-2006/index.html
+0;1;1;stranka neni, cekam popis obsahu DVD;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/chip-dvdx/chip-dvd-freware-2-2018/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sapphire-rx-6650-xt-nitro-jasne-porazi-geforce-rtx-3060-za-stejne-penize-vyssi-vykon-pri-lepsi-efektivite/index.html
+0;1;0;review;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/je-tu-nova-usporna-grafika-radeon-rx-6400-ma-tdp-jen-53-w-jednoslotove-i-low-profile-verze/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/1-kolinske-sanatorium-doprejte-si-peci-jakou-si-zaslouzite48f7.html
+1;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2011/chip-10-11/kognitivni/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/offline-kopie-wikipedie-a-dalsich-oblibenych-aplikaci-internet-do-kapsy-spomoci-kiwix-reader/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/05-2015/flip-powerpoint-3-8/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/intel-raptor-lake-core-i9-13900k-bude-mit-boost-minimalne-55-ghz-o-33-vyssi-mt-vykon/index.html
+1;0;0;spatne;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/microsoft-xbox-series-x-xbox-series-s-cena-datum-specifikace/feed/index.html
+1;1;0;spatne;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/jaka-je-poruchovost-ssd-versus-hdd-pevne-disky-statistika/feed/index.html
+0;1;0;neni to reklama v reklamnim slova smyslu;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/spickove-programy-pro-zpracovani-fotek-bezplatne-alternativy-pro-oblibeny-nastroj-picasa/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-potvrdila-parametry-tri-gpu-ada-ad102-ad103-a-ad104-maji-rezervu-na-silnejsi-karty/index.html
+0;1;0;review bezplatnych OS nastroju;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/kdyz-se-windows-nechteji-spustit-bezplatny-nastroj-je-muze-zachranit/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hobby/poradna-jak-rekonstruovat-starou-eternitovou-strechu48f7.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/zacinaji-se-objevovat-prvni-pcie-5-0-ssd-apacer-a-zadak-odhalily-moduly-m-2-pro-ryzeny-7000/index.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/o2-nabizi-bonding-xdsl/index.html
+1;0;0;spatne;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/zasadni-zmeny-v-zakoniku-prace-od-ledna-sdilene-pracovni-misto-a-zmena-v-dovolene-112470b83a.html
+1;0;0;spatne;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/zasadni-zmeny-v-zakoniku-prace-od-ledna-sdilene-pracovni-misto-a-zmena-v-dovolene-112470.html/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-05-2007/multimedia-v-cele-siti/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/04-2022/obsah-chip-dvd-04-2022/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/ransomwarovy-utok-zaplatit-nebo-nezaplatit/index.html
+0;0;0;stranka neni;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/trzni-podily-x86-0procesory-pc-q1-2022-amd-ma-rekordni-procenta-10-trhu-uz-ale-ted-sebral-arm/index.html
+0;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-08-2012/co-ziskate/index.html
+1;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/chip-07-2010/itbusiness-07-10/index.html
+0;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/derava-ochrana-visty/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sony-prodalo-nejmene-telefonu-v-historii/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/ostatni/indexd7e8.html
+1;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-09-2009/itbusiness-09-09/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-07-2006/knihy-1-5/index.html
+0;1;1;stranka neni, hadam ze to jenom diskutuje adobeRGB;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/adobe-rgb-barvy/index.html
+1;1;1;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-03-2009/chytre-fotonastroje/index.html
+0;1;0;review;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nejvyhodnejsi-zakladni-deska-z690-gigabyte-gaming-x-ddr4-ma-prvky-highendu-za-cenu-nizsi-tridy/3/index.html
+0;1;1;nevim, hadam ze je to review;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-12-2006/grafika-na-maximum/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/doprejte-si-digitalni-detox-109654.html
+0;0;0;stranka neni;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-09-2009/mailbox-09-09/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/konsepti-inside-of-life-uz-25-let-111750.html/index.html
+1;1;0;pochybuju ze to nekdo platil;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/zakladatel-pebblu-eric-migicovsky-spousti-kampan-za-navrat-skutecne-kompaktnich-smartphonu/feed/index.html
+0;1;0;recenze;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/asus-rog-maximus-z690-hero-draha-deska-pro-narocne-a-sporive-uzivatele-recenze/35/index.html
+0;1;0;recenze;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/trochu-exotiky-v-testech-biostar-b660gta-je-v-mnoha-ohledech-jina-nez-desky-tradicnejsich-vyrobcu/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/konsepti-inside-of-life-uz-25-let-111292.html
+0;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-02-2013/kapesni-konzole/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/plzen/necekejte-na-problem48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/v-hokeji-i-v-byznyse-musite-mit-tah-na-branku-rika-milan-kral.html
+0;1;0;zprava;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/amd-ryzen-5-3500x-levne-sestijadro-bez-smt-v-ceskych-obchodech/index.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nahravani-obrazovky-bandicam.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/usti/ustecky-kraj-predstavuje-novy-smer-komunikace-meni-logo-i-svou-image1fd3.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/za-15-let-snizil-cez-energetickou-narocnost-vyroby-elektriny-o-10-dalsi-velke-uspory-pripravuje-115332b83a.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/kam-cestujeme-jako-pred-pandemii-a-kdy-omezeni-zrusi-i-usa.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/brno/bruno-family-park-zabava-nejen-v-horkem-lete48f7.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/kam-cestujeme-jako-pred-pandemii-a-kdy-omezeni-zrusi-i-usac564.html
+1;1;0;zprava z computexu;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/intel-computex-2021-prvni-5g-modem-5ghz-tiger-lake-u-refresh-demo-mobilni-alder-lake-nuc-11-extreme/feed/index.html
+0;1;0;ani tam nejsou linky;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/pocitacove-hry-s-nejlepsim-pribehem-tyhle-tri-urcite-musite-vyzkouset/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/lukas-zhubl-50-kilo-pomohlo-mu-ale-neco-mnohem-ucinnejsiho-nez-diety48f7.html
+0;1;0;recenze;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/gigabyte-z790-aorus-elite-ax-deska-ktera-skvele-padne-do-herniho-pocitace-nastavenim-i-cenove/3/index.html
+0;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-03-2009/milion-pocitacu/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/vyvracime-myty-o-rekuperaci-5-nepravd-ktere-koluji-mezi-lidmi48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/zutulnete-si-podzimni-domov-hrejivym-textilem48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/cestovani/rozmanitost-a-nadilka-aktivit-objev-neprobadanou-saudskou-arabii.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/jihlava/festival-krumlov-zacina-jiz-tento-vikend48f7.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/vypadek-internetu-firmy-prichazeji-o-miliony-i-dobrou-povest/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/jihlava/festival-krumlov-zacina-jiz-tento-vikend.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/podzimni-veletrh-antique-premosti-minulost-s-pritomnosti.html
+0;1;1;je to sneak peek jejich casopisu;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-10-2013/ovladejte-mediacentrum-xbmc-smartphonem/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ctu-konec-aukce-frekvence-vysledky-2020/feed/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/chip-04-2010/hdtv-satelit/index.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/hp-predstavuje-nove-modely-kancelarskych-tiskaren-laserjet/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dvoujadrovy-alder-lake-s-ht-si-dobre-promyslete-vykon-intel-pentium-g7400-ma-k-core-i3-daleko/19/index.html
+0;1;0;review;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-procesoru-amd-ryzen-7-5700x-proti-5800x-vykon-nizsi-pouze-o-par-procent-spotreba-polovicni/39/index.html
+1;1;1;neni clanek;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/06-2015/farstone-one-1-3/index.html
+0;0;0;?;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-10-2007/csi-internet-posledni-cast/index.html
+1;1;1;?;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2017/chip-5-2017/smartphone-jako-klic/index.html
+1;1;1;?;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/08-2022/obsah-chip-dvd-08-2022/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ekonomika/levny-tisk-i-v-kancelari-zkuste-hp-instant-ink-pro-male-firmy48f7.html
+0;0;0;;vojta/jablickar.cz/rubrika/komercni_sdeleni/jablickar.cz/ochrana-osobnich-udaju/index.html
+0;0;0;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/domaci/politicka-reklama-fb/r_b81c82ae709511eda3c0ac1f6b220ee8/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/novinka-ssd-crucial-p3-plus-gen4-nvme48f7.html
+0;1;1;neni clanek;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-procesoru-amd-ryzen-7-5700x-proti-5800x-vykon-nizsi-pouze-o-par-procent-spotreba-polovicni/9/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/microsoft-priznal-ze-nejnovejsi-verze-windows-11-snizuje-vykon-pocitace/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/01-2021/obsah-chip-dvd-01-2021/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-04-2006/businessnews-1-12/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/06-2015/microsoft-onenote-2013/index.html
+0;1;1;neni clanek;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-05-2007/directx-10-realisticke-3d-sceny-ve-windows-vista/index.html
+1;0;0;spatne;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/aktualni-trzni-podily-vyrobcu-gpu-nvidia-je-s-pascalem-zase-v-ofenzive/feed/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/slyseli-jste-uz-o-trvale-udrzitelne-vyrobe-nabytku-111525.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/jihlava/tvorime-vodikovou-budoucnost.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/prima-snizila-kvalitu-obrazu-v-dvb-t2/feed/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/jak-si-poskladat-kuchyn-snu1fd3.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/xman/pokemon-legenda-9-generaci.html
+1;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-08-2008/ekologicka-pc/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/siemens-energeticka-efektivita-je-dnes-podminka-preziti48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ekonomika/caste-vichrice-drahe-pozary-na-jake-skody-si-pojistit-nemovitost1fd3.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/matka-a-otec-jsou-jako-dve-nohy-ktere-potrebuje-atlet-k-behu-jen-o-jedne-dite-daleko-v-zivote-nedobehne-115297.html/index.html
+0;0;0;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.idnes.cz/zpravy/zahranicni/kyjev-ukrajina-utoky-evakuace-klicko.html
+1;1;0;ne striktne reklama;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/anotacni-recenze-koudelka-z-prucha-p-zwyrtek-hamplova-j-zakon-o-obcich-obecni-zrizeni-komentar-praha-leges-2019-480s-110672b83a.html
+0;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-12-2007/chip-top-ten-12-07/index.html
+1;0;0;spatne;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/arm-pocitace-apple-nepodporuji-dual-boot-s-jinym-os-windows-problem/feed/index.html
+0;1;0;zprava;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/lepsi-nez-microsoft-store-zajimava-profi-alternativa-stahovaci-platformy-je-hotova/index.html
+1;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/trendy/uvolnite-stres-monitorem-dechu/index.html
+1;1;1;;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/jak-ziskat-uspory-pro-deti-vetsina-rodicu-voli-stavebko/index.html
+1;0;0;spatne;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/sdilene-pracovni-misto-je-zcela-novym-institutem-ceskeho-prava-ktery-prinasi-novela-zakoniku-prace-ucinna-od-1-1-2021-112304b83a.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/elektronicka-evidence-trzeb/neopokladna-aneb-jak-jednoduse-vyresit-eet/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-procesoru-amd-ryzen-7-5700x-proti-5800x-vykon-nizsi-pouze-o-par-procent-spotreba-polovicni/24/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dvoujadrovy-alder-lake-s-ht-si-dobre-promyslete-vykon-intel-pentium-g7400-ma-k-core-i3-daleko/21/index.html
+0;1;1;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-02-12/obsah-02-12/index.html
+0;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/ms-2022-stret-outsideru-s-velmocemi-vyrovnane-duely-a-co-domaci-katarane48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/liberec/do-harrachova-za-sportem-i-zabavou.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/vzdelavaci_akce/indexb63e.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/tipy-triky/chcete-mit-hezci-fotky-z-mobilu-nekolik-tipu-vam-pomuze-k-podstatne-lepsim-vysledkum/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ryzen-7-5800x3d-vyjde-20-dubna-bude-i-sest-levnych-procesoru-se-zenem-3-a-2-zname-ceny/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/nyni-lze-hardware-bezpecne-odebrat-nejde-pri-odpojovani-usb-disku-o-zbytecny-krok/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/pozoruhodna-nabidka-premier-mestskych-divadel-prazskych-a-jedno-velke-louceni48f7.html
+1;0;0;neni stranka;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-06-2008/casova-osa-chipu-06-08/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/zakladatel-pebblu-eric-migicovsky-spousti-kampan-za-navrat-skutecne-kompaktnich-smartphonu/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/chip-06-2010/drm-zabava/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hobby/stante-se-nezavisli-na-dodavatelich-vody-resenim-je-vrtana-studna48f7.html
+1;1;0;zprava;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/samsung-3nm-vyrobni-proces-3gae-gaafet-mbcfet/feed/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ryzen-5-5600-otestovan-nastupce-bestselleru-amd-je-v-mnohem-vyhodnejsi-nez-core-i5-12400f/23/index.html
+1;0;1;reklama na hypotecni kalkulacku;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/prvni-banky-zlevnuji-hypoteky-plosny-pokles-sazeb-je-ale-v-nedohlednu/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/podnikani-neprinasi-jen-velke-starosti-ale-take-obrovskou-svobodu.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/temata/34-externich-pevnych-disku/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/jak-vyhodne-nakoupit-a-na-co-dat-pozor-black-friday-se-muze-prodrazit48f7.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-09-2012/it-auta/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/pardubice/techplastu-se-vyplatila-proziravost-nekolikrat.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/05-2015/kaspersky-total-security-2015/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/internet-archiv/elegantni-stahovani-z-internetu/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-02-2008/mailbox-02-08/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-02-2013/top10-02-13/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-06-2013/obsah-06-13/index.html
+0;0;0;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/dane/l_i_keyword_350/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/crm-system-skvela-volba-pro-male-stredni-firmy-i-osvc.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/obsah/obsah-05-13/index.html
+1;0;0;chyba;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sankce-za-napadeni-ukrajiny-se-vztahuji-i-na-cipy-rusko-odriznute-od-zapadnich-technologii/feed/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/sport/firma-co-ma-styl-ten-zivotni-2.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ona/neni-saten-jako-saten-vite-jak-spravne-vybrat-satenove-povleceni.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/plzen/zaci-domazlickeho-uciliste-soutezi-v-programovani-i-v-prostrenu48f7.html
+1;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/pres-75-ceskych-firem-se-venuje-v-ramci-sveho-podnikani-nefinancnim-esg-aktivitam-odhalil-pruzkum-115347.html/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-02-2007/chip-software/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/lze-ve-spolecenske-smlouve-urcit-ze-vice-jednatelu-kteri-netvori-kolektivni-organ-musi-sro-zastupovat-spolecne-111277.html
+0;0;0;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.idnes.cz/praha/zpravy/jindrisska-vez-prodej-arcibiskupstvi-zajemci-cena.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-09-08/iphone-3g/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/babi-leto-na-budejovicku.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-02-2008/chip-top-ten-02-08/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/covert-znacka-neviditelneho-pradla-ktera-si-razi-cestu-napric-spolecnosti48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hradec/prace-v-ronalu-je-nejen-pro-fandy-rychlych-kol1fd3.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/bezpecnost/smejdi-uz-radi-nejen-na-bazosi-poslu-k-vam-domu-kuryra-aby-predal-penize-slibuji/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/androidove-telefony-znovu-v-ohrozeni-utocnici-mohou-jednoduse-ovladat-vas-mobil-na-dalku/index.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/en-ca.wordpress.org/feed/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/dobra-vec-hned-dvojnasob-113611.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-05-2008/kolik-nas-stoji-autorska-prava/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-09-2006/knihy-1-6/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ona/reknete-si-o-svuj-zapomenuty-poklad48f7.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/imagination-gpu-powervr-prodany-cinanum-procesory-mips-nechteji-kvuli-trumpovi/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/servis/businessnews-12-07/index.html
+1;1;1;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/retail-summit-2020-jak-se-neztratit-v-dzungli-noveho-maloobc/r_90b2ed9011c811ea88f50cc47ab5f122/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-12-2008/krize-pocitace/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-10-2012/fd-soi/index.html
+0;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/ostatni/indexff17.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-sapphire-rx-6600-xt-pulse-kladivo-na-geforce-rtx-3060-ale-jen-ve-full-hd/11/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-10-2008/inkoustove-novinky/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-vylepsene-max-q-dynamic-boost-advanced-optimus-geforce-gtx-1650-ti-rtx-2070-super-rtx-2080-super-pro-notebooky/index.html
+0;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/dedeni-potreba-zmeny-zakona-112980.html/index.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/web-soukromi-sledovani-apple-mozilla-tema/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/07-2015/icecream-office-pack/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-09-2007/expresni-test-bezplatne-antiviry/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/future-of-export-summit-sestrih-i-czechtrade-petrof-a-skandinavie48f7.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/arm-cortex-a78c-procesory-pro-pc-notebooky-bez-big-little/feed/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-01-2008/kompletni-nabidka-ati/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/mobil/s-huawei-matebook-x-pro-se-kreativite-meze-nekladou48f7.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/uloz-to-nabizi-ockovanym-uzivatelum-kredit-na-stahovani/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/xxix-konference-karlovarske-pravnicke-dny-114462b83a.html
+1;0;1;neni striktne reklama, ale je tam masivni link;vojta/investicniweb.cz/autor/komercni-sdeleni/www.investicniweb.cz/ceske-aukce-umeni-top-10-prvniho-pololeti-roku-2022-podle-narustu-z-vyvolavacich-cen.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nejvyhodnejsi-smartphony-do-10000-kc.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-11-2009/deset-faktu-procesory/index.html
+1;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/tiskove-zpravy/indexb63e.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/vrchol-aukcni-sezony-v-manesu-110066.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/teamviewer-navod.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/wellness-spa-hotel-villa-regenhart-112288.html/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-04-2007/konec-nudy/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hradec/uspechy-zdobi-firmu-mz-liberec-z-rudniku48f7.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/precenovane-opravdu-nejsou-noctua-nf-a12x25-pwm-ma-ze-120-mm-ventilatoru-nejbliz-k-dokonalosti/5/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/adolf-loos-apartment-and-gallery-110664.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-09-2013/skandaly-s-priponou-gate/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/exkluzivne-detailni-rozbor-dlouho-ocekavanych-ventilatoru-bequiet-silent-wings-pro-4-test-recenze/35/index.html
+1;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/10-otazek-pro-jana-kramperu-109849.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nove-procesory-amd-pro-levne-notebooky-6nm-zen-2-s-grafikou-rdna-2-a-legendarnim-jmenem/index.html
+0;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/kriminalita-mladistvych-99870.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-03-2006/chip-top10-1-3/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-04-2008/nastaveni-wi-fi/index.html
+1;0;1;;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/na-co-nezapomenout-pred-koncem-roku/index.html
+0;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ashampoo-music-studio-9.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/je-pro-sro-zavazne-pravni-jednani-ucinene-jednatelem-v-rozporu-se-stanovenym-zpusobem-zastupovani-sro-112874.html/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/objevte-umeni-dokonaleho-upletu-113440.html/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/office-konec-dostupnosti-microsoft-store/index.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sony-zdrazuje-playstation-5-ve-vetsine-sveta-bohuzel-i-u-nas-ceny-xboxu-pry-nestoupnou/feed/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/komercni_sdeleni/indexe810.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/intel-chysta-procesor-raptor-lake-s-34-jadry-a-bez-big-little-nejvetsi-cip-jaky-kdy-vyrobil/feed/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-03-2006/mailbox-1-15/index.html
+0;0;0;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.idnes.cz/zpravy/zahranicni/valka-na-ukrajine-rusko-spinava-bomba-sojgu-lecornu.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/konsepti-inside-of-life-uz-25-let-111224.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/mixano-varene-smesi-vraci-do-jidelnicku-nasich-psu-prirozenost48f7.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-08-2007/navigacni-systemy-budoctnosti/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/vitesco-technologies-nasadila-system-condition-monitoring-od-siemens48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/cestovani/dubaj-je-zimnim-jadranem-cechu-laka-na-levne-letenky-i-dovolene1fd3.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ekonomika/pristupem-k-zivotu-me-pacienti-uci-neco-noveho-kazdy-den-rika-sestra48f7.html
+1;1;1;;vojta/investicniweb.cz/autor/komercni-sdeleni/www.investicniweb.cz/spolecnost-gevorkyan-upisuje-akcie-na-trhu-start-prazske-burzy-investory-laka-unikatnim-know-how.html
+1;1;1;;vojta/https:/prima-receptar.cz/author/komercni-sdeleni/cs.wordpress.org/feed/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-05-2012/feeware-05-12/index.html
+1;0;0;psane komercnim subjektem;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/zaloba-na-neplatnost-usneseni-valne-hromady-110384.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/cestovani/nove-modely-jizdnich-kol-a-elektrokol-leader-fox-s-komponenty-s-ride48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/festival-krumlov-zacina-jiz-tento-vikend.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/olomouc/pivovar-zubr-opet-vyhral-v-soutezi-zlaty-pohar-pivex-pivo-202248f7.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-geforce-gtx-1650-gddr6-specifikace-uniky-foto-pomalejsi-gpu.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/sport/pokud-chcete-vitezit-musite-do-toho-dat-vsechno.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/mnoho-uzivatelu-muze-chybovat-proc-neni-dobre-pouzivat-bezplatne-sluzby-vpn/index.html
+0;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dvoujadrovy-alder-lake-s-ht-si-dobre-promyslete-vykon-intel-pentium-g7400-ma-k-core-i3-daleko/38/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-07-2012/google-disk/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/autorizovana-konverze-manazerske-vystupy-a-dalsi-nastroje-pro-lepsi-efektivitu-evolio-odhaluje-novinky-114432.html/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/editorial/it-nas-bavi/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/tipy-a-triky-earchiv/bezpecny-pristup-do-vasi-domaci-site/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2018/chip-12-2018/co-nam-velka-data-neukazou/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/precenovane-opravdu-nejsou-noctua-nf-a12x25-pwm-ma-ze-120-mm-ventilatoru-nejbliz-k-dokonalosti/3/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/intel-ma-zase-spatne-trzby-v-q4-dal-klesne-bude-propoustet-nektere-produkty-mohou-jit-na-spalek/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-geforce-rtx-3080-12gb-vydani-parametry-vetsi-pamet-lepsi-vykon-ale-vyssi-spotreba/feed/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/interaktivni-vystava-lifmat-2022-cili-na-digitalni-zdravotnictvi/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/siemens-predstavi-reseni-pro-flexibilni-odolnou-a-uspornou-vyrobu48f7.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/01-2022/plne-verze/perfect-pdf-10-premium/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-06-2009/casova-osa-chipu-06-09/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ryzen-5-5600-otestovan-nastupce-bestselleru-amd-je-v-mnohem-vyhodnejsi-nez-core-i5-12400f/20/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/recenze-nejvyhodnejsiho-procesoru-do-nizkorozpoctovych-pocitacu-na-hry-intel-core-i3-10105f/13/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/msi-mag-z690-tomahawk-wifi-pameti-ddr5-a-robustni-napajeni-za-jeste-rozumne-penize-test/4/index.html
+1;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/tiskove-zpravy/index4bec.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/komercni_sdeleni/index3cf6.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/financni-vysledky-intelu-pokles-trzeb-i-zisku-a-nizky-vyhled-na-q2-marze-klesnou-pod-50/feed/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/liberec/obchodni-akademie-v-liberci-vyslala-do-zahranici-studenty-i-vyucujici.html
+0;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/je-libo-podzimni-naloz-4-koktejly-ktere-vas-nakopnou-a-potesi-111899b83a.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/hp-xerox-akvizice-33-miliard-dolaru-spekulace.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/facebook-vr-bryle-oculus-quest2-uvedeni-specifikace-cena-datum/feed/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/vzdelani-je-klicovym-pilirem-kyberneticke-a-informacni-bezpecnosti-109704.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/technologii-proti-suchu-pomoci-muze-5g-i-chytra-sprcha48f7.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/08-2021/obsah-chip-dvd-08-2021/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/10-produktu-a-sluzeb-se-kterymi-apple-pohorel/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hobby/barva-ktera-zvysi-tepelnou-pohodu-a-snizi-naklady-na-vytapeni48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/nejkrasnejsi-vanocni-darek-je-ten-z-kuze48f7.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-03-2008/format-24p/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/recenze-nejvyhodnejsiho-procesoru-do-nizkorozpoctovych-pocitacu-na-hry-intel-core-i3-10105f/10/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ekonomika/e-shopy-bojuji-s-cenami-sluzeb.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/pres-250-advokatnich-kancelari-a-podpora-uzivatelum-do-5-minut-prectete-si-o-uspesich-evolia-v-rozhovoru-s-janem-tkacem-113908b83a.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-08-2008/mailbox-08-08/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/rok-2019-ocima-redaktoru-cnews.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/internet-archiv/fotky-v-rezii-googlu-1/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/komercni_sdeleni/indexa677.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/exkluzivne-detailni-rozbor-dlouho-ocekavanych-ventilatoru-bequiet-silent-wings-pro-4-test-recenze/26/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ekonomika/firmy-se-chrani-proti-kybernetickym-utokum-co-kdyz-se-ale-stane1fd3.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2018/chip-8-2018/tesla-pro-kazdeho/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/sport/firma-co-ma-styl-ten-zivotni.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-02-12/novy-chip-ea/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/asus-rog-maximus-z690-hero-draha-deska-pro-narocne-a-sporive-uzivatele-recenze/33/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/developer-udi-group-cesku-jeste-dame-sanci-chystame-zde-akvizice.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-06-2012/obsah-06-12/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/amd-akvizice-xilinx-30-miliard-dolaru/feed/index.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/tak-to-si-musite-vyzkouset-pusobive-obrazky-si-muze-vytvorit-uplne-kazdy/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dalsi-slevy-grafik-nvidia-ceny-seskrtane-u-geforce-rtx-3090-rtx-3080-ti-rtx-3080-12gb/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/plzen/motorkari-pozor-novy-motorrad-centrum-invelt-otevrel-sve-brany48f7.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/business/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-02-2006/chip-top-10-1-11/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/nez-zacnete-stavet-dum-pouzijte-konfigurator.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/analytici-xtb-trzni-vyhled-pro-rok-2022.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/balik-zabavy/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/znameni-doby-nedostatek-cipu-uz-je-vsude-uz-i-raspberry-pi-4-zdrazeni-nedostupnost/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/trendy-dekorace-pro-podzimni-domov1fd3.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-07-2013/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/jenom-mzda-nestaci-it-odbornici-chteji-viceba93.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/precenovane-opravdu-nejsou-noctua-nf-a12x25-pwm-ma-ze-120-mm-ventilatoru-nejbliz-k-dokonalosti/10/index.html
+1;0;1;;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/platby-na-telefon-nebo-email-bude-brzy-umet-vice-bank/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/diagnoza-neplodnost-reste-ji-nez-bude-pozde.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/deset-let-obedu-pro-deti-z-chudych-rodin-pohled-prijemce-a-pohled-darce-114963.html/index.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/jak-se-presvedcit-ze-na-internetu-surfuji-bezpecne/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-10-2008/casova-osa-notebooky/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/apple-11-pro-max-parametry-cena.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/co-nabidne-zimni-letovy-rad-cesi-vyrazi-do-egypta-i-saudske-arabie48f7.html
+0;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/rozvodu-v-pandemii-bude-pribyvat-vetsinou-probehnou-hladce-nekdy-se-protahnou-i-na-dlouhe-roky-112954.html/index.html
+1;0;1;reklama na financni poradnu;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/air-bank-roste-ale-klesa-ji-zisk/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/usa-ma-nejvykonnejsi-superpocitac-na-svete-prvni-exascale-system-frontier-pohani-cipy-amd/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/spotovy-tarif-energii-se-zakaznikum-vyplaci.html
+1;0;0;sebeprezentace, autor komercni subjekt;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/zahranicni-investori-to-v-cr-nemaji-snadne-od-zacatku-113024.html/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ona/chcete-napadite-osvetleni-inspirujte-se-trendy48f7.html
+0;0;0;;vojta/investicniweb.cz/autor/komercni-sdeleni/www.investicniweb.cz/investice/strategie-analyzy-tipy/co-stoji-v-ceste-uspechu-vasi-investice-moc-myslite.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/geforce-rtx-4080-pry-budou-dve-nvidia-najednou-vyda-verze-s-16gb-i-12gb-pameti/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/wellness-spa-hotel-villa-regenhart-112638b83a.html
+0;0;0;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/domaci/analyza-druhe-kolo-babis/r_c35f4f10719a11ed82b7ac1f6b220ee8/index.html
+1;0;0;chyba;vojta/investicniweb.cz/autor/komercni-sdeleni/www.investicniweb.cz/trh-nemovitosti-ve-volatilni-dobe-hypoteky-sazby-ceny-na-vlnach-zmen.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/nove-bmw-rady-3-touring-109716.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/ochrana-autorskeho-dila-online-za-par-minut-115210.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-10-2007/dokonaly-prohlizec/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/amd-potvrdilo-ze-u-radeonu-rx-7000-take-naroste-spotreba-bude-to-mene-nez-u-nvidie/feed/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/petr-dvorak-ceska-televize-prima-nova-spolecna-streamovaci-sluzba-czechflix-netflix/index.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/temata/nejlepsi-bezplatny-nastroj-na-strih-videa-davinci-resolve-je-dostupny-v-nove-verzi/index.html
+1;1;0;recenze;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/prolimatech-lynx-panther-chladenie-z-dalekeho-vychodu/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/sport/projekt-ceske-unie-sportu-tipsport-sportuj-s-nami-laka-verejnost.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-04-2009/chip-top-04-09/index.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/tipy-a-triky-earchiv/chytrejsi-televize-diky-chromecastu/index.html
+1;0;0;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/hit.gemius.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/usetrete-za-vytapeni-a-elektrinu-s-chytrym-topenim-aeno-premium-eco.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/detska-lecebna-v-jeskyni-i-dostupnejsi-elektrina-ze-slunce-projekty-cez-esco-zabodovaly-v-soutezi-udrzitelnych-projektu-budoucnosti-113996b83a.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/gin-jaro-111148.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/digitalizace-ceskeho-zdravotnictvi-pro-uspech-se-neobejde-bez-efektivniho-vzdelavani-zdravotniku/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2018/chip-8-2018/tvuj-pritel-spion/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-04-2006/knizni-novinky-1-5/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/arm-procesory-qualcomm-architektura-nuvia-v-roce-2023-pro-notebooky.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/cestovani/cestovatelsky-newsfilter-maledivy-slavi-a-novy-zeland-je-bez-omezeni1fd3.html
+1;0;1;je dole reklama na skolu;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/proc-bych-si-pral-aby-byl-kazdy-politicky-vzdelan-aneb-o-nedokonalosti-demokracie-a-skodlivosti-perfekcionismu-112502b83a.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/asus-rog-maximus-z690-hero-draha-deska-pro-narocne-a-sporive-uzivatele-recenze/17/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/ryzen-5-5600-otestovan-nastupce-bestselleru-amd-je-v-mnohem-vyhodnejsi-nez-core-i5-12400f/15/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/google-photos-rusi-neomezene-uloziste-pixel/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/hardware-archiv/akceleratory-fyziky-superrealne-3d-svety/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/brno/detsky-den-v-kamposu48f7.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/05-2015/aomei-backupper-professional-2-5/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/dotykove-obrazovky-vs-fyzicka-tlacitka-v-automobilech-novinari-zmerili-ktery-system-se-ovlada-lepe/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-08-2009/deset-faktu-hacker/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/temata/na-dovolene-i-doma-osm-bezpecnostnich-pravidel-ktera-se-pri-pouzivani-smartphonu-vyplati-dodrzovat/index7b94.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hradec/black-friday-jako-priprava-na-vanoce-i-v-auparku48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/technet/sifrovany-usb-flash-disk-ktery-se-vejde-na-vasi-klicenku48f7.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/wolters-kluwer-vydal-na-trhu-prvni-komentar-k-zakonu-o-nahrade-ujmy-zpusobene-povinnym-ockovanim-112181b83a.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/digital-health/chytra-luzkova-podlozka-anume-care-pomaha-vpeci-o-seniory/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/regionalni-site-dvb-t2-prehled-jak-naladit/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/vysledky-amd-za-q3-2022-prusvih-v-ryzenech-ale-v-serverech-uz-ma-skoro-40-trzeb-intelu/feed/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/hardware-archiv/30-spickovych-digitaku/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-05-2013/prukopnici-it/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/prvni-nvme-ssd-s-pcie-4-0-gigabyte/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/za-10-minut-nabito-cez-rozjizdi-vystavbu-ultrarychlych-dobijecich-stanic-pro-elektromobily-115504.html/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-procesoru-amd-ryzen-7-5700x-proti-5800x-vykon-nizsi-pouze-o-par-procent-spotreba-polovicni/4/index.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/jesenik-referendum-o-5g-nekteri-mistni-se-boji/feed/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2018/chip-3-2018/chip-dvd-freeware-3-2018/index.html
+1;0;0;autorem je pojistovna;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/jak-resit-sousedske-spory-113708.html/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zlin/na-zlinske-barumce-se-predstavi-agrotec-group-nabidne-tymy-i-zabavu48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/benu-centrum-prevence-pecujeme-o-vase-zdravi.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/neplatte-za-vodu-takto-poznate-ze-kupujete-kvalitni-zmrazene-ryby48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/mobil/huawei-mate-50-pro-je-oficialne-k-mani-na-ceskem-trhu.A221006_121745_mob-sdeleni_zuje/tisk.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/jihlava/enviropol-ekologie-a-trvala-udrzitelnost.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/otevreny-prostor-mezi-tremi-kostely48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/leto-v-borsove-zakonci-americkym-rodeem-a-staroceskymi-dozinkami48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/plzen/chcete-si-doplnit-vzdelani-atraktivni-obory-nabizi-bean-stankov48f7.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/tipy-triky/jak-pouzivat-televizor-aby-spotreboval-mene-elektriny/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/chip-10-2010/nej-sw/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2017/chip-3-2017/preprodej-zakazan/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2011/chip-03-2011/ekonomika/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-sapphire-rx-6600-xt-pulse-kladivo-na-geforce-rtx-3060-ale-jen-ve-full-hd/20/index.html
+1;0;0;chapu;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/o2-gigabitove-pripojeni-internet-exklusiv-hd/feed/index.html
+1;1;1;;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/pujcujeme-si-odpovedne/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-12-2007/nakupni-radce/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sony-playstation-5-ceny-datum-startu-prodeje-oznameny/index.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/riziko-tavicich-se-16pinovych-konektoru-nvidia-dodava-dva-druhy-adapteru-jeden-je-nachylnejsi/feed/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-05-2009/hudba-bez-drm-05-09/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/brnanum-se-rozsiruji-moznosti-kam-se-obratit-oh/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/napodobi-rdna-3-zen-4-nova-generace-gpu-od-amd-pry-pojede-na-taktech-skoro-4-ghz/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/msi-vlastni-ssd-spatium-m370-m470-m480-vydani-parametry.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/olomouc/energeticka-budoucnost-ve-vlastnich-rukou.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/wellness-spa-hotel-villa-regenhart-113903b83a.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/liberec/poctu-hejtmana-libereckeho-kraje-obdrzelo-osm-mimoradnych-osobnosti.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/drazsi-ale-nabusena-asus-rog-strix-z790-gaming-wifi-ma-vic-slotu-m-2-nez-portu-sata-recenze/37/index.html
+0;1;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/hry/legendarni-ceska-hra-mafia-slavi-20-let-na-platforme-steam-je-exkluzivne-zdarma/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/komunikace-archiv/dalsi-rychlik/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/obsah/obsah-03-13/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sapphire-rx-6650-xt-nitro-jasne-porazi-geforce-rtx-3060-za-stejne-penize-vyssi-vykon-pri-lepsi-efektivite/3/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/recenze-asus-zenbook-duo-ux482-povedeny-notebook-se-dvema-displeji/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/10-2022/obsah-chip-dvd-10-2022/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/jihlava/tvorime-vodikovou-budoucnost48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ona/tipy-na-darky-do-500-korun-vanoce-s-josefem-ladou-a-prakticke-radosti48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/brno/caravaning-brno-cesta-k-vasemu-dobrodruzstvi1fd3.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/zakladni-desky-z490-lga-1200-kompatibilni-s-procesory-rocket-lake-potvrzeno-pci-express-4-0/index.html
+0;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/hobby/jak-starne-pes-zjistete-jaky-vek-ma-v-prepoctu-na-lidska-leta48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/usti/ustecky-kraj-predstavuje-novy-smer-komunikace-meni-logo-i-svou-image.html
+0;1;0;recenze;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/asrock-b660-steel-legend-zakladni-deska-s-lga-1700-nemusi-byt-draha-recenze/4/index.html
+0;0;0;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/domaci/zdravotnictvi/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-11-2006/kocka-s-pocitacovym-virem/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/07-2015/amc-security-pro/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2017/chip-3-2017/honba-za-roboautem/index.html
+1;0;1;nabizi srovnani pujcek;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/nakup-jidla-a-dalsiho-zbozi-na-dluh-zajem-o-odlozene-platby-roste/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/trendy/digitalni-unava-oci/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/vary/jak-se-zmenilo-inovacni-prostredi-karlovarskeho-kraje-za-3-roky.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/investice-do-retail-parku-jako-proverena-jistota-113915.html/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-12-2007/internet-explorer-8-podomacku/index.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-08-2012/obsah-08-12/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/vzdelavaci_akce/index8f63.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/olomouc/kdo-pracuje-v-precheze48f7.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/cena-za-krach-spojeni-s-nvidii-arm-chysta-masivni-propousteni-snizuje-naklady-pred-ipo/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/servis/businessnews-10-07/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-procesoru-amd-ryzen-7-5700x-proti-5800x-vykon-nizsi-pouze-o-par-procent-spotreba-polovicni/34/index.html
+1;1;0;recenze;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/test-oki-c650dn/index.html
+1;0;0;neni striktne komercni, ale psala ho pojistovna;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/pojisteni-auta-neni-veda-na-co-se-zamerit-aby-se-vam-skutecne-vyplatilo-112077.html/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-potichu-vydava-geforce-rtx-3060-8gb-stejne-gpu-ale-o-tretinu-pomalejsi-pameti/index.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/stat-porada-hackathon-na-tema-siti-5-generace-5gthon-ma-zmenit-ceska-mesta/index.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/exkluzivne-detailni-rozbor-dlouho-ocekavanych-ventilatoru-bequiet-silent-wings-pro-4-test-recenze/22/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2007/chip-08-2007/idnes-spousti-blogy/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/usti/v-livinove-zahajila-pusobeni-nova-stredni-prumyslova-skola48f7.html
+0;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/test-amd-ryzen-9-5950x-32vlaknovy-procesor-na-ktery-intel-nema-odpoved/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/recenze-nejvyhodnejsiho-procesoru-do-nizkorozpoctovych-pocitacu-na-hry-intel-core-i3-10105f/23/index.html
+1;1;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/nepredstavitelne-se-stava-realnym-objevte-tajemnou-saudskou-arabiiba93.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/bydleni/fotovoltaicke-elektrarny-prilezitost-nebo-utopie48f7.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/napajeci-konektory-pci-express-5-0-450-w-nebo-600-w-kompatibilita-s-12pinem-nvidie/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/sony-uz-prodalo-skoro-8-milionu-playstation-5-pres-problemy-se-jich-uz-vyrobilo-vic-nez-ps4/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-04-2006/dokonale-mobilni-internet/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/ona/na-oslavy-15-narozenin-fashion-areny-dorazilo-bezmala-50-tisic-zakazniku48f7.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/amd-a-nvidia-predstavily-levne-alternativy-grafickych-karet/index.html
+1;1;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-financni-vysledky-q2-fy2022-je-velka-jako-tretina-intelu/feed/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/trzni-podily-vyrobcu-grafik-za-q2-2015-cely-trh-se-potapi-nejhur-bylo-s-amd/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/dress-code-je-gentlemanuv-velmi-dobry-pritel-112289.html/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/facebook-se-chce-prejmenovat-proc-a-jaka-jsou-mozna-nova-jmena/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/milan-kral-otevrenim-noveho-autosalonu-vse-teprve-zacalo.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/budejovice/jihoceske-muzeum-zve-na-vystavu-masozravych-rostlin48f7.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/procesory-intel-roadmapa-10nm-raptor-lake-rok-2022/feed/index.html
+1;0;0;spatne;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/nvidia-rusi-geforce-rtx-4080-12gb-uznala-ze-se-jmenem-prestrelila-bude-jen-16gb-verze/feed/index.html
+1;0;1;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.lidovky.cz/pr/sdeleni-komercni/ambasadory-kvality-se-staly-firma-edwards-a-praha-1448f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/zpravy/nova-spalovna-chce-pardubickemu-kraji-pomoci-s-odpadem48f7.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/seznamte-se-s-designery-slovenske-znacky-javorina-112043.html/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/wellness-spa-hotel-villa-regenhart-111956b83a.html
+1;1;1;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/advanced-systemcare.html
+0;0;0;;vojta/aktualne.cz/l~b:vs:6f717d9ae0a3f2869c1ab03b4f7/zpravy.aktualne.cz/finance/nakupovani/szpi-muze-blokovat-weby-s-nebezpecnymi-potravinami-jde-hlavn/r_bf9b8840456b11edbe29ac1f6b220ee8/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/liberec/luxus-ktery-naleznete-na-upati-hor.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/chip-03-2012/freeware-03-12/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-07-2008/anonymni-nakupy/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/07-2015/mailwasher-pro-7-5/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/rubriky/technika/budoucnost-elektromobilu/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/praha/jenom-mzda-nestaci-it-odbornici-chteji-vice.A221108_135301_prahah-sdeleni_hradr/tisk.html
+0;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2012/tablet-google/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/za-10-minut-nabito-cez-rozjizdi-vystavbu-ultrarychlych-dobijecich-stanic-pro-elektromobily-115504b83a.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/komercni_sdeleni/index7e7d.html
+1;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/transcend-mte240s-levne-nvme-ssd-rozhrani-pcie-4-0-tlc-vysoka-zivotnost/feed/index.html
+1;0;0;;vojta/investicniweb.cz/autor/komercni-sdeleni/www.investicniweb.cz/podminky-uzivani.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/procesory-intel-core-13-generace-pro-notebooky-unikly-budou-to-preznacene-cipy-alder-lake/index.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/olomouc/tip-nejhezci-vystup-na-kralicky-sneznik-je-od-stribrne-twiggy48f7.html
+0;0;0;;vojta/https:/www.lidovky.cz/pr/sdeleni-komercni/www.idnes.cz/volby/prezidentske/2023/billboardy-prezidentska-volba-nerudova-babis-petr-pavel-karel-janecek-basta.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/cestovani/zillertal-aktualne-fantasticke-podminky-pro-jarni-lyzovani48f7.html
+1;1;1;;vojta/https:/sdeleni.idnes.cz/sdeleni.idnes.cz/brno/chcete-v-brne-vice-zelene-koncertu-nebo-hrist-hlasujte-v-dame-na-vas48f7.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/intel-kupuje-tower-semiconductor-chce-ziskat-pozice-ve-foundry-zakazkove-vyrobe-cipu/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/rocnik-2013/chip-12-2013/spionazni-technologie/index.html
+1;0;1;reklama na hypotecni kalkulacku;vojta/https:/www.banky.cz/clanky/komercni-sdeleni/www.banky.cz/clanky/hlavne-rychle-pribyva-lidi-kteri-s-prodejem-nemovitosti-spechaji/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2010/chip-06-2010/digi-hrozba/index.html
+1;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2008/chip-12-2008/filmy-budoucnost-kina/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2006/chip-11-2006/kratkodobe-testy-1-4/index.html
+0;0;0;;vojta/https:/www.cnews.cz/komercni-clanek/www.cnews.cz/amd-poprve-ukazalo-nazivo-radeon-rx-7000-s-architekturou-rdna-3-uniky-se-potvrzuji/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/novinky/foto-video/test-huawei-nova-9-se/index.html
+0;0;0;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2011/chip-08-11/bezchybny-os/index.html
+1;1;1;;vojta/https:/www.chip.cz/komercni-sdeleni/www.chip.cz/casopis-chip/earchiv/vydani/r-2009/chip-11-2009/itbusiness-11-09/index.html
+1;1;1;;vojta/https:/www.epravo.cz/top/aktualne/komercni_sdeleni/www.epravo.cz/top/aktualne/pujcky-v-hotovosti-na-ruku-jsou-stale-legalni-110724.html
