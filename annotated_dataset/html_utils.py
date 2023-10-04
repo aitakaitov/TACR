@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup, NavigableString
 import re
+from lxml import html
 
 
 def filter_html(soup: BeautifulSoup):
@@ -81,3 +82,19 @@ def process_html_full(html, trim_type='start_length', trim_length=15):
     text = keep_paragraphs(soup)
     trimmed = trim_text(text, trim_type, trim_length)
     return trimmed
+
+
+def parse_xpath(xp):
+    path_nodes = xp.split('<')
+    path_nodes.reverse()
+    path_nodes = [n.strip() for n in path_nodes]
+
+    path = []
+    for node in path_nodes:
+        split = node.split('[')
+        if len(split) == 1:
+            path.append((split[0].lower(), None))
+        else:
+            path.append((split[0].lower(), int(split[1][:-1])))
+
+    return path

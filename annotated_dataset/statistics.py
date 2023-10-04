@@ -5,54 +5,49 @@ import matplotlib.pyplot as plt
 import re
 from bs4 import BeautifulSoup
 
+from annotated_dataset.similarity_utils import character_count_similarity_index
 
-def parse_xpath(xp):
-    path_nodes = xp.split('<')
-    path_nodes.reverse()
-    path_nodes = [n.strip() for n in path_nodes]
 
-    path = []
-    for node in path_nodes:
-        split = node.split('[')
-        if len(split) == 1:
-            path.append((split[0].lower(), None))
+def get_webpages():
+    with open('datasets/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
+        return [w.strip() for w in f.readlines()]
+
+
+def get_index_for_url(webpages, url):
+    return webpages.index(url) + 1
+
+
+def get_span_statistics(html, texts, start_paths, start_offsets, end_paths, end_offsets, match_leniency):
+    soup = BeautifulSoup(html, 'lxml')
+    soup_text = soup.get_text().lower()
+    soup_text = re.sub('\\s+', ' ', soup_text)
+
+    spans_located = 0
+    spans_total = 0
+    for text in texts:
+        text = re.sub('\\s+', ' ', text).lower()[1:-1]
+        if text in soup_text:
+            # try simple match
+            spans_located += 1
         else:
-            path.append((split[0].lower(), int(split[1][:-1])))
+            # if simple match fails, try to match a set of characters allowing for <leniency> different characters
+            if character_count_similarity_index(text, soup_text, match_leniency):
+                spans_located += 1
 
-    return path
+        spans_total += 1
 
-
-def get_node_by_path(soup, path):
-    current_node = soup
-    for node, index in path[1:]:
-        if node == '#text':
-            break
-        current_node = current_node.find_all_next('')
-
-    return current_node
-
-def get_overlap_between_spans(html_file, texts, start_paths, start_offsets, end_paths, end_offsets, extend_by_tokens=0):
-    with open(html_file, 'r', encoding='utf-8') as f:
-        html = f.read()
-
-    soup = BeautifulSoup(html)
-
-    for sp, so, ep, eo in zip(start_paths, start_offsets, end_paths, end_offsets):
-        start_path_nodes = parse_xpath(sp[1:-1])
-        end_path_nodes = parse_xpath(ep[1:-1])
-        start_node = get_node_by_path(soup, start_path_nodes)
-        end_node = get_node_by_path(soup, end_path_nodes)
-
-        pass
+    return spans_total, spans_located
 
 
-def get_stats(min_fraction, min_annotators, min_spans, positive_only):
-    print(min_fraction, min_annotators, min_spans, positive_only)
-    df = pd.read_csv('datasets/1_to_0_and_2_removed/0.7.csv')
-
+def get_stats(min_fraction, min_annotators, min_spans, positive_only, match_leniency):
+    print(min_fraction, min_annotators, min_spans, positive_only, match_leniency)
     os.makedirs(f'histograms/po-{positive_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}', exist_ok=True)
 
-    expr = re.compile(r'[a-z0-9]+\.cz')
+    df = pd.read_csv('datasets/1_to_0_and_2_removed/0.7.csv')
+
+    pattern = re.compile(r'[a-z0-9]+\.cz')
+
+    webpages = get_webpages()
 
     total_docs = 0
     ad_docs = 0
@@ -60,6 +55,8 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_only):
     span_lengths = []
     domain_counts_positive = {}
     domain_counts_negative = {}
+    spans_total = 0
+    spans_located = 0
     for index, row in df.iterrows():
         if 'bad/' in row['url'] or 'bad2/' in row['url']:
             continue
@@ -90,7 +87,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_only):
             span_lengths.append(len(split))
 
         url = row['url']
-        domain = re.search(expr, url).group(0)
+        domain = re.search(pattern, url).group(0)
 
         if row['state'] == 0:
             if domain not in domain_counts_positive.keys():
@@ -109,7 +106,11 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_only):
         end_offsets = row['end_offset'].split(';')
         texts = row['text'].split(';')
 
-        get_overlap_between_spans(f'html/{index}.html', texts, start_paths, start_offsets, end_paths, end_offsets)
+        with open(f'html/{get_index_for_url(webpages, row["url"])}.html', 'r', encoding='utf-8') as f:
+            total, located = get_span_statistics(f.read(), texts, start_paths, start_offsets, end_paths, end_offsets, match_leniency)
+
+        spans_total += total
+        spans_located += located
 
     plt.hist(span_counts, bins=10)
     plt.savefig(f'histograms/po-{positive_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_counts.png')
@@ -117,7 +118,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_only):
     plt.ylabel('spans')
     plt.close()
 
-    plt.hist(span_lengths, bins=10)
+    plt.hist(span_lengths, bins=30)
     plt.savefig(f'histograms/po-{positive_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_lengths.png')
     plt.xlabel('span lengths')
     plt.ylabel('spans')
@@ -151,28 +152,33 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_only):
     plt.savefig(f'histograms/po-{positive_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
     plt.close()
 
-    return (positive_only, '{:.2f}'.format(min_fraction), min_annotators, min_spans, total_docs, ad_docs, ad_docs / total_docs,
-            np.mean(span_counts), np.percentile(span_counts, 25), np.percentile(span_counts, 50), np.percentile(span_counts, 75),
+    return (positive_only, '{:.2f}'.format(min_fraction), min_annotators, min_spans, match_leniency, total_docs, ad_docs, ad_docs / total_docs,
+            spans_located / float(spans_total), np.mean(span_counts), np.percentile(span_counts, 25), np.percentile(span_counts, 50), np.percentile(span_counts, 75),
             np.mean(span_lengths), np.percentile(span_lengths, 25), np.percentile(span_lengths, 50), np.percentile(span_lengths, 75))
 
 
 def main():
-    majority_fractions = [2 / 3.0, 1.0]
+    #majority_fractions = [2 / 3.0, 1.0]
+    majority_fractions = [2 / 3.0]
     min_annotators = [3]
-    min_spans = [3, 4, 5, 6]
-    positive_only = [True, False]
+    min_spans = [3]
+    #min_spans = [3, 4, 5, 6]
+    match_leniency = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    #positive_only = [Ttue, False]
+    positive_only = [False]
 
     with open('stats.csv', 'w+', encoding='utf-8') as f:
-        f.write('positive_only;min_fraction;min_annotators;min_spans;total_docs;ad_docs;ad_docs_percent;'
-                'avg_spans;p25_spans;p50_spans;p75_spans;'
+        f.write('positive_only;min_fraction;min_annotators;min_spans;leniency;total_docs;ad_docs;ad_docs_percent;'
+                'spans_located_perc;avg_spans;p25_spans;p50_spans;p75_spans;'
                 'avg_span_len;p25_span_len;p50_span_len;p75_span_len\n')
         for po in positive_only:
             for frac in majority_fractions:
                 for anns in min_annotators:
                     for sp in min_spans:
-                        f.write(
-                            ';'.join(str(x) for x in get_stats(frac, anns, sp, po)) + '\n'
-                        )
+                        for l in match_leniency:
+                            f.write(
+                                ';'.join(str(x) for x in get_stats(frac, anns, sp, po, l)) + '\n'
+                            )
 
 
 if __name__ == '__main__':
