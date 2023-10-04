@@ -1,82 +1,9 @@
 import json
 import pandas as pd
 import argparse
-from bs4 import BeautifulSoup, NavigableString
-import re
+from bs4 import BeautifulSoup
 
-
-def filter_html(soup: BeautifulSoup):
-    """
-    Filters tags and their contents from html
-    :param soup: Parsed html
-    :return: Filtered html
-    """
-    scripts = soup.find_all("script")
-    for tag in scripts:
-        tag.decompose()
-
-    iframes = soup.find_all("iframe")
-    for tag in iframes:
-        tag.decompose()
-
-    link_tags = soup.find_all("link")
-    for tag in link_tags:
-        tag.decompose()
-
-    metas = soup.find_all("meta")
-    for tag in metas:
-        tag.decompose()
-
-    styles = soup.find_all("style")
-    for tag in styles:
-        tag.decompose()
-
-    return soup
-
-
-def process_contents(tag, string_list):
-    for item in tag.contents:
-        if isinstance(item, NavigableString):
-            string_list.append(str(item))
-        else:
-            process_contents(item, string_list)
-
-
-def keep_paragraphs(soup: BeautifulSoup):
-    result_list = []
-
-    p_tags = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
-    for p_tag in p_tags:
-        process_contents(p_tag, result_list)
-
-    text = '\n'.join(result_list)
-    return re.sub('\n+', '\n', text)
-
-
-def trim_text_start_length(text):
-    MIN_TOKENS = args['trim_length']
-    tag_texts = text.split('\n')
-    start = -1
-    for i, tag in enumerate(tag_texts):
-        if len(tag.split()) > MIN_TOKENS:
-            start = i
-            break
-
-    new_text = ''
-    for i in range(start, len(tag_texts)):
-        new_text += tag_texts[i]
-
-    return new_text
-
-
-def trim_text(text):
-    if args['trim_text'] is None:
-        return text
-    elif args['trim_text'] == 'start_length':
-        return trim_text_start_length(text)
-    else:
-        print(f'{args["trim_text"]} not valid')
-        exit(-1)
+from annotated_dataset.html_utils import process_html_full
 
 
 def main():
@@ -116,16 +43,12 @@ def main():
 
         with open(f'html/{int(index) + 1}.html', 'r', encoding='utf-8') as f:
             html = f.read()
-            soup = BeautifulSoup(html)
-            soup = filter_html(soup)
-            extracted = keep_paragraphs(soup)
-            extracted = trim_text(extracted)
 
         data.append({
             'url': row['url'],
             'rationales': rationales,
             'html': html,
-            'text': extracted
+            'text': process_html_full(html, args['trim_text'], args['trim_length'])
         })
 
     with open(args['output_file'], 'w+', encoding='utf-8') as f:
