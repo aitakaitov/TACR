@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import re
 from bs4 import BeautifulSoup
 
+from annotated_dataset.html_utils import html_to_plaintext
 from annotated_dataset.similarity_utils import character_count_similarity_index
 
 
@@ -18,9 +19,7 @@ def get_index_for_url(webpages, url):
 
 
 def get_span_statistics(html, texts, start_paths, start_offsets, end_paths, end_offsets, match_leniency):
-    soup = BeautifulSoup(html, 'lxml')
-    soup_text = soup.get_text().lower()
-    soup_text = re.sub('\\s+', ' ', soup_text)
+    soup_text = html_to_plaintext(html, lowercase=True, merge_whitespaces=True)
 
     spans_located = 0
     spans_total = 0

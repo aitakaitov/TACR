@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup, NavigableString
 import re
-from lxml import html
 
 
 def filter_html(soup: BeautifulSoup):
@@ -98,3 +97,16 @@ def parse_xpath(xp):
             path.append((split[0].lower(), int(split[1][:-1])))
 
     return path
+
+
+def html_to_plaintext(html, lowercase=True, merge_whitespaces=True):
+    soup = BeautifulSoup(html, 'lxml')
+    soup_text = soup.get_text()
+
+    if lowercase:
+        soup_text = soup_text.lower()
+
+    if merge_whitespaces:
+        soup_text = re.sub('\\s+', ' ', soup_text)
+
+    return soup_text
