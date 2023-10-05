@@ -24,17 +24,16 @@ def character_count_similarity_index(to_find, target, leniency, check_multiples=
         if target[it - 1] in char_counts_target.keys():
             char_counts_target[target[it - 1]] -= 1
 
-        if target[it + len(to_find)] in char_counts_target.keys():
-            char_counts_target[target[it + len(to_find)]] += 1
+        if target[it + len(to_find) - 1] in char_counts_target.keys():
+            char_counts_target[target[it + len(to_find) - 1]] += 1
 
         new_sim = score(char_counts_to_find, char_counts_target)
         if new_sim < max_similarity:
             max_similarity = new_sim
             index = it
             same_similarity = 1
-        if new_sim == max_similarity:
+        elif new_sim == max_similarity:
             same_similarity += 1
-
 
     if max_similarity <= len(to_find) / leniency:
         if check_multiples:
