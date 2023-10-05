@@ -6,7 +6,7 @@ def score(c1, c2):
     return diff
 
 
-def character_count_similarity_index(to_find, target, leniency):
+def character_count_similarity_index(to_find, target, leniency, check_multiples=False):
     char_counts_to_find = dict.fromkeys(to_find, 0)
     for c in to_find:
         char_counts_to_find[c] += 1
@@ -17,6 +17,7 @@ def character_count_similarity_index(to_find, target, leniency):
             char_counts_target[c] += 1
 
     index = 0
+    same_similarity = 0
     max_similarity = score(char_counts_to_find, char_counts_target)
 
     for it in range(1, len(target) - len(to_find)):
@@ -30,8 +31,14 @@ def character_count_similarity_index(to_find, target, leniency):
         if new_sim < max_similarity:
             max_similarity = new_sim
             index = it
+            same_similarity = 1
+        if new_sim == max_similarity:
+            same_similarity += 1
 
-    if max_similarity <= leniency:
+
+    if max_similarity <= len(to_find) / leniency:
+        if check_multiples:
+            return index, same_similarity
         return index
     else:
         return None

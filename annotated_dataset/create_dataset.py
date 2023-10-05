@@ -4,26 +4,7 @@ import pandas as pd
 import re
 
 from annotated_dataset.html_utils import html_to_plaintext
-from similarity_utils import character_count_similarity_index
-
-
-def validate_span(span_text, plaintext_doc):
-    if args['lowercase']:
-        span_text = span_text.lower()
-
-    if args['merge_whitespaces']:
-        span_text = re.sub('\\s+', ' ', span_text)
-
-    span_length = len(span_text)
-
-    try:
-        index = plaintext_doc.index(span_text)
-    except ValueError:
-        index = character_count_similarity_index(span_text, plaintext_doc, leniency=args['leniency'])
-        if not index:
-            return None
-
-    return {'start_index': index, 'length': span_length}
+from annotation_merge_utils import process_span
 
 
 def main():
@@ -54,8 +35,9 @@ def main():
         plaintext = html_to_plaintext(html, args['lowercase'], args['merge_whitespaces'])
 
         for text in texts:
-            span_data = validate_span(text, plaintext)
-            if not span_data:
+            span_data = process_span(text, plaintext, lowercase=args['lowercase'],
+                                     merge_whitespaces=args['merge_whitespaces'], leniency=args['leniency'])
+            if span_data is None:
                 continue
             else:
                 rationales.append(span_data)
