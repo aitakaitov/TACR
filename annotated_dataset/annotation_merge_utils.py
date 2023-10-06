@@ -3,7 +3,28 @@ import re
 from annotated_dataset.similarity_utils import character_count_similarity_index
 
 
-def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=True, leniency=8, report_multiples=True):
+def get_spans_with_intersection(intersections, spans):
+    intersected_spans = []
+    for i in range(len(spans)):
+        for intersection in intersections:
+            if i == intersection['span_1'] or i == intersection['span_2']:
+                if i not in intersected_spans:
+                    intersected_spans.append(i)
+
+    return intersected_spans
+
+
+def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=True, strictness=8, report_multiples=True):
+    """
+    Finds a span in target text
+    @param span_text: what to find
+    @param plaintext_doc: where to find it
+    @param lowercase: lowercase the span
+    @param merge_whitespaces: merge whitespaces of the span into a single space
+    @param strictness: how strict the inexact matching is
+    @param report_multiples: whether to add statistics on multiple matches
+    @return: None when no match, otherwise a dict
+    """
     if lowercase:
         span_text = span_text.lower()
 
@@ -11,12 +32,16 @@ def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=Tru
         span_text = re.sub('\\s+', ' ', span_text)
 
     span_length = len(span_text)
+    # number of simple matches
     count_simple = 0
+    # number of inexact matches
     count_sim = 0
     try:
+        # try an exact match
         index = plaintext_doc.index(span_text)
         count_simple = 1
         if report_multiples:
+            # find any other matches
             temp_index = index
             while True:
                 try:
@@ -25,12 +50,15 @@ def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=Tru
                 except ValueError:
                     break
     except ValueError:
-        index = character_count_similarity_index(span_text, plaintext_doc, leniency=leniency)
+        # if an exact match does not work, use inexact match
+        index = character_count_similarity_index(span_text, plaintext_doc, leniency=strictness)
         count_sim = 1
         if not index:
+            # if None is returned, no match was found
             return None
         if report_multiples:
-            index, count_sim = character_count_similarity_index(span_text, plaintext_doc, leniency=leniency, check_multiples=True)
+            # if we want to know about multiplicities, run it again
+            index, count_sim = character_count_similarity_index(span_text, plaintext_doc, leniency=strictness, check_multiples=True)
 
     return {
         'start_index': index,
@@ -45,7 +73,6 @@ def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=Tru
 
 def get_span_intersections(span_data_list):
     intersections = []
-
     for i in range(len(span_data_list)):
         for j in range(i + 1, len(span_data_list)):
             span1_end = span_data_list[i]['start_index'] + span_data_list[i]['length']

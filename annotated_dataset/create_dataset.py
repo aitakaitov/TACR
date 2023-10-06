@@ -36,7 +36,7 @@ def main():
 
         for text in texts:
             span_data = process_span(text, plaintext, lowercase=args['lowercase'],
-                                     merge_whitespaces=args['merge_whitespaces'], leniency=args['leniency'])
+                                     merge_whitespaces=args['merge_whitespaces'], strictness=args['leniency'])
             if span_data is None:
                 continue
             else:
