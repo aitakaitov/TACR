@@ -71,6 +71,19 @@ def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=Tru
     }
 
 
+def get_intersection_size(s1_start, s1_len, s2_start, s2_len):
+    s1_end = s1_start + s1_len
+    s2_end = s2_start + s2_len
+
+    if s1_end < s2_start or s2_end < s1_start:
+        return 0
+
+    else:
+        intersection_start = max(s1_start, s2_start)
+        intersection_end = min(s1_end, s2_end)
+        return intersection_end - intersection_start
+
+
 def get_span_intersections(span_data_list):
     intersections = []
     for i in range(len(span_data_list)):

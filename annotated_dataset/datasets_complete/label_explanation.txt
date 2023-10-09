@@ -1,0 +1,22 @@
+state, reason, meaning
+0, 0, declared ad; explicit
+0, 1, declared ad; obvious
+0, 2, declared ad; product-focused
+1, 0, hidden ad; product-focused, no declaration
+1, 1, hidden ad; product link
+1, 2, hidden ad; product-focused tutorial
+1, 3, hidden ad; biased reference
+1, 4, hidden ad; criticism
+2, 0, potential ad; many products
+2, 1, potential ad; contextual ad
+2, 2, potential ad; minor ad
+3, 0, not an ad; a description
+3, 1, not an ad; many products
+3, 2, not an ad; unbiased reference
+3, 3, not an ad; criticism
+3, 4, not an ad; no product
+
+        
+If reason = -1, it means that the corresponding state was changed as a result of
+transformation (like hidden -> declared) and thus the reason lost its original meaning. It should be ignored.
+        

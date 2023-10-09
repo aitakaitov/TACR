@@ -6,6 +6,7 @@ import re
 
 from annotated_dataset.annotation_merge_utils import process_span, get_span_intersections, get_spans_with_intersection
 from annotated_dataset.html_utils import html_to_plaintext
+from annotated_dataset.iaa_metrics import soft_f1
 
 
 def get_webpages():
@@ -23,9 +24,10 @@ def get_index_for_url(webpages, url):
     return webpages.index(url) + 1
 
 
-def get_span_statistics(html, span_data_list, match_strictness, min_span_length, lowercase, whitespace_merge, classes):
+def get_span_statistics(html, span_data_list, match_strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes):
     """
     Given the HTML string, a list of spans and hyperparameters, calculate a set of doc-specific statistics
+    @param max_span_length: maximum allowed length fo span in tokens
     @param html: HTML string
     @param span_data_list: list of span data - can be changed
     @param match_strictness: how strict the inexact matching is (value of ~10 000 will disable inexact matches)
@@ -49,7 +51,8 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
         spans = []
         for span in spans_data['spans']:
             # check length
-            if len(span[1:-1].split()) < min_span_length:
+            span_length = len(span[1:-1].split())
+            if span_length < min_span_length or span_length > max_span_length:
                 continue
             # try to find the span
             result = process_span(span[1:-1], soup_text, lowercase=lowercase, merge_whitespaces=whitespace_merge, strictness=match_strictness)
@@ -97,6 +100,9 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
                     spans_with_charsim_duplicates += 1
                     total_duplicates_charsim_match += span_info['count_sim'] - 1
 
+    intersections_percents_positive = []
+    intersections_percents_negative = []
+
     # get intersection stats
     if classes != 'both':
         if classes == 'ads':
@@ -105,15 +111,16 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
                 if a['decision'] == 'positive':
                     spans_to_process.extend(a['spans'])
             intersections = get_span_intersections(spans_to_process)
+            intersections_percents_positive = [i['intersection_percent'] for i in intersections]
         else:
             spans_to_process = []
             for a in valid_spans:
                 if a['decision'] == 'negative':
                     spans_to_process.extend(a['spans'])
             intersections = get_span_intersections(spans_to_process)
+            intersections_percents_negative = [i['intersection_percent'] for i in intersections]
 
         intersections_count = len(intersections)
-        intersections_percents = [i['intersection_percent'] for i in intersections]
         intersected_spans = get_spans_with_intersection(intersections, spans_to_process)
         intersectionless_spans = len(spans_to_process) - len(intersected_spans)
 
@@ -135,8 +142,8 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
         intersected_spans.extend(intersected_spans_negative)
         intersections_count = len(intersections_positive) + len(intersections_negative)
 
-        intersections_percents = [i['intersection_percent'] for i in intersections_positive]
-        intersections_percents.extend(i['intersection_percent'] for i in intersections_negative)
+        intersections_percents_positive = [i['intersection_percent'] for i in intersections_positive]
+        intersections_percents_negative = [i['intersection_percent'] for i in intersections_negative]
 
         intersectionless_spans = len(spans_to_process_positive) + len(spans_to_process_negative) - len(intersected_spans)
 
@@ -152,12 +159,14 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
         'total_simple_duplicates': total_duplicates_simple_match,
         'total_charsim_duplicates': total_duplicates_charsim_match,
         'intersection_count': intersections_count,
-        'intersection_percents': intersections_percents,
-        'spans_without_intersection': intersectionless_spans
+        'intersection_percents_positive': intersections_percents_positive,
+        'intersection_percents_negative': intersections_percents_negative,
+        'spans_without_intersection': intersectionless_spans,
+        'span_data': valid_spans
     }
 
 
-def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match_leniency, min_span_length, lowercase, whitespace_merge, classes):
+def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes):
     os.makedirs(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}', exist_ok=True)
     df = pd.read_csv('datasets_complete/1_to_0_and_2_removed/0.7.csv')
     pattern = re.compile(r'[a-z0-9]+\.cz')
@@ -173,7 +182,8 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
 
     # intersection stuff
     intersections_count_total = 0
-    intersections_percents = []
+    intersections_percents_positive = []
+    intersections_percents_negative = []
     spans_without_intersection = 0
 
     # total number of spans in the data
@@ -197,6 +207,9 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
     # lengths of spans
     span_lengths_tokens = []
     span_lengths_chars = []
+
+    # documents and their spans for each annotator
+    processed_spans = []
 
     for index, row in df.iterrows():
         # ignore these
@@ -308,7 +321,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
         total_spans_available += sum([len(s) for s in annotator_spans])
 
         with open(f'html/{get_index_for_url(webpages, row["url"])}.html', 'r', encoding='utf-8') as f:
-            data = get_span_statistics(f.read(), span_data, match_leniency, min_span_length, lowercase, whitespace_merge, classes)
+            data = get_span_statistics(f.read(), span_data, strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes)
 
         total_spans_eligible += data['long_enough_spans']
         total_spans_located += data['spans_located']
@@ -324,48 +337,51 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
         span_counts.append(data['spans_located'])
 
         intersections_count_total += data['intersection_count']
-        intersections_percents.extend(data['intersection_percents'])
+        intersections_percents_positive.extend(data['intersection_percents_positive'])
+        intersections_percents_negative.extend(data['intersection_percents_negative'])
         spans_without_intersection += data['spans_without_intersection']
 
-    # plt.hist(span_counts, bins=10)
-    # plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_counts.png')
-    # plt.xlabel('span counts')
-    # plt.ylabel('spans')
-    # plt.close()
-    #
-    # plt.hist(span_lengths_tokens, bins=30)
-    # plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_lengths.png')
-    # plt.xlabel('span lengths in tokens')
-    # plt.ylabel('spans')
-    # plt.close()
-    #
-    # for d in domain_counts_positive.keys():
-    #     if d not in domain_counts_negative.keys():
-    #         domain_counts_negative[d] = 0
-    # for d in domain_counts_negative.keys():
-    #     if d not in domain_counts_positive.keys():
-    #         domain_counts_positive[d] = 0
-    #
-    # domains = domain_counts_negative.keys()
-    #
-    # counts = {
-    #     'Positive': np.array([domain_counts_positive[d] for d in domains]),
-    #     'Negative': np.array([domain_counts_negative[d] for d in domains])
-    # }
-    #
-    # fig, ax = plt.subplots()
-    # bottom = np.zeros(len(domain_counts_positive.keys()))
-    #
-    # for boolean, weight_count in counts.items():
-    #     p = ax.bar(domains, weight_count, 0.5, label=boolean, bottom=bottom)
-    #     bottom += weight_count
-    #
-    # ax.legend(loc="upper right")
-    # plt.xticks(rotation=90)
-    # plt.ylabel('documents')
-    # plt.subplots_adjust(bottom=0.3)  # Adjust the value as needed
-    # plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
-    # plt.close()
+        processed_spans.append(data['span_data'])
+
+    plt.hist(span_counts, bins=10)
+    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_counts.png')
+    plt.xlabel('span counts')
+    plt.ylabel('spans')
+    plt.close()
+
+    plt.hist(span_lengths_tokens, bins=100)
+    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_lengths.png')
+    plt.xlabel('span lengths in tokens')
+    plt.ylabel('spans')
+    plt.close()
+
+    for d in domain_counts_positive.keys():
+        if d not in domain_counts_negative.keys():
+            domain_counts_negative[d] = 0
+    for d in domain_counts_negative.keys():
+        if d not in domain_counts_positive.keys():
+            domain_counts_positive[d] = 0
+
+    domains = domain_counts_negative.keys()
+
+    counts = {
+        'Positive': np.array([domain_counts_positive[d] for d in domains]),
+        'Negative': np.array([domain_counts_negative[d] for d in domains])
+    }
+
+    fig, ax = plt.subplots()
+    bottom = np.zeros(len(domain_counts_positive.keys()))
+
+    for boolean, weight_count in counts.items():
+        p = ax.bar(domains, weight_count, 0.5, label=boolean, bottom=bottom)
+        bottom += weight_count
+
+    ax.legend(loc="upper right")
+    plt.xticks(rotation=90)
+    plt.ylabel('documents')
+    plt.subplots_adjust(bottom=0.3)  # Adjust the value as needed
+    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
+    plt.close()
 
     return {
         # metadata, class stats
@@ -373,8 +389,9 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
         'positive_docs_only': positive_docs_only,
         'min_frac': '{:.2f}'.format(min_fraction),
         'min_annotators': min_annotators,
-        'leniency': match_leniency,
+        'strictness': strictness,
         'min_span_length': min_span_length,
+        'max_span_length': max_span_length,
         'lowercase': lowercase,
         'whitespace_merge': whitespace_merge,
         'total_docs': total_docs,
@@ -399,8 +416,13 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, match
         # intersection stats
         'intersections_per_span': intersections_count_total / total_spans_located,
         'intersections_per_doc': intersections_count_total / total_docs,
-        'average_intersection_size_perc': sum(intersections_percents) / len(intersections_percents),
+        'average_intersection_size_perc_positive': sum(intersections_percents_positive) / len(intersections_percents_positive) if classes != 'non_ads' else 'nan',
+        'average_intersection_size_perc_negative': sum(intersections_percents_negative) / len(intersections_percents_negative) if classes != 'ads' else 'nan',
         'spans_with_intersect_perc': 1 - (spans_without_intersection / total_spans_located),
+
+        # inter annotator agreement
+        'soft_f1_positive': soft_f1(processed_spans, 'positive') if classes == 'ads' or classes == 'both' else 'nan',
+        'soft_f1_negative': soft_f1(processed_spans, 'negative') if classes == 'non_ads' or classes == 'both' else 'nan'
     }
 
 
@@ -408,12 +430,13 @@ def main():
     majority_fractions = [2 / 3.0]
     min_annotators = [3]
     min_spans = [3]
-    match_leniency = [100, 250, 500, 1000, 2000, 5000]
+    match_leniency = [10, 50, 100, 200, 500, 1000]
     positive_only = [False]
-    min_span_lengths = [1] #, 1, 2, 3, 4, 5, 7, 8, 9, 10]
+    min_span_lengths = [2] #, 2, 3] #, 1, 2, 3, 4, 5, 7, 8, 9, 10]
+    max_span_lengths = [10000]
     lowercase = [True]
     whitespace_merge = [True]
-    classes = ['ads', 'non_ads', 'both']
+    classes = ['both']
 
     first = True
 
@@ -427,12 +450,13 @@ def main():
                                 for lwc in lowercase:
                                     for wsm in whitespace_merge:
                                         for c in classes:
-                                            result = get_stats(frac, anns, sp, po, l, msl, lwc, wsm, c)
-                                            if first:
-                                                first = False
-                                                f.write(';'.join(result.keys()) + '\n')
+                                            for masl in max_span_lengths:
+                                                result = get_stats(frac, anns, sp, po, l, msl, masl, lwc, wsm, c)
+                                                if first:
+                                                    first = False
+                                                    f.write(';'.join(result.keys()) + '\n')
 
-                                            f.write(';'.join([str(x) for x in result.values()]) + '\n')
+                                                f.write(';'.join([str(x) for x in result.values()]) + '\n')
 
 
 if __name__ == '__main__':
