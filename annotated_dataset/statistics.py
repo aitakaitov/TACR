@@ -1,3 +1,5 @@
+import argparse
+
 import pandas as pd
 import numpy as np
 import os
@@ -383,7 +385,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
     plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
     plt.close()
 
-    return {
+    return {   
         # metadata, class stats
         'span_classes': classes,
         'positive_docs_only': positive_docs_only,
@@ -414,11 +416,11 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         'avg_span_length_chars': sum(span_lengths_chars) / total_spans_located,
 
         # intersection stats
-        'intersections_per_span': intersections_count_total / total_spans_located,
-        'intersections_per_doc': intersections_count_total / total_docs,
-        'average_intersection_size_perc_positive': sum(intersections_percents_positive) / len(intersections_percents_positive) if classes != 'non_ads' else 'nan',
-        'average_intersection_size_perc_negative': sum(intersections_percents_negative) / len(intersections_percents_negative) if classes != 'ads' else 'nan',
-        'spans_with_intersect_perc': 1 - (spans_without_intersection / total_spans_located),
+        #'intersections_per_span': intersections_count_total / total_spans_located,
+        #'intersections_per_doc': intersections_count_total / total_docs,
+        #'average_intersection_size_perc_positive': sum(intersections_percents_positive) / len(intersections_percents_positive) if classes != 'non_ads' else 'nan',
+        #'average_intersection_size_perc_negative': sum(intersections_percents_negative) / len(intersections_percents_negative) if classes != 'ads' else 'nan',
+        #'spans_with_intersect_perc': 1 - (spans_without_intersection / total_spans_located),
 
         # inter annotator agreement
         'soft_f1_positive': soft_f1(processed_spans, 'positive') if classes == 'ads' or classes == 'both' else 'nan',
@@ -432,7 +434,7 @@ def main():
     min_spans = [3]
     match_leniency = [10, 50, 100, 200, 500, 1000]
     positive_only = [False]
-    min_span_lengths = [2] #, 2, 3] #, 1, 2, 3, 4, 5, 7, 8, 9, 10]
+    min_span_lengths = [2]
     max_span_lengths = [10000]
     lowercase = [True]
     whitespace_merge = [True]
