@@ -21,3 +21,4 @@ output.csv
 *.7z
 __pycache__
 wandb_stats.csv
+/annotated_dataset/datasets_complete/

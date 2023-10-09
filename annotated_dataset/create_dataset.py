@@ -1,62 +1,187 @@
-import json
 import argparse
-import pandas as pd
-import re
 
+import pandas as pd
+import json
+
+from annotated_dataset.annotation_merge_utils import process_span, get_span_intersections, get_spans_with_intersection, \
+    perform_union_merge, perform_intersection_merge
 from annotated_dataset.html_utils import html_to_plaintext
-from annotation_merge_utils import process_span
+
+
+def get_webpages():
+    """
+    Loads a list of webpage IDs
+    """
+    with open('datasets/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
+        return [w.strip() for w in f.readlines()]
+
+
+def get_index_for_url(webpages, url):
+    """
+    Gets the name of the HTML file for a given URL (corresponds to the index in webpages + 1)
+    """
+    return webpages.index(url) + 1
+
+
+def perform_merge(annotations):
+    if args['merge_annotations'] == 'union':
+        result = perform_union_merge(annotations)
+    elif args['merge_annotations'] == 'intersection':
+        result = perform_intersection_merge(annotations)
+
+    return result
+
+
+def process_document(html, annotation_list, classification):
+    # find the spans
+    soup_text = html_to_plaintext(html, lowercase=args['lowercase'], merge_whitespaces=args['merge_whitespaces'])
+    annotator_data = []
+    for annotation in annotation_list:
+        spans = []
+        for span in annotation['spans']:
+            # check length
+            span_length = len(span[1:-1].split())
+            if span_length < args['min_span_length'] or span_length > args['max_span_length']:
+                continue
+
+            # try to find the span
+            result = process_span(span[1:-1], soup_text, lowercase=args['lowercase'],
+                                  merge_whitespaces=args['merge_whitespaces'], strictness=args['strictness'],
+                                  report_multiples=False)
+            if result is not None:
+                # if span is found
+                spans.append(result)
+
+        annotator_data.append({
+            'annotator_id': annotation['annotator_id'],
+            'decision': annotation['decision'],
+            'spans': spans
+        })
+
+    # get intersections
+    positive_annotators = []
+    [positive_annotators.append(ad) if ad['decision'] == 1 else None for ad in annotator_data]
+
+    negative_annotators = []
+    [negative_annotators.append(ad) if ad['decision'] == 0 else None for ad in annotator_data]
+
+    positive_merged = perform_merge(positive_annotators)
+    negative_merged = perform_merge(negative_annotators)
+
+    result = {
+        'label': classification,
+        'text': soup_text
+    }
+
+    if args['span_classes'] == 'both' or args['span_classes'] == 'ads':
+        result['positive_spans'] = positive_merged
+
+    if args['span_classes'] == 'both' or args['span_classes'] == 'non_ads':
+        result['negative_spans'] = negative_merged
+
+    return result
 
 
 def main():
     df = pd.read_csv(args['input_file'])
+    webpages = get_webpages()
 
-    data = []
+    data_samples = []
     for index, row in df.iterrows():
-        if row['majority_fraction'] < args['majority_fraction']:
+        # ignore these
+        if 'bad/' in row['url'] or 'bad2/' in row['url']:
             continue
 
-        frac_per_an = row['majority_fraction'] / row['majority_size']
-        annotators = row['majority_size'] + (1 - row['majority_fraction']) / frac_per_an
+        # check agreement
+        if row['majority_fraction'] < args['min_fraction']:
+            continue
+
+        # calculate number of annotators
+        pos_c = 0
+        neg_c = 0
+        for state in row['states'].split('///'):
+            if state == '0':
+                pos_c += 1
+            else:
+                neg_c += 1
+
+        majority_size = max(pos_c, neg_c)
+        frac_per_an = row['majority_fraction'] / majority_size
+        annotators = majority_size + (1 - row['majority_fraction']) / frac_per_an
         if annotators < args['min_annotators']:
             continue
 
-        if row['state'] != 0 and args['positive_only']:
+        classification = 0 if neg_c > pos_c else 1
+
+        # if positive only, ignore negative
+        if classification == 0 and args['positive_only']:
             continue
 
-        if row['span_count'] < args['min_spans']:
+        # check number of spans
+        if sum([int(c) for c in row['span_counts'].split('///')]) < args['min_spans']:
             continue
 
-        rationales = []
-        texts = [t[1:-1] for t in row['text'].split(';')]
+        # process spans
+        annotator_ids = row['emails'].split('///')
+        annotator_span_counts = [int(c) for c in row['span_counts'].split('///')]
+        annotator_decisions = [1 if d == '0' else 0 for d in row['states'].split('///')]
+        annotator_spans = [t.split(';;;') for t in row['texts'].split('///')]
+        # check if someone didn't mark any spans
+        indices_to_remove = []
+        for i in range(len(annotator_ids)):
+            if annotator_span_counts[i] == 0:
+                indices_to_remove.append(i)
 
-        with open(f'html/{int(index) + 1}.html', 'r', encoding='utf-8') as f:
-            html = f.read()
+        # remove them
+        indices_to_remove.reverse()
+        for i in indices_to_remove:
+            del annotator_ids[i]
+            del annotator_span_counts[i]
+            del annotator_decisions[i]
+            del annotator_spans[i]
 
-        plaintext = html_to_plaintext(html, args['lowercase'], args['merge_whitespaces'])
+        # now check which spans we want
+        # 'both' means we want spans from both positive and negative annotators
+        if args['span_classes'] == 'both':
+            indices_to_remove = []
+        # 'ads' means we want spans only from positive annotators
+        elif args['span_classes'] == 'ads':
+            indices_to_remove = []
+            for i in range(len(annotator_decisions)):
+                if annotator_decisions[i] == 'negative':
+                    indices_to_remove.append(i)
+        # 'non_ads' means we want spans only from negative annotators
+        elif args['span_classes'] == 'non_ads':
+            indices_to_remove = []
+            for i in range(len(annotator_decisions)):
+                if annotator_decisions[i] == 'positive':
+                    indices_to_remove.append(i)
 
-        for text in texts:
-            span_data = process_span(text, plaintext, lowercase=args['lowercase'],
-                                     merge_whitespaces=args['merge_whitespaces'], strictness=args['leniency'])
-            if span_data is None:
-                continue
-            else:
-                rationales.append(span_data)
+        indices_to_remove.reverse()
+        # remove the selected spans
+        for i in indices_to_remove:
+            del annotator_ids[i]
+            del annotator_span_counts[i]
+            del annotator_decisions[i]
+            del annotator_spans[i]
 
-        data.append({
-            'url': row['url'],
-            'rationales': rationales,
-            'html': html,
-            'text': plaintext,
-            'config': {
-                'lowercase': args['lowercase'],
-                'merge_whitespaces': args['merge_whitespaces'],
-                'match_leniency': args['leniency']
-            }
-        })
+        span_data = []
+        for annotator_id, annotator_decision, annotator_span in zip(annotator_ids, annotator_decisions, annotator_spans):
+            span_data.append({
+                'annotator_id': annotator_id,
+                'decision': annotator_decision,
+                'spans': annotator_span
+            })
+
+        with open(f'html/{get_index_for_url(webpages, row["url"])}.html', 'r', encoding='utf-8') as f:
+            data = process_document(f.read(), span_data, classification)
+
+        if len(data['negative_spans']) != 0 and len(data['positive_spans']) != 0:
+            data_samples.append(data)
 
     with open(args['output_file'], 'w+', encoding='utf-8') as f:
-        for d in data:
-            f.write(json.dumps(d) + '\n')
+        for sample in data_samples:
+            f.write(json.dumps(sample) + '\n')
 
 
 def parse_bool(s):
@@ -65,21 +190,23 @@ def parse_bool(s):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', default='datasets/1_to_0_and_2_removed/0.7.csv')
+    parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.5.csv')
     parser.add_argument('--output_file', type=str, required=False, default=None)
-    parser.add_argument('--majority_fraction', default=1.0, type=float)
+    parser.add_argument('--min_fraction', default=1.0, type=float)
     parser.add_argument('--min_annotators', default=3, type=int)
     parser.add_argument('--positive_only', default=False, type=parse_bool)
     parser.add_argument('--min_spans', default=3, type=int)
-    # parser.add_argument('--trim_text', default='start_length')
-    # parser.add_argument('--trim_length', default=15)
+    parser.add_argument('--min_span_length', default=1, type=int)
+    parser.add_argument('--max_span_length', default=500, type=int)
     parser.add_argument('--lowercase', default=True, type=parse_bool)
     parser.add_argument('--merge_whitespaces', default=True, type=parse_bool)
-    parser.add_argument('--leniency', default=8, type=int)
+    parser.add_argument('--strictness', default=250, type=int)
+    parser.add_argument('--span_classes', default='both', type=str)   # ads, non_ads, both
+    parser.add_argument('--merge_annotations', default='intersection', type=str)  # intersection, union
     args = vars(parser.parse_args())
 
     if args['output_file'] is None:
-        args['output_file'] = (f'rationales_positive-{args["positive_only"]}_maj-{args["majority_fraction"]}_anno-'
-                               f'{args["min_annotators"]}_spans-{args["min_spans"]}.jsonl')
+        # todo change
+        args['output_file'] = f'test_dataset.jsonl'
 
     main()

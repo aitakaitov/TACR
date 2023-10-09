@@ -3,6 +3,84 @@ import re
 from annotated_dataset.similarity_utils import character_count_similarity_index
 
 
+def merge_intervals(intervals):
+    if len(intervals) == 0:
+        return []
+
+    # check if any intersections overlap and merge them if they do
+    intervals.sort(key=lambda x: x['start_index'])
+    merged_intervals = [intervals[0]]
+    for i in range(1, len(intervals)):
+        current_interval = intervals[i]
+        last_merged_interval = merged_intervals[-1]
+
+        if current_interval['start_index'] <= last_merged_interval['start_index'] + last_merged_interval['length']:
+            last_merged_interval['length'] = max(last_merged_interval['start_index'] + last_merged_interval['length'],
+                                                 current_interval['start_index'] + current_interval['length']) - last_merged_interval['start_index']
+        else:
+            merged_intervals.append(current_interval)
+
+    return merged_intervals
+
+
+def perform_union_merge(annotations):
+    if len(annotations) < 2:
+        return []
+
+    unions = []
+    # get intersections between spans from different annotators
+    for i in range(len(annotations)):
+        for j in range(i + 1, len(annotations)):
+            spans_i = annotations[i]['spans']
+            spans_j = annotations[j]['spans']
+
+            for s_i in range(len(spans_i)):
+                for s_j in range(s_i, len(spans_j)):
+                    s_i_end = spans_i[s_i]['start_index'] + spans_i[s_i]['length']
+                    s_j_end = spans_j[s_j]['start_index'] + spans_j[s_j]['length']
+
+                    if s_i_end < spans_j[s_j]['start_index'] or s_j_end < spans_i[s_i]['start_index']:
+                        continue
+
+                    union_start = min(spans_i[s_i]['start_index'], spans_j[s_j]['start_index'])
+                    union_end = max(s_i_end, s_j_end)
+                    unions.append({
+                        'start_index': union_start,
+                        'length': union_end - union_start
+                    })
+
+    return merge_intervals(unions)
+
+
+def perform_intersection_merge(annotations):
+    if len(annotations) < 2:
+        return []
+
+    intersections = []
+    # get intersections between spans from different annotators
+    for i in range(len(annotations)):
+        for j in range(i + 1, len(annotations)):
+            spans_i = annotations[i]['spans']
+            spans_j = annotations[j]['spans']
+
+            for s_i in range(len(spans_i)):
+                for s_j in range(s_i, len(spans_j)):
+                    s_i_end = spans_i[s_i]['start_index'] + spans_i[s_i]['length']
+                    s_j_end = spans_j[s_j]['start_index'] + spans_j[s_j]['length']
+
+                    if s_i_end < spans_j[s_j]['start_index'] or s_j_end < spans_i[s_i]['start_index']:
+                        continue
+
+                    intersection_start = max(spans_i[s_i]['start_index'], spans_j[s_j]['start_index'])
+                    intersection_end = min(s_i_end, s_j_end)
+                    intersections.append({
+                        'start_index': intersection_start,
+                        'length': intersection_end - intersection_start
+                    })
+
+    return merge_intervals(intersections)
+
+
 def get_spans_with_intersection(intersections, spans):
     intersected_spans = []
     for i in range(len(spans)):
@@ -108,3 +186,22 @@ def get_span_intersections(span_data_list):
                 })
 
     return intersections
+
+
+if __name__ == '__main__':
+    intersections = [
+        {
+            'start_index': 0,
+            'length': 10
+        },
+        {
+            'start_index': 5,
+            'length': 10
+        },
+        {
+            'start_index': 40,
+            'length': 10
+        },
+    ]
+
+    print(merge_intervals(intersections))

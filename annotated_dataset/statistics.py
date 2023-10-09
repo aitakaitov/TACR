@@ -170,7 +170,7 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
 
 def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes):
     os.makedirs(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}', exist_ok=True)
-    df = pd.read_csv('datasets_complete/1_to_0_and_2_removed/0.7.csv')
+    df = pd.read_csv('datasets_complete/1_to_0_and_2_removed/0.5.csv')
     pattern = re.compile(r'[a-z0-9]+\.cz')
     webpages = get_webpages()
 
@@ -237,8 +237,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         if annotators < min_annotators:
             continue
 
-        classification = [int(d) for d in row['states'].split('///')]
-        classification = 'negative' if sum(classification) / len(classification) > 1.5 else 'positive'
+        classification = 'negative' if neg_c > pos_c else 'positive'
 
         # if positive only, ignore negative
         if classification == 'negative' and positive_docs_only:
@@ -385,7 +384,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
     plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
     plt.close()
 
-    return {   
+    return {
         # metadata, class stats
         'span_classes': classes,
         'positive_docs_only': positive_docs_only,
@@ -432,7 +431,7 @@ def main():
     majority_fractions = [2 / 3.0]
     min_annotators = [3]
     min_spans = [3]
-    match_leniency = [10, 50, 100, 200, 500, 1000]
+    match_leniency = [100]
     positive_only = [False]
     min_span_lengths = [2]
     max_span_lengths = [10000]
