@@ -15,7 +15,7 @@ def get_webpages():
     """
     Loads a list of webpage IDs
     """
-    with open('datasets/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
+    with open('datasets_complete/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
         return [w.strip() for w in f.readlines()]
 
 
@@ -431,9 +431,9 @@ def main():
     majority_fractions = [2 / 3.0]
     min_annotators = [3]
     min_spans = [3]
-    match_leniency = [100]
+    match_leniency = [10, 25, 50, 100, 250, 500, 1000]
     positive_only = [False]
-    min_span_lengths = [2]
+    min_span_lengths = [1]
     max_span_lengths = [10000]
     lowercase = [True]
     whitespace_merge = [True]

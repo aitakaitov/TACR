@@ -26,7 +26,7 @@ def _get_f1_for_doc(document_annotations):
     results = [[0] * len(document_annotations) for _ in range(len(document_annotations))]
     f1s = []
     for h in range(len(document_annotations)):
-        for r in range(h, len(document_annotations)):
+        for r in range(h + 1, len(document_annotations)):
             results[h][r] = _get_f1_for_pair(document_annotations[h], document_annotations[r])
             f1s.append(results[h][r])
 
@@ -45,6 +45,7 @@ def _transform_data(document_data, clss):
 
             temp.append(annotation_data['spans'])
 
+        # creates 1x1 F1 matrix - no point in evaluating it
         if len(temp) < 2:
             continue
         else:
