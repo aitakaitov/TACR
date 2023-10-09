@@ -12,7 +12,7 @@ def get_webpages():
     """
     Loads a list of webpage IDs
     """
-    with open('datasets/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
+    with open('datasets_complete/1_to_0_and_2_removed/webpages.txt', 'r', encoding='utf-8') as f:
         return [w.strip() for w in f.readlines()]
 
 
@@ -86,6 +86,11 @@ def main():
     df = pd.read_csv(args['input_file'])
     webpages = get_webpages()
 
+    no_intersections = 0
+    fraction = 0
+    annotators_e = 0
+    spans_e = 0
+
     data_samples = []
     for index, row in df.iterrows():
         # ignore these
@@ -94,6 +99,7 @@ def main():
 
         # check agreement
         if row['majority_fraction'] < args['min_fraction']:
+            fraction += 1
             continue
 
         # calculate number of annotators
@@ -109,6 +115,7 @@ def main():
         frac_per_an = row['majority_fraction'] / majority_size
         annotators = majority_size + (1 - row['majority_fraction']) / frac_per_an
         if annotators < args['min_annotators']:
+            annotators_e += 1
             continue
 
         classification = 0 if neg_c > pos_c else 1
@@ -119,6 +126,7 @@ def main():
 
         # check number of spans
         if sum([int(c) for c in row['span_counts'].split('///')]) < args['min_spans']:
+            spans_e += 1
             continue
 
         # process spans
@@ -176,12 +184,19 @@ def main():
         with open(f'html/{get_index_for_url(webpages, row["url"])}.html', 'r', encoding='utf-8') as f:
             data = process_document(f.read(), span_data, classification)
 
-        if len(data['negative_spans']) != 0 and len(data['positive_spans']) != 0:
+        if len(data['negative_spans']) != 0 or len(data['positive_spans']) != 0:
             data_samples.append(data)
+        else:
+            no_intersections += 1
 
     with open(args['output_file'], 'w+', encoding='utf-8') as f:
         for sample in data_samples:
             f.write(json.dumps(sample) + '\n')
+
+    print(f'not enough spans: {spans_e}')
+    print(f'no intersections: {no_intersections}')
+    print(f'fraction too low: {fraction}')
+    print(f'not enough annotators: {annotators_e}')
 
 
 def parse_bool(s):
@@ -190,14 +205,14 @@ def parse_bool(s):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.5.csv')
+    parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.7.csv')
     parser.add_argument('--output_file', type=str, required=False, default=None)
-    parser.add_argument('--min_fraction', default=1.0, type=float)
-    parser.add_argument('--min_annotators', default=3, type=int)
+    parser.add_argument('--min_fraction', default=0.6, type=float)
+    parser.add_argument('--min_annotators', default=2, type=int)
     parser.add_argument('--positive_only', default=False, type=parse_bool)
-    parser.add_argument('--min_spans', default=3, type=int)
-    parser.add_argument('--min_span_length', default=1, type=int)
-    parser.add_argument('--max_span_length', default=500, type=int)
+    parser.add_argument('--min_spans', default=2, type=int)
+    parser.add_argument('--min_span_length', default=2, type=int)
+    parser.add_argument('--max_span_length', default=1500, type=int)
     parser.add_argument('--lowercase', default=True, type=parse_bool)
     parser.add_argument('--merge_whitespaces', default=True, type=parse_bool)
     parser.add_argument('--strictness', default=250, type=int)

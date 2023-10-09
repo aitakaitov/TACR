@@ -428,12 +428,12 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
 
 
 def main():
-    majority_fractions = [2 / 3.0]
-    min_annotators = [3]
-    min_spans = [3]
-    match_leniency = [10, 25, 50, 100, 250, 500, 1000]
+    majority_fractions = [0.6]
+    min_annotators = [2]
+    min_spans = [2]
+    match_leniency = [10, 50]
     positive_only = [False]
-    min_span_lengths = [1]
+    min_span_lengths = [2]
     max_span_lengths = [10000]
     lowercase = [True]
     whitespace_merge = [True]
