@@ -1,19 +1,19 @@
 import json
-import os
 import argparse
-import numpy as np
 
 import torch.cuda
 import transformers
 
 import attribution_methods as _attrs
+from tqdm import tqdm
 
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 OUTPUT_DIR = 'attributions_html'
 SOURCE_DIR = 'attribution_articles'
-BLOCK_SIZE = 510
+BLOCK_SIZE = 128
+
 
 def format_attrs(attrs):
     """
@@ -22,6 +22,8 @@ def format_attrs(attrs):
     :param sentence:
     :return:
     """
+    attrs = torch.mean(attrs, dim=2)
+
     if len(attrs.shape) == 2 and attrs.shape[0] == 1:
         attrs = torch.squeeze(attrs)
 
@@ -29,17 +31,14 @@ def format_attrs(attrs):
     return attrs_list[1:len(attrs) - 1]  # leave out cls and sep
 
 
-def embed_input_ids(text):
+def embed_input_ids(input_ids):
     """
     Prepares input embeddings and attention mask
     :param sentence:
     :return:
     """
-    encoded = tokenizer(text, max_length=512, truncation=True, return_tensors='pt')
-    attention_mask = encoded.data['attention_mask'].to(device)
-    input_embeds = torch.unsqueeze(torch.index_select(embeddings, 0, torch.squeeze(encoded.data['input_ids']).to(device)), 0).requires_grad_(True).to(device)
-
-    return encoded.data['input_ids'], input_embeds, attention_mask
+    input_embeds = torch.unsqueeze(torch.index_select(embeddings, 0, torch.squeeze(input_ids).to(device)), 0).requires_grad_(True).to(device)
+    return input_embeds
 
 
 def generate_attributions(input_embeds, att_mask):
@@ -114,16 +113,16 @@ def split_into_blocks(encoding):
             input_ids.extend(encoding.input_ids[i * BLOCK_SIZE:])
             input_ids.append(sep_token_index)
             blocks.append({
-                'input_ids': input_ids,
-                'attention_mask': [1 for _ in range(len(input_ids))]
+                'input_ids': torch.tensor([input_ids], dtype=torch.int),
+                'attention_mask': torch.tensor([[1 for _ in range(len(input_ids))]], dtype=torch.int)
             })
         else:
             input_ids = [cls_token_index]
             input_ids.extend(encoding.input_ids[i * BLOCK_SIZE: (i + 1) * BLOCK_SIZE])
             input_ids.append(sep_token_index)
             blocks.append({
-                'input_ids': input_ids,
-                'attention_mask': [1 for _ in range(len(input_ids))]
+                'input_ids': torch.tensor([input_ids], dtype=torch.int),
+                'attention_mask': torch.tensor([[1 for _ in range(len(input_ids))]], dtype=torch.int)
             })
 
     return blocks
@@ -132,16 +131,52 @@ def split_into_blocks(encoding):
 def sample_attributions(encoding):
     blocks = split_into_blocks(encoding)
 
+    positive_complete = []
+    negative_complete = []
+    for block in blocks:
+        input_embeds = embed_input_ids(block['input_ids'])
+        attention_mask = block['attention_mask'].to(device)
+
+        negative_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 0, 0 * input_embeds, model,
+                                                       logit_fn, steps=30)
+        positive_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 1, 0 * input_embeds, model,
+                                                       logit_fn, steps=30)
+
+        #positive_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 1, model, logit_fn, True)
+        #negative_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 0, model, logit_fn, True)
+
+        #positive_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 1, model, logit_fn, 10, stdev_spread=0.1).to('cuda')
+        #positive_attributions *= input_embeds
+        #negative_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 0, model, logit_fn, 10, stdev_spread=0.1).to('cuda')
+        #negative_attributions *= input_embeds
+
+
+        positive_complete.extend(format_attrs(positive_attributions))
+        negative_complete.extend(format_attrs(negative_attributions))
+
+    return positive_complete, negative_complete
+
 
 def main():
     with open(args['input_file'], 'r', encoding='utf-8') as f:
         samples = f.readlines()
 
-    for sample in samples:
-        # preprocessing to split the text according to spans
-        sample = json.loads(sample)
-        text_split, split_classes = split_text(sample)
-        encoding = tokenize_text(text_split)
+    with open('attributions.jsonl', 'w+', encoding='utf-8') as f:
+        for sample in tqdm(samples):
+            # preprocessing to split the text according to spans
+            sample = json.loads(sample)
+            text_split, split_classes = split_text(sample)
+            encoding = tokenize_text(text_split)
+            pos_attrs, neg_attrs = sample_attributions(encoding)
+
+            f.write(json.dumps({
+                'label': sample['label'],
+                'text_split': text_split,
+                'classes_split': split_classes,
+                'word_ids': encoding.word_ids(),
+                'pos_class_attrs': pos_attrs,
+                'neg_class_attrs': neg_attrs
+            }) + '\n')
 
 
 
