@@ -151,7 +151,7 @@ def sample_attributions(encoding):
         if args['method'] == 'random':
             positive_attributions = _attrs.random_attributions(block['input_ids'])
             negative_attributions = _attrs.random_attributions(block['input_ids'])
-        elif args['method'] == 'grads_x_i':
+        elif args['method'] == 'gradsxi':
             positive_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 1, model, logit_fn, True)
             negative_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 0, model, logit_fn, True)
         elif args['method'] == 'grads':
@@ -228,7 +228,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='../sec-final-e2')
     parser.add_argument('--input_file', type=str, default='keep_all_pars_only.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
-    parser.add_argument('--output_file', type=str, default='random_keep_all_pars_only.jsonl')
+    parser.add_argument('--output_file', type=str, default=None)
     parser.add_argument('--method', type=str, default='random')
     parser.add_argument('--block_size', type=int, default=510)
     args = vars(parser.parse_args())
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     print(args['method'])
 
     if args['output_file'] is None:
-        args['output_file'] = f'{args["method"]}_bs{args["block_size"]}_{args["input_file"]}.jsonl'
+        args['output_file'] = f'{args["method"]}_bs{args["block_size"]}_{args["input_file"]}'
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
