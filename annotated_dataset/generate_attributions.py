@@ -227,16 +227,16 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='../sec-final-e2')
-    parser.add_argument('--input_file', type=str, default='test_dataset.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
-    parser.add_argument('--output_file', type=str, default='keepall_ig10.jsonl')
-    parser.add_argument('--method', type=str, default='grads_x_i')
-    parser.add_argument('--block_size', type=int, default=256)
+    parser.add_argument('--input_file', type=str, default='keep_all_pars_only.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
+    parser.add_argument('--output_file', type=str, default='random_keep_all_pars_only.jsonl')
+    parser.add_argument('--method', type=str, default='random')
+    parser.add_argument('--block_size', type=int, default=510)
     args = vars(parser.parse_args())
 
     print(args['method'])
 
     if args['output_file'] is None:
-        args['output_file'] = f'attrs_{args["method"]}_bs{args["block_size"]}.jsonl'
+        args['output_file'] = f'{args["input_file"]}_{args["method"]}_bs{args["block_size"]}.jsonl'
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])

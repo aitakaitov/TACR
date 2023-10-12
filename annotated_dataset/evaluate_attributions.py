@@ -169,12 +169,12 @@ def parse_list_to_ints(string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', default='ig20_keep_all.jsonl', type=str)
+    parser.add_argument('--file', default='ig20_bs128_keep_all.jsonl', type=str)
     parser.add_argument('--top_k_tokens', default=None, type=int)
     parser.add_argument('--top_p_tokens', default=10, type=int)
     parser.add_argument('--evaluate_class', default='both', type=str)
     args = vars(parser.parse_args())
 
-    wandb.init(config={**args, 'method': args['file'].split('_')[0]}, project='lrec-2024')
+    wandb.init(config={**args, 'method': args['file'].split('_')[0], 'block_size': args['file'].split('_')[1][2:]}, project='lrec-2024')
 
     main()
