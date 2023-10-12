@@ -1,6 +1,7 @@
 import json
 import argparse
 import numpy as np
+import wandb
 
 
 def threshold_k(attributions):
@@ -148,12 +149,14 @@ def main():
                 pos_map_count += 1
 
     if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'ads':
+        wandb.log({'positive_f1': pos_f1 / f1_pos_count, 'positive_precision': pos_prec / f1_pos_count, 'positive_recall': pos_rec / f1_pos_count, 'positive_map': pos_map / pos_map_count})
         print(f'Positive F1: {pos_f1 / f1_pos_count}')
         print(f'Positive Precision: {pos_prec / f1_pos_count}')
         print(f'Positive Recall: {pos_rec / f1_pos_count}')
         print(f'Positive MAP: {pos_map / pos_map_count}')
 
     if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'non_ads':
+        wandb.log({'negative_f1': neg_f1 / f1_neg_count, 'negative_precision': neg_prec / f1_neg_count, 'negative_recall': neg_rec / f1_neg_count, 'negative_map': neg_map / neg_map_count})
         print(f'Negative F1: {neg_f1 / f1_neg_count}')
         print(f'Negative Precision: {neg_prec / f1_neg_count}')
         print(f'Negative Recall: {neg_rec / f1_neg_count}')
@@ -166,9 +169,12 @@ def parse_list_to_ints(string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', default='attrs_random_bs128.jsonl', type=str)
-    parser.add_argument('--top_k_tokens', default=None, type=int)#parse_list_to_ints)
+    parser.add_argument('--file', default='ig20_keep_all.jsonl', type=str)
+    parser.add_argument('--top_k_tokens', default=None, type=int)
     parser.add_argument('--top_p_tokens', default=10, type=int)
     parser.add_argument('--evaluate_class', default='both', type=str)
     args = vars(parser.parse_args())
+
+    wandb.init(config={**args, 'method': args['file'].split('_')[0]}, project='lrec-2024')
+
     main()
