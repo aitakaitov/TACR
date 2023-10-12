@@ -94,6 +94,16 @@ def split_text(sample):
                 in_pos = not in_pos
             last_point = points[i][0]
 
+    empty_indices = []
+    for i in range(len(text_split)):
+        if text_split[i] == '':
+            empty_indices.append(i)
+
+    empty_indices.sort(reverse=True)
+    for i in empty_indices:
+        del split_classes[i]
+        del text_split[i]
+
     return text_split, split_classes
 
 

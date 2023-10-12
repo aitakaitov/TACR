@@ -386,6 +386,8 @@ def get_stats():
         'positive_docs_only': args['positive_only'],
         'min_frac': '{:.2f}'.format(args['min_fraction']),
         'min_annotators': args['min_annotators'],
+        'keep_paragraphs_only': args['keep_paragraphs_only'],
+        'start_trim': args['start_trim'],
         'strictness': args['strictness'],
         'min_span_length': args['min_span_length'],
         'max_span_length': args['max_span_length'],
@@ -430,14 +432,14 @@ def main():
     match_leniency = [250]
     positive_only = [False]
     min_span_lengths = [2]
-    max_span_lengths = [1000]
+    max_span_lengths = [True, False]
     lowercase = [True]
     whitespace_merge = [True]
     classes = ['both']
 
     first = True
 
-    with open('stats_075-3-3.csv', 'w+', encoding='utf-8') as f:
+    with open('stats_075-3-3_partest.csv', 'w+', encoding='utf-8') as f:
         for po in positive_only:
             args['positive_only'] = po
             for frac in majority_fractions:
@@ -457,9 +459,9 @@ def main():
                                         for c in classes:
                                             args['span_classes'] = c
                                             for masl in max_span_lengths:
-                                                args['max_span_length'] = masl
-                                                args['keep_paragraphs_only'] = True
-                                                args['start_trim'] = 15
+                                                args['max_span_length'] = 1000
+                                                args['keep_paragraphs_only'] = masl
+                                                args['start_trim'] = 15 if masl else None
                                                 result = get_stats()
                                                 if first:
                                                     first = False
