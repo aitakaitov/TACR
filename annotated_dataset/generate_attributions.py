@@ -22,7 +22,8 @@ def format_attrs(attrs):
     :param sentence:
     :return:
     """
-    attrs = torch.mean(attrs, dim=2)
+    if len(attrs.shape) == 3:
+        attrs = torch.mean(attrs, dim=2)
 
     if len(attrs.shape) == 2 and attrs.shape[0] == 1:
         attrs = torch.squeeze(attrs)
@@ -137,19 +138,27 @@ def sample_attributions(encoding):
         input_embeds = embed_input_ids(block['input_ids'])
         attention_mask = block['attention_mask'].to(device)
 
-        negative_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 0, 0 * input_embeds, model,
-                                                       logit_fn, steps=30)
-        positive_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 1, 0 * input_embeds, model,
-                                                       logit_fn, steps=30)
-
-        #positive_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 1, model, logit_fn, True)
-        #negative_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 0, model, logit_fn, True)
-
-        #positive_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 1, model, logit_fn, 10, stdev_spread=0.1).to('cuda')
-        #positive_attributions *= input_embeds
-        #negative_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 0, model, logit_fn, 10, stdev_spread=0.1).to('cuda')
-        #negative_attributions *= input_embeds
-
+        if args['method'] == 'random':
+            positive_attributions = _attrs.random_attributions(block['input_ids'])
+            negative_attributions = _attrs.random_attributions(block['input_ids'])
+        elif args['method'] == 'grads_x_i':
+            positive_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 1, model, logit_fn, True)
+            negative_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 0, model, logit_fn, True)
+        elif args['method'] == 'grads':
+            positive_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 1, model, logit_fn, False)
+            negative_attributions = _attrs.gradient_attributions(input_embeds, attention_mask, 0, model, logit_fn, False)
+        elif 'sg' in args['method']:
+            samples = int(args['method'][2:])
+            positive_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 1, model, logit_fn, samples, stdev_spread=0.15).to(device)
+            positive_attributions *= input_embeds
+            negative_attributions = _attrs.sg_attributions(input_embeds, attention_mask, 0, model, logit_fn, samples, stdev_spread=0.15).to(device)
+            negative_attributions *= input_embeds
+            positive_attributions = positive_attributions.to('cpu')
+            negative_attributions = negative_attributions.to('cpu')
+        elif 'ig' in args['method']:
+            samples = int(args['method'][2:])
+            negative_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 0, 0 * input_embeds, model, logit_fn, steps=samples)
+            positive_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 1, 0 * input_embeds, model, logit_fn, steps=samples)
 
         positive_complete.extend(format_attrs(positive_attributions))
         negative_complete.extend(format_attrs(negative_attributions))
@@ -157,14 +166,40 @@ def sample_attributions(encoding):
     return positive_complete, negative_complete
 
 
+def run_eval(samples):
+    tp = tn = fp = fn = 0
+    for sample in samples:
+        text = sample['text']
+        encoded = tokenizer(text, max_length=512, truncation=True, return_tensors='pt')
+        prediction = model(encoded.input_ids.to(device), encoded.attention_mask.to(device)).logits
+        prediction = logit_fn(prediction)
+
+        pred_class = int(torch.argmax(prediction))
+        if pred_class == 1 and sample['label'] == 1:
+            tp += 1
+        elif pred_class == 1 and sample['label'] == 0:
+            fp += 1
+        elif pred_class == 0 and sample['label'] == 1:
+            fn += 1
+        else:
+            tn += 1
+
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+
+    print(f'Classification F1: {2 * (precision * recall) / (precision + recall)}')
+
+
 def main():
     with open(args['input_file'], 'r', encoding='utf-8') as f:
         samples = f.readlines()
 
-    with open('attributions.jsonl', 'w+', encoding='utf-8') as f:
+    samples = [json.loads(s) for s in samples]
+    # run_eval(samples)
+
+    with open(args['output_file'], 'w+', encoding='utf-8') as f:
         for sample in tqdm(samples):
             # preprocessing to split the text according to spans
-            sample = json.loads(sample)
             text_split, split_classes = split_text(sample)
             encoding = tokenize_text(text_split)
             pos_attrs, neg_attrs = sample_attributions(encoding)
@@ -179,13 +214,19 @@ def main():
             }) + '\n')
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='../sec-final-e2')
-    parser.add_argument('--input_file', type=str, default='test_dataset.jsonl')
-    parser.add_argument('--method', type=str, default='ig')
+    parser.add_argument('--input_file', type=str, default='test_dataset.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
+    parser.add_argument('--output_file', type=str, default='keepall_ig10.jsonl')
+    parser.add_argument('--method', type=str, default='grads_x_i')
+    parser.add_argument('--block_size', type=int, default=256)
     args = vars(parser.parse_args())
+
+    print(args['method'])
+
+    if args['output_file'] is None:
+        args['output_file'] = f'attrs_{args["method"]}_bs{args["block_size"]}.jsonl'
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
@@ -196,3 +237,5 @@ if __name__ == '__main__':
     logit_fn = torch.nn.Softmax(dim=1)
 
     main()
+    print()
+    print()

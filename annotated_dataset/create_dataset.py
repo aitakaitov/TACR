@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 from annotated_dataset.annotation_merge_utils import process_span, get_span_intersections, get_spans_with_intersection, \
-    perform_union_merge, perform_intersection_merge
+    perform_union_merge, perform_intersection_merge, keep_all
 from annotated_dataset.html_utils import html_to_plaintext
 
 
@@ -28,13 +28,15 @@ def perform_merge(annotations):
         result = perform_union_merge(annotations)
     elif args['merge_annotations'] == 'intersection':
         result = perform_intersection_merge(annotations)
+    elif args['merge_annotations'] == 'keep_all':
+        result = keep_all(annotations)
 
     return result
 
 
 def process_document(html, annotation_list, classification):
     # find the spans
-    soup_text = html_to_plaintext(html, lowercase=args['lowercase'], merge_whitespaces=args['merge_whitespaces'])
+    soup_text = html_to_plaintext(html, lowercase=args['lowercase'], merge_whitespaces=args['merge_whitespaces'], keep_paragraphs_only=args['keep_paragraphs_only'], trim_start=args['start_trim'])
     annotator_data = []
     for annotation in annotation_list:
         spans = []
@@ -205,7 +207,7 @@ def parse_bool(s):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.7.csv')
+    parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.5.csv')
     parser.add_argument('--output_file', type=str, required=False, default=None)
     parser.add_argument('--min_fraction', default=0.6, type=float)
     parser.add_argument('--min_annotators', default=2, type=int)
@@ -217,7 +219,9 @@ if __name__ == '__main__':
     parser.add_argument('--merge_whitespaces', default=True, type=parse_bool)
     parser.add_argument('--strictness', default=250, type=int)
     parser.add_argument('--span_classes', default='both', type=str)   # ads, non_ads, both
-    parser.add_argument('--merge_annotations', default='intersection', type=str)  # intersection, union
+    parser.add_argument('--merge_annotations', default='keep_all', type=str)  # intersection, union, keep_all
+    parser.add_argument('--keep_paragraphs_only', default=False, type=parse_bool)
+    parser.add_argument('--start_trim', default=None, type=int)
     args = vars(parser.parse_args())
 
     if args['output_file'] is None:

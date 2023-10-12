@@ -52,7 +52,7 @@ def random_attributions(inputs_embeds):
     """
     Random attributions
     """
-    return torch.randn_like(inputs_embeds)
+    return torch.randn_like(torch.tensor(inputs_embeds, dtype=torch.float))
 
 
 def gradient_attributions(inputs_embeds, attention_mask, target_idx, model, logit_fn, x_inputs=False):

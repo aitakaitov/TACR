@@ -91,40 +91,39 @@ def evaluate_class_f1(sample, clss):
     return precision, recall, f1
 
 
-def map(sample, clss):
-    token_classes = get_token_classes(sample, clss)
+def avep(sample, clss):
     indexed_attrs = list(enumerate(sample[f'{"pos" if clss == 1 else "neg"}_class_attrs']))
     indexed_attrs.sort(key=lambda x: x[1], reverse=True)
+    # sorted_indices = [ia[0] for ia in indexed_attrs]
+    token_classes = get_token_classes(sample, clss)
 
-    precision_sum = 0
-    for i in range(0, len(indexed_attrs)):
-        ave_p = 0
-        token_sum = 0
-        for j in range(0, i + 1):
-            token_sum += token_classes[j]
-            ave_p += token_classes[j] #* indexed_attrs[j][1]
+    if sum(token_classes) == 0:
+        return None
 
-        if token_sum == 0:
-            ave_p = 0
+    tp = 0
+    fp = 0
+    #fn = sum(token_classes)
+    average_precision = 0
+    for token_index in range(len(indexed_attrs)):
+        if token_classes[indexed_attrs[token_index][0]] == 0:
+            fp += 1
+            continue
         else:
-            ave_p /= token_sum
+            tp += 1
+            average_precision += tp / (tp + fp)
 
-        precision_sum += ave_p
-
-    precision_sum /= len(indexed_attrs)
-
-    return precision_sum
+    return average_precision / sum(token_classes)
 
 
 def main():
     with open(args['file'], 'r', encoding='utf-8') as f:
         samples = f.readlines()
+    samples = [json.loads(s) for s in samples]
 
     pos_f1 = pos_prec = pos_rec = neg_f1 = neg_prec = neg_rec = f1_pos_count = f1_neg_count = 0
     pos_map = neg_map = pos_map_count = neg_map_count = 0
-    for i, sample in enumerate(samples):
-        sample = json.loads(sample)
 
+    for i, sample in enumerate(samples):
         if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'non_ads':
             prec, rec, f1 = evaluate_class_f1(sample, 0)
             if prec is not None:
@@ -132,8 +131,10 @@ def main():
                 neg_rec += rec
                 neg_f1 += f1
                 f1_neg_count += 1
-            neg_map += map(sample, 0)
-            neg_map_count += 1
+            ap = avep(sample, 0)
+            if ap is not None:
+                neg_map += ap
+                neg_map_count += 1
         if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'ads':
             prec, rec, f1 = evaluate_class_f1(sample, 1)
             if prec is not None:
@@ -141,8 +142,10 @@ def main():
                 pos_rec += rec
                 pos_f1 += f1
                 f1_pos_count += 1
-            pos_map += map(sample, 1)
-            pos_map_count += 1
+            ap = avep(sample, 1)
+            if ap is not None:
+                pos_map += ap
+                pos_map_count += 1
 
     if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'ads':
         print(f'Positive F1: {pos_f1 / f1_pos_count}')
@@ -163,7 +166,7 @@ def parse_list_to_ints(string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', default='attributions_ig30.jsonl', type=str)
+    parser.add_argument('--file', default='attrs_random_bs128.jsonl', type=str)
     parser.add_argument('--top_k_tokens', default=None, type=int)#parse_list_to_ints)
     parser.add_argument('--top_p_tokens', default=10, type=int)
     parser.add_argument('--evaluate_class', default='both', type=str)

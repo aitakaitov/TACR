@@ -1,6 +1,6 @@
 import re
 
-from annotated_dataset.similarity_utils import character_count_similarity_index
+from similarity_utils import character_count_similarity_index
 
 
 def merge_intervals(intervals):
@@ -31,6 +31,35 @@ def perform_union_merge(annotations):
     # get intersections between spans from different annotators
     for i in range(len(annotations)):
         for j in range(i + 1, len(annotations)):
+            spans_i = annotations[i]['spans']
+            spans_j = annotations[j]['spans']
+
+            for s_i in range(len(spans_i)):
+                for s_j in range(s_i, len(spans_j)):
+                    s_i_end = spans_i[s_i]['start_index'] + spans_i[s_i]['length']
+                    s_j_end = spans_j[s_j]['start_index'] + spans_j[s_j]['length']
+
+                    if s_i_end < spans_j[s_j]['start_index'] or s_j_end < spans_i[s_i]['start_index']:
+                        continue
+
+                    union_start = min(spans_i[s_i]['start_index'], spans_j[s_j]['start_index'])
+                    union_end = max(s_i_end, s_j_end)
+                    unions.append({
+                        'start_index': union_start,
+                        'length': union_end - union_start
+                    })
+
+    return merge_intervals(unions)
+
+
+def keep_all(annotations):
+    if len(annotations) < 1:
+        return []
+
+    unions = []
+    # get intersections between spans from different annotators
+    for i in range(len(annotations)):
+        for j in range(i, len(annotations)):
             spans_i = annotations[i]['spans']
             spans_j = annotations[j]['spans']
 
@@ -137,6 +166,9 @@ def process_span(span_text, plaintext_doc, lowercase=True, merge_whitespaces=Tru
         if report_multiples:
             # if we want to know about multiplicities, run it again
             index, count_sim = character_count_similarity_index(span_text, plaintext_doc, leniency=strictness, check_multiples=True)
+
+    if index == 0:
+        print('starts at zero')
 
     return {
         'start_index': index,

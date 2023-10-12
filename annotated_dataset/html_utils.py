@@ -99,9 +99,15 @@ def parse_xpath(xp):
     return path
 
 
-def html_to_plaintext(html, lowercase=True, merge_whitespaces=True):
+def html_to_plaintext(html, keep_paragraphs_only=False, trim_start=None, lowercase=True, merge_whitespaces=True):
     soup = BeautifulSoup(html, 'lxml')
-    soup_text = soup.get_text()
+
+    if keep_paragraphs_only:
+        soup_text = keep_paragraphs(soup)
+        if trim_start:
+            soup_text = trim_text_start_length(soup_text, trim_start)
+    else:
+        soup_text = soup.get_text()
 
     if lowercase:
         soup_text = soup_text.lower()

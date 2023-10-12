@@ -6,9 +6,9 @@ import os
 import matplotlib.pyplot as plt
 import re
 
-from annotated_dataset.annotation_merge_utils import process_span, get_span_intersections, get_spans_with_intersection
-from annotated_dataset.html_utils import html_to_plaintext
-from annotated_dataset.iaa_metrics import soft_f1
+from annotation_merge_utils import process_span, get_span_intersections, get_spans_with_intersection
+from html_utils import html_to_plaintext
+from iaa_metrics import soft_f1
 
 
 def get_webpages():
@@ -26,19 +26,14 @@ def get_index_for_url(webpages, url):
     return webpages.index(url) + 1
 
 
-def get_span_statistics(html, span_data_list, match_strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes):
+def get_span_statistics(html, span_data_list):
     """
     Given the HTML string, a list of spans and hyperparameters, calculate a set of doc-specific statistics
-    @param max_span_length: maximum allowed length fo span in tokens
     @param html: HTML string
     @param span_data_list: list of span data - can be changed
-    @param match_strictness: how strict the inexact matching is (value of ~10 000 will disable inexact matches)
-    @param min_span_length: minimum length of span text in tokens (span is split by whitespace, set to 0 to disable)
-    @param lowercase: lowercase the span texts and the extracted HTML text
-    @param whitespace_merge: merge sequences of whitespaces into a single space
     @return: statistics
     """
-    soup_text = html_to_plaintext(html, lowercase=lowercase, merge_whitespaces=whitespace_merge)
+    soup_text = html_to_plaintext(html, lowercase=args['lowercase'], merge_whitespaces=args['merge_whitespaces'], trim_start=args['start_trim'], keep_paragraphs_only=args['keep_paragraphs_only'])
 
     # how many spans passed the length check
     spans_long_enough = 0
@@ -54,10 +49,11 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
         for span in spans_data['spans']:
             # check length
             span_length = len(span[1:-1].split())
-            if span_length < min_span_length or span_length > max_span_length:
+            if span_length < args['min_span_length'] or span_length > args['max_span_length']:
                 continue
             # try to find the span
-            result = process_span(span[1:-1], soup_text, lowercase=lowercase, merge_whitespaces=whitespace_merge, strictness=match_strictness)
+            result = process_span(span[1:-1], soup_text, lowercase=args['lowercase'],
+                                  merge_whitespaces=args['merge_whitespaces'], strictness=args['strictness'])
             if result is not None:
                 # if span is found, record stats
                 spans_located += 1
@@ -106,8 +102,8 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
     intersections_percents_negative = []
 
     # get intersection stats
-    if classes != 'both':
-        if classes == 'ads':
+    if args['span_classes'] != 'both':
+        if args['span_classes'] == 'ads':
             spans_to_process = []
             for a in valid_spans:
                 if a['decision'] == 'positive':
@@ -168,8 +164,8 @@ def get_span_statistics(html, span_data_list, match_strictness, min_span_length,
     }
 
 
-def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes):
-    os.makedirs(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}', exist_ok=True)
+def get_stats():
+    os.makedirs(f'histograms/po-{args["positive_only"]}_f{args["min_fraction"]:.2f}_a{args["min_annotators"]}_s{args["min_spans"]}', exist_ok=True)
     df = pd.read_csv('datasets_complete/1_to_0_and_2_removed/0.5.csv')
     pattern = re.compile(r'[a-z0-9]+\.cz')
     webpages = get_webpages()
@@ -219,7 +215,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
             continue
 
         # check agreement
-        if row['majority_fraction'] < min_fraction:
+        if row['majority_fraction'] < args["min_fraction"]:
             continue
 
         # calculate number of annotators
@@ -234,17 +230,17 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         majority_size = max(pos_c, neg_c)
         frac_per_an = row['majority_fraction'] / majority_size
         annotators = majority_size + (1 - row['majority_fraction']) / frac_per_an
-        if annotators < min_annotators:
+        if annotators < args["min_annotators"]:
             continue
 
         classification = 'negative' if neg_c > pos_c else 'positive'
 
         # if positive only, ignore negative
-        if classification == 'negative' and positive_docs_only:
+        if classification == 'negative' and args["positive_only"]:
             continue
 
         # check number of spans
-        if sum([int(c) for c in row['span_counts'].split('///')]) < min_spans:
+        if sum([int(c) for c in row['span_counts'].split('///')]) < args["min_spans"]:
             continue
 
         # record docs
@@ -288,16 +284,16 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
 
         # now check which spans we want
         # 'both' means we want spans from both positive and negative annotators
-        if classes == 'both':
+        if args["span_classes"] == 'both':
             indices_to_remove = []
         # 'ads' means we want spans only from positive annotators
-        elif classes == 'ads':
+        elif args["span_classes"] == 'ads':
             indices_to_remove = []
             for i in range(len(annotator_decisions)):
                 if annotator_decisions[i] == 'negative':
                     indices_to_remove.append(i)
         # 'non_ads' means we want spans only from negative annotators
-        elif classes == 'non_ads':
+        elif args["span_classes"] == 'non_ads':
             indices_to_remove = []
             for i in range(len(annotator_decisions)):
                 if annotator_decisions[i] == 'positive':
@@ -322,7 +318,7 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         total_spans_available += sum([len(s) for s in annotator_spans])
 
         with open(f'html/{get_index_for_url(webpages, row["url"])}.html', 'r', encoding='utf-8') as f:
-            data = get_span_statistics(f.read(), span_data, strictness, min_span_length, max_span_length, lowercase, whitespace_merge, classes)
+            data = get_span_statistics(f.read(), span_data)
 
         total_spans_eligible += data['long_enough_spans']
         total_spans_located += data['spans_located']
@@ -345,13 +341,13 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         processed_spans.append(data['span_data'])
 
     plt.hist(span_counts, bins=10)
-    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_counts.png')
+    plt.savefig(f'histograms/po-{args["positive_only"]}_f{args["min_fraction"]:.2f}_a{args["min_annotators"]}_s{args["min_spans"]}/span_counts.png')
     plt.xlabel('span counts')
     plt.ylabel('spans')
     plt.close()
 
     plt.hist(span_lengths_tokens, bins=100)
-    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/span_lengths.png')
+    plt.savefig(f'histograms/po-{args["positive_only"]}_f{args["min_fraction"]:.2f}_a{args["min_annotators"]}_s{args["min_spans"]}/span_lengths.png')
     plt.xlabel('span lengths in tokens')
     plt.ylabel('spans')
     plt.close()
@@ -381,20 +377,20 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
     plt.xticks(rotation=90)
     plt.ylabel('documents')
     plt.subplots_adjust(bottom=0.3)  # Adjust the value as needed
-    plt.savefig(f'histograms/po-{positive_docs_only}_f{min_fraction:.2f}_a{min_annotators}_s{min_spans}/domains.png')
+    plt.savefig(f'histograms/po-{args["positive_only"]}_f{args["min_fraction"]:.2f}_a{args["min_annotators"]}_s{args["min_spans"]}/domains.png')
     plt.close()
 
     return {
         # metadata, class stats
-        'span_classes': classes,
-        'positive_docs_only': positive_docs_only,
-        'min_frac': '{:.2f}'.format(min_fraction),
-        'min_annotators': min_annotators,
-        'strictness': strictness,
-        'min_span_length': min_span_length,
-        'max_span_length': max_span_length,
-        'lowercase': lowercase,
-        'whitespace_merge': whitespace_merge,
+        'span_classes': args["span_classes"],
+        'positive_docs_only': args['positive_only'],
+        'min_frac': '{:.2f}'.format(args['min_fraction']),
+        'min_annotators': args['min_annotators'],
+        'strictness': args['strictness'],
+        'min_span_length': args['min_span_length'],
+        'max_span_length': args['max_span_length'],
+        'lowercase': args['lowercase'],
+        'whitespace_merge': args['merge_whitespaces'],
         'total_docs': total_docs,
         'ad_docs_perc': ad_docs / total_docs,
 
@@ -422,37 +418,49 @@ def get_stats(min_fraction, min_annotators, min_spans, positive_docs_only, stric
         #'spans_with_intersect_perc': 1 - (spans_without_intersection / total_spans_located),
 
         # inter annotator agreement
-        'soft_f1_positive': soft_f1(processed_spans, 'positive') if classes == 'ads' or classes == 'both' else 'nan',
-        'soft_f1_negative': soft_f1(processed_spans, 'negative') if classes == 'non_ads' or classes == 'both' else 'nan'
+        'soft_f1_positive': soft_f1(processed_spans, 'positive') if args['span_classes'] == 'ads' or args['span_classes'] == 'both' else 'nan',
+        'soft_f1_negative': soft_f1(processed_spans, 'negative') if args['span_classes'] == 'non_ads' or args['span_classes'] == 'both' else 'nan'
     }
 
 
 def main():
-    majority_fractions = [0.6]
-    min_annotators = [2]
-    min_spans = [2]
-    match_leniency = [10, 50]
+    majority_fractions = [0.75]
+    min_annotators = [3]
+    min_spans = [3]
+    match_leniency = [250]
     positive_only = [False]
     min_span_lengths = [2]
-    max_span_lengths = [10000]
+    max_span_lengths = [1000]
     lowercase = [True]
     whitespace_merge = [True]
     classes = ['both']
 
     first = True
 
-    with open('stats.csv', 'w+', encoding='utf-8') as f:
+    with open('stats_075-3-3.csv', 'w+', encoding='utf-8') as f:
         for po in positive_only:
+            args['positive_only'] = po
             for frac in majority_fractions:
+                args['min_fraction'] = frac
                 for anns in min_annotators:
+                    args['min_annotators'] = anns
                     for sp in min_spans:
+                        args['min_spans'] = sp
                         for l in match_leniency:
+                            args['strictness'] = l
                             for msl in min_span_lengths:
+                                args['min_span_length'] = msl
                                 for lwc in lowercase:
+                                    args['lowercase'] = lwc
                                     for wsm in whitespace_merge:
+                                        args['merge_whitespaces'] = wsm
                                         for c in classes:
+                                            args['span_classes'] = c
                                             for masl in max_span_lengths:
-                                                result = get_stats(frac, anns, sp, po, l, msl, masl, lwc, wsm, c)
+                                                args['max_span_length'] = masl
+                                                args['keep_paragraphs_only'] = True
+                                                args['start_trim'] = 15
+                                                result = get_stats()
                                                 if first:
                                                     first = False
                                                     f.write(';'.join(result.keys()) + '\n')
@@ -461,4 +469,5 @@ def main():
 
 
 if __name__ == '__main__':
+    args = {}
     main()
