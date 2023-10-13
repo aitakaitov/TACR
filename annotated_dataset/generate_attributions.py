@@ -236,7 +236,7 @@ if __name__ == '__main__':
     print(args['method'])
 
     if args['output_file'] is None:
-        args['output_file'] = f'{args["method"]}_bs{args["block_size"]}_{args["input_file"]}'
+        args['output_file'] = f'{args["method"]}_{args["block_size"]}_{args["model"]}_{args["input_file"]}'
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
