@@ -241,7 +241,11 @@ if __name__ == '__main__':
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
 
-    embeddings = model.electra.base_model.embeddings.word_embeddings.weight.data.to(device)
+    if 'sec' in args['model']:
+        embeddings = model.electra.base_model.embeddings.word_embeddings.weight.data.to(device)
+    else:
+        embeddings = model.bert.base_model.embeddings.word_embeddings.weight.data.to(device)
+
     cls_token_index = tokenizer.cls_token_id
     sep_token_index = tokenizer.sep_token_id
     logit_fn = torch.nn.Softmax(dim=1)
