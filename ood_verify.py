@@ -3,8 +3,6 @@ import random
 
 import wandb
 
-import openai_utils
-
 random.seed(42)
 
 import transformers
@@ -77,23 +75,9 @@ def run_verify(tokenizer, model, dataset_file):
     })
 
 
-def get_predictions_chatgpt(ad_samples):
-    predictions = []
-    for sample in tqdm(ad_samples):
-        text = openai_utils.shorten_text(sample['text'], 1000)
-        response = openai_utils.get_response(text)
-        predictions.append(openai_utils.decode_response_binary(response))
-
-    return predictions
-
-
 def main():
     ad_samples, domains, labels = load_ads()
-
-    if not args['use_chatgpt']:
-        predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
-    else:
-        predictions = get_predictions_chatgpt(ad_samples)
+    predictions = get_predictions(model, tokenizer, ad_samples, model.config.max_position_embeddings)
     print_results(predictions, labels, domains)
 
 
@@ -104,7 +88,6 @@ def check_bool(inp):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_save', type=str, default=None, required=False)
-    parser.add_argument('--use_chatgpt', default=False, type=check_bool, required=False)
     parser.add_argument('--dataset_file', type=str, required=True)
     parser.add_argument('--max_samples', default=None, type=int, required=False)
     args = vars(parser.parse_args())
