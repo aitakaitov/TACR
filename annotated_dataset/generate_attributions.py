@@ -7,13 +7,10 @@ import transformers
 import attribution_methods as _attrs
 from tqdm import tqdm
 
+from BERT_explainability.bert import BertForSequenceClassificationChefer
+from BERT_explainability.modules.BERT.ExplanationGenerator import Generator
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-OUTPUT_DIR = 'attributions_html'
-SOURCE_DIR = 'attribution_articles'
-BLOCK_SIZE = 128
-
 
 def format_attrs(attrs):
     """
@@ -113,15 +110,15 @@ def tokenize_text(text_split):
 
 def split_into_blocks(encoding):
     length = len(encoding.input_ids)
-    block_count = int(length / BLOCK_SIZE)
-    if length % BLOCK_SIZE != 0:
+    block_count = int(length / args['block_size'])
+    if length % args['block_size'] != 0:
         block_count += 1
 
     blocks = []
     for i in range(block_count):
         if i == block_count - 1:
             input_ids = [cls_token_index]
-            input_ids.extend(encoding.input_ids[i * BLOCK_SIZE:])
+            input_ids.extend(encoding.input_ids[i * args['block_size']:])
             input_ids.append(sep_token_index)
             blocks.append({
                 'input_ids': torch.tensor([input_ids], dtype=torch.int),
@@ -129,7 +126,7 @@ def split_into_blocks(encoding):
             })
         else:
             input_ids = [cls_token_index]
-            input_ids.extend(encoding.input_ids[i * BLOCK_SIZE: (i + 1) * BLOCK_SIZE])
+            input_ids.extend(encoding.input_ids[i * args['block_size']: (i + 1) * args['block_size']])
             input_ids.append(sep_token_index)
             blocks.append({
                 'input_ids': torch.tensor([input_ids], dtype=torch.int),
@@ -169,6 +166,9 @@ def sample_attributions(encoding):
             samples = int(args['method'][2:])
             negative_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 0, 0 * input_embeds, model, logit_fn, steps=samples)
             positive_attributions = _attrs.ig_attributions(input_embeds, attention_mask, 1, 0 * input_embeds, model, logit_fn, steps=samples)
+        elif args['method'] == 'chefer':
+            negative_attributions = relprop_generator.generate_LRP(input_ids=block['input_ids'].to(device), attention_mask=attention_mask, start_layer=0, index=0)
+            positive_attributions = relprop_generator.generate_LRP(input_ids=block['input_ids'].to(device), attention_mask=attention_mask, start_layer=0, index=1)
 
         positive_complete.extend(format_attrs(positive_attributions))
         negative_complete.extend(format_attrs(negative_attributions))
@@ -200,6 +200,26 @@ def run_eval(samples):
     print(f'Classification F1: {2 * (precision * recall) / (precision + recall)}')
 
 
+def optimal_attributions(split_classes, encoding):
+    token_splits = encoding.word_ids()
+
+    positive_attributions = []
+    for ts in token_splits:
+        clss = 0
+        if split_classes[ts][1]:
+            clss = 1
+        positive_attributions.append(clss)
+
+    negative_attributions = []
+    for ts in token_splits:
+        clss = 0
+        if split_classes[ts][0]:
+            clss = 1
+        negative_attributions.append(clss)
+
+    return positive_attributions, negative_attributions
+
+
 def main():
     with open(args['input_file'], 'r', encoding='utf-8') as f:
         samples = f.readlines()
@@ -227,7 +247,7 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='../sec-final-e2')
-    parser.add_argument('--input_file', type=str, default='keep_all_pars_only.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
+    parser.add_argument('--input_file', type=str, default='keep_all.jsonl')#'05_mf0.6_ma2_poF_ms2_misl2_masl1500_s250_mI_scB.jsonl')
     parser.add_argument('--output_file', type=str, default=None)
     parser.add_argument('--method', type=str, default='random')
     parser.add_argument('--block_size', type=int, default=510)
@@ -240,11 +260,14 @@ if __name__ == '__main__':
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(args['model']).to(device)
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
+    config = transformers.AutoConfig.from_pretrained(args['model'])
 
-    if 'sec' in args['model']:
+    if 'ElectraForSequenceClassification' in config.architectures[0]:
         embeddings = model.electra.base_model.embeddings.word_embeddings.weight.data.to(device)
-    else:
+    elif 'BertForSequenceClassification' in config.architectures[0]:
         embeddings = model.bert.base_model.embeddings.word_embeddings.weight.data.to(device)
+        model = BertForSequenceClassificationChefer.from_pretrained(args['model']).to(device)
+        relprop_generator = Generator(model)
 
     cls_token_index = tokenizer.cls_token_id
     sep_token_index = tokenizer.sep_token_id
