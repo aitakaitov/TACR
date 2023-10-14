@@ -32,7 +32,7 @@ def compute_metrics(p):
 
 def tokenize(examples):
     #if 'intfloat' not in args['model']:
-    return tokenizer(examples['text'], truncation=True, max_length=512)
+    return tokenizer(examples['text'], truncation=True, max_length=512 if 'Czert' in args['model'] else None)
     #if 'barticzech' in args['model']:
     #return tokenizer(examples['text'], truncation=True, max_length=1024)
 
@@ -92,7 +92,7 @@ def main():
         train_dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:500]')
         train_dataset = prepare_dataset_whole_docs(train_dataset)
 
-    test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train')#.map(tokenize)
+    # test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train')#.map(tokenize)
 
     config = transformers.AutoConfig.from_pretrained(args['model'])
     if args['dropout'] is not None:

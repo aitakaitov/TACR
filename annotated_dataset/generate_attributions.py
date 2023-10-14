@@ -26,7 +26,12 @@ def format_attrs(attrs):
         attrs = torch.squeeze(attrs)
 
     attrs_list = attrs.tolist()
-    return attrs_list[1:len(attrs) - 1]  # leave out cls and sep
+
+    if model_type == 'bert':
+        return attrs_list[1:len(attrs) - 1]  # leave out cls and sep
+
+    if model_type == 'mt5':
+        return attrs_list[:len(attrs) - 1]  # leave out sep
 
 
 def embed_input_ids(input_ids):
@@ -262,12 +267,19 @@ if __name__ == '__main__':
     tokenizer = transformers.AutoTokenizer.from_pretrained(args['model'])
     config = transformers.AutoConfig.from_pretrained(args['model'])
 
+    model_type = None
+
     if 'ElectraForSequenceClassification' in config.architectures[0]:
         embeddings = model.electra.base_model.embeddings.word_embeddings.weight.data.to(device)
+        model_type = 'bert'
     elif 'BertForSequenceClassification' in config.architectures[0]:
         embeddings = model.bert.base_model.embeddings.word_embeddings.weight.data.to(device)
         model = BertForSequenceClassificationChefer.from_pretrained(args['model']).to(device)
         relprop_generator = Generator(model)
+        model_type = 'bert'
+    elif 'MT5ForSequenceClassification' in config.architectures[0]:
+        embeddings = model.transformer.encoder.embed_tokens.weight.data.to(device)
+        model_type = 'mt5'
 
     cls_token_index = tokenizer.cls_token_id
     sep_token_index = tokenizer.sep_token_id
