@@ -48,7 +48,10 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
     blocks = []
     for i in range(block_count):
         if i == block_count - 1:
-            input_ids = [cls_token_index]
+            if 'Czert' in args['model']:
+                input_ids = [cls_token_index]
+            else:
+                input_ids = []
             input_ids.extend(encoding.input_ids[i * block_size:])
             input_ids.append(sep_token_index)
             blocks.append({
@@ -56,7 +59,10 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
                 'attention_mask': [1 for _ in range(len(input_ids))]
             })
         else:
-            input_ids = [cls_token_index]
+            if 'Czert' in args['model']:
+                input_ids = [cls_token_index]
+            else:
+                input_ids = []
             input_ids.extend(encoding.input_ids[i * block_size: (i + 1) * block_size])
             input_ids.append(sep_token_index)
             blocks.append({
@@ -69,7 +75,7 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
 
 def prepare_dataset_whole_docs(dataset):
     cls_token_index = tokenizer.cls_token_id
-    sep_token_index = tokenizer.sep_token_id
+    sep_token_index = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else 1
 
     new_dataset = []
     for sample in tqdm.tqdm(dataset):
@@ -84,13 +90,16 @@ def prepare_dataset_whole_docs(dataset):
 
 def main():
     if not args['whole_document']:
-        train_dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:500]').map(tokenize)
-        # split_dataset = dataset.train_test_split(test_size=args['test_split_size'])
-        # train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+        dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
+        split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
+        train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
         train_dataset = train_dataset.shuffle(seed=42)
     else:
-        train_dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train[:500]')
-        train_dataset = prepare_dataset_whole_docs(train_dataset)
+        dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train')
+        dataset = prepare_dataset_whole_docs(dataset)
+        split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
+        train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+        train_dataset = train_dataset.shuffle(seed=42)
 
     # test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train')#.map(tokenize)
 
@@ -109,8 +118,8 @@ def main():
 
     training_arguments = TrainingArguments(
         args['save_name'],
-        evaluation_strategy='no',
-        do_eval=False,
+        evaluation_strategy='epoch',
+        do_eval=True,
         learning_rate=args['lr'],
         per_device_train_batch_size=args['batch_size'],
         per_device_eval_batch_size=args['batch_size'],
@@ -119,7 +128,8 @@ def main():
         fp16=True,  # True,
         save_strategy='epoch',
         group_by_length=True,
-        eval_accumulation_steps=128 if 'barticzech' in args['model'] else None
+        eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
+        gradient_accumulation_steps=16
     )
 
     data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
@@ -128,10 +138,10 @@ def main():
         model,
         training_arguments,
         train_dataset=train_dataset,
-        #eval_dataset=test_dataset,
+        eval_dataset=test_dataset,
         data_collator=data_collator,
         tokenizer=tokenizer,
-        #compute_metrics=compute_metrics
+        compute_metrics=compute_metrics
     )
 
     trainer.train()
@@ -149,12 +159,12 @@ def parse_bool(s):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', required=False, default=1, type=int)
-    parser.add_argument('--model', required=True, default='UWB-AIR/Czert-B-base-cased', type=str)
+    parser.add_argument('--model', required=True, default='google/mt5-base', type=str)
     parser.add_argument('--lr', required=True, default=1e-5, type=float)
     parser.add_argument('--batch_size', required=False, default=1, type=int)
     parser.add_argument('--test_split_size', required=False, default=0.1, type=float)
     parser.add_argument('--dataset_json_path', required=True, default=None, type=str)
-    parser.add_argument('--ood_test_json_path', required=True, default=None, type=str)
+    parser.add_argument('--ood_test_json_path', required=False, default=None, type=str)
     parser.add_argument('--dropout', default=None, type=float, required=False)
     parser.add_argument('--save_name', required=True, type=str)
     parser.add_argument('--tags', required=False, default=None, type=str)
