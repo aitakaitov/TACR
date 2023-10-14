@@ -176,6 +176,6 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     split = args['file'].split('_')
-    wandb.init(config={**args, 'method': split[0], 'block_size': split[1], 'model': split[2], 'input_file': split[3]}, project='lrec-2024')
+    wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, project='lrec-2024')
 
     main()
