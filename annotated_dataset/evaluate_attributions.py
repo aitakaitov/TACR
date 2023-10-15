@@ -173,9 +173,11 @@ if __name__ == '__main__':
     parser.add_argument('--top_k_tokens', default=None, type=int)
     parser.add_argument('--top_p_tokens', default=1, type=int)
     parser.add_argument('--evaluate_class', default='both', type=str)
+    parser.add_argument('--tags', default='', type=str)
     args = vars(parser.parse_args())
 
     split = args['file'].split('_')
     wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, project='lrec-2024')
+    wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, tags=args['tags'].split(','), project='lrec-2024')
 
     main()
