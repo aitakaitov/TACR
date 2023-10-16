@@ -77,9 +77,15 @@ def process_document(html, annotation_list, classification):
 
     if args['span_classes'] == 'both' or args['span_classes'] == 'ads':
         result['positive_spans'] = positive_merged
+        # for span in positive_merged:
+        #     stats['merged_span_counts_positive'] += 1
+        #     stats['merged_span_lengths_positive'].append(span['length'])
 
     if args['span_classes'] == 'both' or args['span_classes'] == 'non_ads':
         result['negative_spans'] = negative_merged
+        # for span in positive_merged:
+        #     stats['merged_span_counts_negative'] += 1
+        #     stats['merged_span_lengths_negative'].append(span['length'])
 
     return result
 
@@ -226,6 +232,22 @@ if __name__ == '__main__':
 
     if args['output_file'] is None:
         # todo change
-        args['output_file'] = f'test_dataset.jsonl'
+        args['output_file'] = f'aaa.jsonl'
+
+    # stats = {
+    #     'merged_span_counts_positive': 0,
+    #     'merged_span_counts_negative': 0,
+    #     'merged_span_lengths_positive': [],
+    #     'merged_span_lengths_negative': [],
+    # }
 
     main()
+
+    # print(f'Merged spans positive count: {stats["merged_span_counts_positive"]}')
+    # print(f'Merged spans negative count: {stats["merged_span_counts_negative"]}')
+    # print(f'Merged spans positive average length (chars): {sum(stats["merged_span_lengths_positive"]) / len(stats["merged_span_lengths_positive"])}')
+    # print(f'Merged spans negative average length (chars): {sum(stats["merged_span_lengths_negative"]) / len(stats["merged_span_lengths_negative"])}')
+    # print(f'Merged spans positive max length (chars): {max(stats["merged_span_lengths_positive"])}')
+    # print(f'Merged spans negative max length (chars): {max(stats["merged_span_lengths_negative"])}')
+    # print(f'Merged spans positive min length (chars): {min(stats["merged_span_lengths_positive"])}')
+    # print(f'Merged spans negative min length (chars): {min(stats["merged_span_lengths_negative"])}')

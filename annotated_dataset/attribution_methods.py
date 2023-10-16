@@ -2,10 +2,7 @@ import numpy
 import torch
 from captum.attr import KernelShap
 
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-torch.manual_seed(42)
-
 
 def kernel_shap_attributions(input_ids, attention_mask, target_idx, model, baseline_idx, cls_tensor, sep_tensor,
                              logit_fn, steps=50):
@@ -52,6 +49,7 @@ def random_attributions(inputs_embeds):
     """
     Random attributions
     """
+    torch.seed()
     return torch.randn_like(torch.tensor(inputs_embeds, dtype=torch.float))
 
 
@@ -158,3 +156,4 @@ def __sg_generate_samples(inputs_embeds, length, stdev, samples):
         noisy_samples.append(sample)
 
     return noisy_samples
+

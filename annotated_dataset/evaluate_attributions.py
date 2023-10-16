@@ -31,6 +31,41 @@ def threshold_p(attributions):
     return thresholded_attributions
 
 
+def extend_k_tokens(token_classes):
+    k = args['extend_k_tokens']
+    in_span = False
+    i = 0
+    while i < len(token_classes):
+        if token_classes[i] == 1 and not in_span:
+            in_span = True
+            go_back = False if i == 0 else True
+            j = -1
+            while go_back:
+                if i + j < 0 or -j > k:
+                    break
+                token_classes[i + j] = 1
+                j -= 1
+
+        elif token_classes[i] == 1 and in_span:
+            pass
+
+        elif token_classes[i] == 0 and not in_span:
+            pass
+
+        elif in_span and token_classes[i] == 0:
+            in_span = False
+            go_forward = False if i == len(token_classes) - 1 else True
+            j = 0
+            while go_forward:
+                if i + j > len(token_classes) - 1 or j == k:
+                    i += j
+                    break
+                token_classes[i + j] = 1
+                j += 1
+
+        i += 1
+
+
 def get_token_classes(sample, _type):
     span_classes = sample['classes_split']
     token_splits = sample['word_ids']
@@ -41,7 +76,48 @@ def get_token_classes(sample, _type):
             clss = 1
         token_classes.append(clss)
 
+    if args['extend_k_tokens'] != 0:
+        extend_k_tokens(token_classes)
+
     return token_classes
+
+
+def fraction_hit_full_count(token_classes, attrs):
+    new_attrs = [a for a in attrs]
+    in_span = False
+    span_length = 0
+    hits = 0
+    start = -1
+    for i in range(len(token_classes)):
+        if token_classes[i] == 1 and not in_span:
+            in_span = True
+            span_length += 1
+            start = i
+            if new_attrs[i] == 1:
+                hits += 1
+        elif token_classes[i] == 1 and in_span:
+            span_length += 1
+            if new_attrs[i] == 1:
+                hits += 1
+        elif token_classes[i] == 0 and not in_span:
+            continue
+        elif token_classes[i] == 0 and in_span:
+            in_span = False
+
+            if hits / span_length >= args['fraction_hit_full_count']:
+                for j in range(start, start + span_length):
+                    new_attrs[j] = 1
+
+            start = -1
+            span_length = 0
+            hits = 0
+
+    if in_span:
+        if hits / span_length >= args['fraction_hit_full_count']:
+            for j in range(start, start + span_length):
+                new_attrs[j] = 1
+
+    return new_attrs
 
 
 def get_tp_fp_fn(sample, attrs, _type):
@@ -50,6 +126,10 @@ def get_tp_fp_fn(sample, attrs, _type):
     fp = 0
 
     token_classes = get_token_classes(sample, _type)
+
+    if args['fraction_hit_full_count']:
+        attrs = fraction_hit_full_count(token_classes, attrs)
+
     control = 0
     for tc, attr in zip(token_classes, attrs):
         if attr == 1 and tc == 1:
@@ -169,11 +249,14 @@ def parse_list_to_ints(string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', default='keep_all_optimal.jsonl', type=str)
+    parser.add_argument('--file', default='sg25_keep_all_025.jsonl', type=str)
     parser.add_argument('--top_k_tokens', default=None, type=int)
-    parser.add_argument('--top_p_tokens', default=1, type=int)
+    parser.add_argument('--top_p_tokens', default=5, type=int)
     parser.add_argument('--evaluate_class', default='both', type=str)
     parser.add_argument('--tags', default='', type=str)
+
+    parser.add_argument('--extend_k_tokens', default=0, type=int)
+    parser.add_argument('--fraction_hit_full_count', default=None, type=float)
     args = vars(parser.parse_args())
 
     split = args['file'].split('_')
