@@ -42,12 +42,12 @@ def process_document(html, annotation_list, classification):
         spans = []
         for span in annotation['spans']:
             # check length
-            span_length = len(span[1:-1].split())
+            span_length = len(span.split())
             if span_length < args['min_span_length'] or span_length > args['max_span_length']:
                 continue
 
             # try to find the span
-            result = process_span(span[1:-1], soup_text, lowercase=args['lowercase'],
+            result = process_span(span, soup_text, lowercase=args['lowercase'],
                                   merge_whitespaces=args['merge_whitespaces'], strictness=args['strictness'],
                                   report_multiples=False)
             if result is not None:
@@ -215,24 +215,24 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_file', default='datasets_complete/1_to_0_and_2_removed/0.5.csv')
     parser.add_argument('--output_file', type=str, required=False, default=None)
-    parser.add_argument('--min_fraction', default=0.6, type=float)
-    parser.add_argument('--min_annotators', default=2, type=int)
+    parser.add_argument('--min_fraction', default=0.75, type=float)
+    parser.add_argument('--min_annotators', default=3, type=int)
     parser.add_argument('--positive_only', default=False, type=parse_bool)
-    parser.add_argument('--min_spans', default=2, type=int)
+    parser.add_argument('--min_spans', default=3, type=int)
     parser.add_argument('--min_span_length', default=2, type=int)
-    parser.add_argument('--max_span_length', default=1500, type=int)
+    parser.add_argument('--max_span_length', default=1000, type=int)
     parser.add_argument('--lowercase', default=True, type=parse_bool)
     parser.add_argument('--merge_whitespaces', default=True, type=parse_bool)
-    parser.add_argument('--strictness', default=250, type=int)
+    parser.add_argument('--strictness', default=10000, type=int)
     parser.add_argument('--span_classes', default='both', type=str)   # ads, non_ads, both
-    parser.add_argument('--merge_annotations', default='keep_all', type=str)  # intersection, union, keep_all
+    parser.add_argument('--merge_annotations', default='union', type=str)  # intersection, union, keep_all
     parser.add_argument('--keep_paragraphs_only', default=False, type=parse_bool)
-    parser.add_argument('--start_trim', default=None, type=int)
+    parser.add_argument('--start_trim', default=15, type=int)
     args = vars(parser.parse_args())
 
     if args['output_file'] is None:
         # todo change
-        args['output_file'] = f'aaa.jsonl'
+        args['output_file'] = f'075-union-s10000.jsonl'
 
     # stats = {
     #     'merged_span_counts_positive': 0,
