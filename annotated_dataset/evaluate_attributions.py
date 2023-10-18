@@ -204,14 +204,16 @@ def main():
     pos_f1 = pos_prec = pos_rec = neg_f1 = neg_prec = neg_rec = f1_pos_count = f1_neg_count = 0
     pos_map = neg_map = pos_map_count = neg_map_count = 0
 
+    pos_prec = []
+    pos_rec = []
+    neg_prec = []
+    neg_rec = []
     for i, sample in enumerate(samples):
         if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'non_ads':
             prec, rec, f1 = evaluate_class_f1(sample, 0)
             if prec is not None:
-                neg_prec += prec
-                neg_rec += rec
-                neg_f1 += f1
-                f1_neg_count += 1
+                neg_prec.append(prec)
+                neg_rec.append(rec)
             ap = avep(sample, 0)
             if ap is not None:
                 neg_map += ap
@@ -219,28 +221,35 @@ def main():
         if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'ads':
             prec, rec, f1 = evaluate_class_f1(sample, 1)
             if prec is not None:
-                pos_prec += prec
-                pos_rec += rec
-                pos_f1 += f1
-                f1_pos_count += 1
+                pos_prec.append(prec)
+                pos_rec.append(rec)
             ap = avep(sample, 1)
             if ap is not None:
                 pos_map += ap
                 pos_map_count += 1
 
+    print('k;method;posf1;posprec;posrec;posmap;negf1;negprec;negrec;negmap\n')
     if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'ads':
-        wandb.log({'positive_f1': pos_f1 / f1_pos_count, 'positive_precision': pos_prec / f1_pos_count, 'positive_recall': pos_rec / f1_pos_count, 'positive_map': pos_map / pos_map_count})
-        print(f'Positive F1: {pos_f1 / f1_pos_count}')
-        print(f'Positive Precision: {pos_prec / f1_pos_count}')
-        print(f'Positive Recall: {pos_rec / f1_pos_count}')
+        prec = sum(pos_prec) / len(pos_prec)
+        rec = sum(pos_rec) / len(pos_rec)
+        f1 = 2 * prec * rec / (rec + prec)
+        wandb.log({'positive_f1': f1, 'positive_precision': prec, 'positive_recall': rec, 'positive_map': pos_map / pos_map_count})
+        print(f'Positive F1: {f1}')
+        print(f'Positive Precision: {prec}')
+        print(f'Positive Recall: {rec}')
         print(f'Positive MAP: {pos_map / pos_map_count}')
 
     if args['evaluate_class'] == 'both' or args['evaluate_class'] == 'non_ads':
-        wandb.log({'negative_f1': neg_f1 / f1_neg_count, 'negative_precision': neg_prec / f1_neg_count, 'negative_recall': neg_rec / f1_neg_count, 'negative_map': neg_map / neg_map_count})
-        print(f'Negative F1: {neg_f1 / f1_neg_count}')
-        print(f'Negative Precision: {neg_prec / f1_neg_count}')
-        print(f'Negative Recall: {neg_rec / f1_neg_count}')
+        prec = sum(neg_prec) / len(neg_prec)
+        rec = sum(neg_rec) / len(neg_rec)
+        f1 = 2 * prec * rec / (rec + prec)
+        wandb.log({'negative_f1': f1, 'negative_precision': prec, 'negative_recall': rec, 'negative_map': neg_map / neg_map_count})
+        print(f'Negative F1: {f1}')
+        print(f'Negative Precision: {prec}')
+        print(f'Negative Recall: {rec}')
         print(f'Negative MAP: {neg_map / neg_map_count}')
+
+    #print(f'{args["fraction_hit_full_count"]};method;{pos_f1 / f1_pos_count};{pos_prec / f1_pos_count};{pos_rec / f1_pos_count};{pos_map / pos_map_count};{neg_f1 / f1_neg_count};{neg_prec / f1_neg_count};{neg_rec / f1_neg_count};{neg_map / neg_map_count}')
 
 
 def parse_list_to_ints(string):
@@ -257,10 +266,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--extend_k_tokens', default=0, type=int)
     parser.add_argument('--fraction_hit_full_count', default=None, type=float)
+
     args = vars(parser.parse_args())
 
     split = args['file'].split('_')
-    wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, project='lrec-2024')
-    wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, tags=args['tags'].split(','), project='lrec-2024')
+    #wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, project='lrec-2024')
+    wandb.init(config={**args, 'file': args['file']}, tags=args['tags'].split(','), project='lrec-2024')
 
     main()

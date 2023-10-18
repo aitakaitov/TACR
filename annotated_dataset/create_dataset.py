@@ -141,6 +141,10 @@ def main():
         annotator_ids = row['emails'].split('///')
         annotator_span_counts = [int(c) for c in row['span_counts'].split('///')]
         annotator_decisions = [1 if d == '0' else 0 for d in row['states'].split('///')]
+
+        if isinstance(row['texts'], float):
+            continue
+
         annotator_spans = [t.split(';;;') for t in row['texts'].split('///')]
         # check if someone didn't mark any spans
         indices_to_remove = []
