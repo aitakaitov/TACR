@@ -78,14 +78,13 @@ def prepare_dataset_whole_docs(dataset):
     sep_token_index = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else 1
 
     new_dataset = []
-    for sample in tqdm.tqdm(dataset):
+    for i, sample in tqdm.tqdm(enumerate(dataset)):
         encoding = tokenizer(sample['text'], add_special_tokens=False)
         blocks = split_into_blocks(encoding, cls_token_index, sep_token_index, 510)
         for block in blocks:
-            new_dataset.append({**block, 'label': sample['label']})
+            new_dataset.append({**block, 'label': sample['label'], 'document_id': i})
 
     return Dataset.from_list(new_dataset)
-
 
 
 def main():
@@ -100,8 +99,6 @@ def main():
         split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
         train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
         train_dataset = train_dataset.shuffle(seed=42)
-
-    # test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train')#.map(tokenize)
 
     config = transformers.AutoConfig.from_pretrained(args['model'])
     if args['dropout'] is not None:
@@ -129,7 +126,7 @@ def main():
         save_strategy='epoch',
         group_by_length=True,
         eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
-        gradient_accumulation_steps=16
+        gradient_accumulation_steps=args['gradient_acc_steps']
     )
 
     data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
@@ -145,11 +142,12 @@ def main():
     )
 
     trainer.train()
-    #trainer.evaluate()
     trainer.save_model(args['save_name'])
 
-    #if ood_test:
-    #    run_verify(tokenizer, model, args['ood_test_json_path'])
+    if ood_test:
+        test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train').map(tokenize)
+        test_dataset = prepare_dataset_whole_docs(test_dataset)
+        run_verify(model, test_dataset)
 
 
 def parse_bool(s):
@@ -159,7 +157,7 @@ def parse_bool(s):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', required=False, default=1, type=int)
-    parser.add_argument('--model', required=True, default='google/mt5-base', type=str)
+    parser.add_argument('--model', required=True, default='UWB-AIR/Czert-B-base-cased', type=str)
     parser.add_argument('--lr', required=True, default=1e-5, type=float)
     parser.add_argument('--batch_size', required=False, default=1, type=int)
     parser.add_argument('--test_split_size', required=False, default=0.1, type=float)
@@ -171,6 +169,7 @@ if __name__ == '__main__':
     parser.add_argument('--domain', required=False, default=None, type=str)
     parser.add_argument('--seed', default=-1, required=False, type=int)
     parser.add_argument('--whole_document', default=True, type=parse_bool)
+    parser.add_argument('--gradient_acc_steps', default=1, type=int)
 
     args = vars(parser.parse_args())
 
