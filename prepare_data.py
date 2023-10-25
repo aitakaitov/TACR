@@ -5,6 +5,8 @@ import argparse
 import random
 import time
 
+import bs4
+
 random.seed(42)
 
 
@@ -80,9 +82,9 @@ def select_files(tld, counts):
     selected_files = {}
     for domain, count in counts.items():
         print(f'Processing \'{domain}\'')
-        dir_path = os.path.join(tld, domain, 'p_only_sanitized')
+        dir_path = os.path.join(tld, domain, args['source_dir_type'])
         files = os.listdir(dir_path)
-        files = [str(os.path.join(tld, domain, 'p_only_sanitized', file)) for file in files]
+        files = [str(os.path.join(tld, domain, args['source_dir_type'], file)) for file in files]
         random.shuffle(files)
         selected_files[domain] = files[:count]
 
@@ -115,11 +117,20 @@ def trim_text(text):
         exit(-1)
 
 
+def get_text_from_html(html):
+    soup = bs4.BeautifulSoup(html)
+    return soup.get_text()
+
+
 def write_dataset(art_files, ad_files, dataset_name):
     with open(os.path.join(args["folder"], f'{dataset_name}.json'), 'w+') as f:
         for domain in art_files.keys():
             for file in art_files[domain]:
                 data = load_from_json(file)
+
+                if 'html' in args['source_dir_type']:
+                    data['data'] = get_text_from_html(data['data'])
+
                 data['data'] = trim_text(data['data'])
                 f.write(json.dumps(
                     {
@@ -132,6 +143,10 @@ def write_dataset(art_files, ad_files, dataset_name):
         for domain in ad_files.keys():
             for file in ad_files[domain]:
                 data = load_from_json(file)
+
+                if 'html' in args['source_dir_type']:
+                    data['data'] = get_text_from_html(data['data'])
+
                 data['data'] = trim_text(data['data'])
                 f.write(json.dumps(
                     {
@@ -213,8 +228,8 @@ def remove_a_domain_temp(art_files, ad_files, domain):
 
 
 def get_domain_files(domain):
-    art_dir_path = os.path.join('art_pages', domain, 'p_only_sanitized')
-    ad_dir_path = os.path.join('ad_pages', domain, 'p_only_sanitized')
+    art_dir_path = os.path.join('art_pages', domain, args['source_dir_type'])
+    ad_dir_path = os.path.join('ad_pages', domain, args['source_dir_type'])
 
     art_files = os.listdir(art_dir_path)
     ad_files = os.listdir(ad_dir_path)
@@ -225,8 +240,8 @@ def get_domain_files(domain):
     random.shuffle(art_files)
     art_files = art_files[:actual_art_count]
 
-    art_files = [str(os.path.join('art_pages', domain, 'p_only_sanitized', file)) for file in art_files]
-    ad_files = [str(os.path.join('ad_pages', domain, 'p_only_sanitized', file)) for file in ad_files]
+    art_files = [str(os.path.join('art_pages', domain, args['source_dir_type'], file)) for file in art_files]
+    ad_files = [str(os.path.join('ad_pages', domain, args['source_dir_type'], file)) for file in ad_files]
 
     return {domain: art_files}, {domain: ad_files}
 
@@ -267,6 +282,7 @@ if __name__ == '__main__':
     parser.add_argument('--trim_length', required=False, default=0, type=int)
     parser.add_argument('--invalid_domains', required=False, default='expres,forbes', type=str)
     parser.add_argument('--random_seed', required=False, default=False, type=bool)
+    parser.add_argument('--source_dir_type', required=True, type=str)
     args = vars(parser.parse_args())
 
     if args['random_seed']:
