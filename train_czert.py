@@ -67,11 +67,15 @@ def prepare_dataset_whole_docs(dataset):
     sep_token_index = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else 1
 
     new_dataset = []
-    for i, sample in tqdm.tqdm(enumerate(dataset)):
+    i = 0
+    for sample in tqdm.tqdm(dataset):
         encoding = tokenizer(sample['text'], add_special_tokens=False)
         blocks = split_into_blocks(encoding, cls_token_index, sep_token_index, 510)
+        if len(blocks) == 0:
+            continue
         for block in blocks:
             new_dataset.append({**block, 'label': sample['label'], 'document_id': i})
+        i += 1
 
     return Dataset.from_list(new_dataset)
 
@@ -183,7 +187,7 @@ if __name__ == '__main__':
         **domain_dict
     })
 
-    tokenizer = AutoTokenizer.from_pretrained(args['model'], use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained(args['model'], use_fast=True)
     accuracy_metric = load_metric("accuracy")
     f1_metric = load_metric('f1')
 
