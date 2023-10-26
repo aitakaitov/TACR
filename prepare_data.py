@@ -4,6 +4,7 @@ import os
 import argparse
 import random
 import time
+import re
 
 import bs4
 
@@ -119,7 +120,9 @@ def trim_text(text):
 
 def get_text_from_html(html):
     soup = bs4.BeautifulSoup(html)
-    return soup.get_text()
+    text = soup.get_text()
+    text = re.sub('\\s+', ' ', text)
+    return text
 
 
 def write_dataset(art_files, ad_files, dataset_name):
