@@ -74,10 +74,19 @@ def get_document_predictions_half_min(doc_block_preds):
 
 
 def run_verify(model, test_dataset):
+    for sample in test_dataset:
+        if isinstance(sample['input_ids'], list):
+            sample['input_ids'] = torch.tensor([sample['input_ids']], dtype=torch.int)
+            sample['attention_mask'] = torch.tensor([sample['attention_mask']], dtype=torch.int)
+            sample['label'] = torch.tensor([sample['label']], dtype=torch.int)
+
     block_predictions = []
     block_labels = []
     for sample in tqdm(test_dataset):
-        logits = model(input_ids=sample['input_ids'].to(device), attention_mask=sample['attention_mask'].to(device)).logits.to('cpu')
+        logits = model(
+            input_ids=torch.tensor([sample['input_ids']]).to(device),
+            attention_mask=torch.tensor([sample['attention_mask']]).to(device)
+        ).logits.to('cpu')
         block_predictions.append(int(torch.argmax(logits, dim=1)))
         block_labels.append(sample['label'])
 
@@ -104,7 +113,7 @@ def run_verify(model, test_dataset):
         'ood_f1_block': f1.compute(predictions=block_predictions, references=block_labels)['f1'],
         'ood_f1_one_min': f1.compute(predictions=doc_preds_one_min, references=labels)['f1'],
         'ood_f1_half_min': f1.compute(predictions=doc_preds_half_min, references=labels)['f1'],
-        'ood_accuracy_blocks': f1.compute(predictions=block_predictions, references=block_labels)['accuracy'],
+        'ood_accuracy_blocks': acc.compute(predictions=block_predictions, references=block_labels)['accuracy'],
         'ood_accuracy_one_min': acc.compute(predictions=doc_preds_one_min, references=labels)['accuracy'],
         'ood_accuracy_half_min': acc.compute(predictions=doc_preds_half_min, references=labels)['accuracy'],
     })

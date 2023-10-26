@@ -31,12 +31,7 @@ def compute_metrics(p):
 
 
 def tokenize(examples):
-    #if 'intfloat' not in args['model']:
-    return tokenizer(examples['text'], truncation=True, max_length=512 if 'Czert' in args['model'] else None)
-    #if 'barticzech' in args['model']:
-    #return tokenizer(examples['text'], truncation=True, max_length=1024)
-
-    #return tokenizer('query: ' + examples['text'], truncation=True, max_length=512)
+    return tokenizer(examples['text'], truncation=True, max_length=512 if not args['whole_document'] else None)
 
 
 def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
@@ -48,10 +43,7 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
     blocks = []
     for i in range(block_count):
         if i == block_count - 1:
-            if 'Czert' in args['model']:
-                input_ids = [cls_token_index]
-            else:
-                input_ids = []
+            input_ids = [cls_token_index]
             input_ids.extend(encoding.input_ids[i * block_size:])
             input_ids.append(sep_token_index)
             blocks.append({
@@ -59,10 +51,7 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
                 'attention_mask': [1 for _ in range(len(input_ids))]
             })
         else:
-            if 'Czert' in args['model']:
-                input_ids = [cls_token_index]
-            else:
-                input_ids = []
+            input_ids = [cls_token_index]
             input_ids.extend(encoding.input_ids[i * block_size: (i + 1) * block_size])
             input_ids.append(sep_token_index)
             blocks.append({
