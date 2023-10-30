@@ -29,7 +29,7 @@ for k, d in datasets.items():
         d[m]['pos_rec'] = []
 
 
-api = wandb.Api(api_key='bb99cb2b7077af36587e0415e9ea6b87a1f0013b')
+api = wandb.Api()
 runs = api.runs('aitakaitov/tacr-reklama', filters={'tags': 'nofilter-v1-attrs'})
 for run in runs:
     a = 0
@@ -40,7 +40,7 @@ for run in runs:
         continue
 
     model = config['file']['value'].split('_')[2].split('/')[1]
-    if 'sec' in model:
+    if 'sec' not in model:
         continue
     #if 'tags' not in config.keys():
     #    continue
