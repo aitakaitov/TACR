@@ -81,61 +81,62 @@ def prepare_dataset_whole_docs(dataset):
 
 
 def main():
-    if not args['whole_document']:
-        dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
-        split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
-        train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
-        train_dataset = train_dataset.shuffle(seed=42)
-    else:
-        dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train')
-        dataset = prepare_dataset_whole_docs(dataset)
-        split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
-        train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
-        train_dataset = train_dataset.shuffle(seed=42)
-
     config = transformers.AutoConfig.from_pretrained(args['model'])
-    if args['dropout'] is not None:
-        config.classifier_dropout = args['dropout']
-        config.hidden_dropout_prob = args['dropout']
-        config.attention_probs_dropout_prob = args['dropout']
-
+    # if args['dropout'] is not None:
+    #     config.classifier_dropout = args['dropout']
+    #     config.hidden_dropout_prob = args['dropout']
+    #     config.attention_probs_dropout_prob = args['dropout']
+    #
     config.num_labels = 2
     config.output_attentions = False
     config.output_hidden_states = False
     config.pooler_output = False
 
-    model = AutoModelForSequenceClassification.from_pretrained(args['model'], config=config)
+    model = AutoModelForSequenceClassification.from_pretrained(args['model'], config=config).to('cuda')
 
-    training_arguments = TrainingArguments(
-        args['save_name'],
-        evaluation_strategy='epoch',
-        do_eval=True,
-        learning_rate=args['lr'],
-        per_device_train_batch_size=args['batch_size'],
-        per_device_eval_batch_size=args['batch_size'],
-        num_train_epochs=args['epochs'],
-        weight_decay=1e-5,
-        fp16=True,  # True,
-        save_strategy='epoch',
-        group_by_length=True,
-        eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
-        gradient_accumulation_steps=args['gradient_acc_steps']
-    )
+    if args['dataset_json_path']:
+        if not args['whole_document']:
+            dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train').map(tokenize)
+            split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
+            train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+            train_dataset = train_dataset.shuffle(seed=42)
+        else:
+            dataset = load_dataset('json', data_files=args['dataset_json_path'], split='train')
+            dataset = prepare_dataset_whole_docs(dataset)
+            split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
+            train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
+            train_dataset = train_dataset.shuffle(seed=42)
+    
+        training_arguments = TrainingArguments(
+            args['save_name'],
+            evaluation_strategy='epoch',
+            do_eval=True,
+            learning_rate=args['lr'],
+            per_device_train_batch_size=args['batch_size'],
+            per_device_eval_batch_size=args['batch_size'],
+            num_train_epochs=args['epochs'],
+            weight_decay=1e-5,
+            fp16=True,  # True,
+            save_strategy='epoch',
+            group_by_length=True,
+            eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
+            gradient_accumulation_steps=args['gradient_acc_steps']
+        )
 
-    data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
+        data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
 
-    trainer = Trainer(
-        model,
-        training_arguments,
-        train_dataset=train_dataset,
-        eval_dataset=test_dataset,
-        data_collator=data_collator,
-        tokenizer=tokenizer,
-        compute_metrics=compute_metrics
-    )
+        trainer = Trainer(
+            model,
+            training_arguments,
+            train_dataset=train_dataset,
+            eval_dataset=test_dataset,
+            data_collator=data_collator,
+            tokenizer=tokenizer,
+            compute_metrics=compute_metrics
+        )
 
-    trainer.train()
-    trainer.save_model(args['save_name'])
+        trainer.train()
+        trainer.save_model(args['save_name'])
 
     if ood_test:
         test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train').map(tokenize)
@@ -153,8 +154,8 @@ if __name__ == '__main__':
     parser.add_argument('--model', required=True, default='UWB-AIR/Czert-B-base-cased', type=str)
     parser.add_argument('--lr', required=True, default=1e-5, type=float)
     parser.add_argument('--batch_size', required=False, default=1, type=int)
-    parser.add_argument('--test_split_size', required=False, default=0.1, type=float)
-    parser.add_argument('--dataset_json_path', required=True, default=None, type=str)
+    parser.add_argument('--test_split_size', required=False, default=0.15, type=float)
+    parser.add_argument('--dataset_json_path', required=False, default=None, type=str)
     parser.add_argument('--ood_test_json_path', required=False, default=None, type=str)
     parser.add_argument('--dropout', default=None, type=float, required=False)
     parser.add_argument('--save_name', required=True, type=str)
