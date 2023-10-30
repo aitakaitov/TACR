@@ -121,20 +121,40 @@ def main():
             group_by_length=True,
             eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
             gradient_accumulation_steps=args['gradient_acc_steps'],
-            seed=args['seed']
+            seed=args['seed'],
         )
 
         data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
 
-        trainer = Trainer(
-            model,
-            training_arguments,
-            train_dataset=train_dataset,
-            eval_dataset=test_dataset,
-            data_collator=data_collator,
-            tokenizer=tokenizer,
-            compute_metrics=compute_metrics
-        )
+        if args['lr_scheduler'] == 'linear_decay':
+            trainer = Trainer(
+                model,
+                training_arguments,
+                train_dataset=train_dataset,
+                eval_dataset=test_dataset,
+                data_collator=data_collator,
+                tokenizer=tokenizer,
+                compute_metrics=compute_metrics,
+            )
+        else:
+            total_steps = len(train_dataset) * args['epochs'] / (args['gradient_acc_steps'] * args['batch_size'])
+            warmup_steps = int(args['warmup_steps'] * total_steps)
+
+            if args['lr_scheduler'] == 'warmup_decay':
+                optimizer = torch.optim.AdamW(params=model.parameters(), lr=args['lr'], weight_decay=1e-5)
+                scheduler = transformers.get_linear_schedule_with_warmup(optimizer, num_warmup_steps=warmup_steps,
+                                                                         num_training_steps=total_steps)
+
+            trainer = Trainer(
+                model,
+                training_arguments,
+                train_dataset=train_dataset,
+                eval_dataset=test_dataset,
+                data_collator=data_collator,
+                tokenizer=tokenizer,
+                compute_metrics=compute_metrics,
+                optimizers=(optimizer, scheduler)
+            )
 
         trainer.train()
         trainer.save_model(args['save_name'])
@@ -165,6 +185,8 @@ if __name__ == '__main__':
     parser.add_argument('--seed', default=-1, required=False, type=int)
     parser.add_argument('--whole_document', default=True, type=parse_bool)
     parser.add_argument('--gradient_acc_steps', default=1, type=int)
+    parser.add_argument('--lr_scheduler', default='linear_decay', type=str)
+    parser.add_argument('--warmup_steps', default=0.1, type=float)
 
     args = vars(parser.parse_args())
 
@@ -190,6 +212,7 @@ if __name__ == '__main__':
         'dataset': args['dataset_json_path'],
         'left_out_domain': args['dataset_json_path'] if ood_test else None,
         'model_save': args['save_name'],
+        **args,
         **domain_dict,
         **seed_dict
     })
