@@ -82,11 +82,11 @@ def prepare_dataset_whole_docs(dataset):
 
 def main():
     config = transformers.AutoConfig.from_pretrained(args['model'])
-    # if args['dropout'] is not None:
-    #     config.classifier_dropout = args['dropout']
-    #     config.hidden_dropout_prob = args['dropout']
-    #     config.attention_probs_dropout_prob = args['dropout']
-    #
+    if args['dropout'] is not None:
+         config.classifier_dropout = args['dropout']
+         config.hidden_dropout_prob = args['dropout']
+         config.attention_probs_dropout_prob = args['dropout']
+
     config.num_labels = 2
     config.output_attentions = False
     config.output_hidden_states = False
@@ -106,7 +106,7 @@ def main():
             split_dataset = dataset.train_test_split(test_size=args['test_split_size'], seed=42)
             train_dataset, test_dataset = split_dataset['train'], split_dataset['test']
             train_dataset = train_dataset.shuffle(seed=42)
-    
+
         training_arguments = TrainingArguments(
             args['save_name'],
             evaluation_strategy='epoch',
