@@ -120,7 +120,8 @@ def main():
             save_strategy='epoch',
             group_by_length=True,
             eval_accumulation_steps=128 if 'barticzech' in args['model'] else None,
-            gradient_accumulation_steps=args['gradient_acc_steps']
+            gradient_accumulation_steps=args['gradient_acc_steps'],
+            seed=args['seed']
         )
 
         data_collator = DataCollatorWithPadding(tokenizer, padding=True, pad_to_multiple_of=8, max_length=512)
@@ -178,6 +179,10 @@ if __name__ == '__main__':
     if args['domain'] is not None:
         domain_dict = {'domain': args['domain']}
 
+    seed_dict = {}
+    if args['dataset_json_path'] is None:
+        seed_dict['seed'] = args['seed']
+
     wandb.init(project='tacr-reklama', entity='aitakaitov', tags=None if args['tags'] is None else args['tags'].split(','), config={
         'lr': args['lr'],
         'batch_size': args['batch_size'],
@@ -185,7 +190,8 @@ if __name__ == '__main__':
         'dataset': args['dataset_json_path'],
         'left_out_domain': args['dataset_json_path'] if ood_test else None,
         'model_save': args['save_name'],
-        **domain_dict
+        **domain_dict,
+        **seed_dict
     })
 
     tokenizer = AutoTokenizer.from_pretrained(args['model'], use_fast=True)
