@@ -214,6 +214,9 @@ def get_stats():
         if 'bad/' in row['url'] or 'bad2/' in row['url']:
             continue
 
+        if isinstance(row['texts'], float):
+            continue
+
         # check agreement
         if row['majority_fraction'] < args["min_fraction"]:
             continue
