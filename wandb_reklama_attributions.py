@@ -72,12 +72,15 @@ for run in runs:
     datasets[dataset][method]['pos_rec'].append(pos_rec)
 
 for dataset, methods in datasets.items():
-    with open(f'result.csv', 'w+', encoding='utf-8') as f:
+    with (open(f'result.csv', 'w+', encoding='utf-8') as f):
         f.write('method;positive map;positive f1;positive prec;positive rec\n')
         for method, data in methods.items():
             f.write(f'{method}')
             for metric, values in data.items():
                 mean = np.mean(values)
-                conf95 = st.t.interval(0.95, len(values) - 1, loc=np.mean(values), scale=st.sem(values))
-                f.write(f';{mean:.3f} ± {mean - conf95[0]:.3f}')
+                if len(values) > 1:
+                    conf95 = st.t.interval(0.95, len(values) - 1, loc=np.mean(values), scale=st.sem(values))
+                    f.write(f';{mean:.3f} ± {mean - conf95[0]:.3f}')
+                else:
+                    f.write(f';{mean:.3f}')
             f.write('\n')

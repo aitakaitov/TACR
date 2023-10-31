@@ -269,8 +269,8 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
 
-    split = args['file'].split('_')
+    split = args['file'].split('+')
     #wandb.init(config={**args, 'method': split[1], 'block_size': split[2], 'model': split[0]}, project='lrec-2024')
-    wandb.init(config={**args, 'file': args['file']}, tags=None if args['tags'] is None else args['tags'].split(','), project='tacr-reklama')
+    wandb.init(config={**args, 'file': args['file'], 'method': split[1], 'model': split[0], 'seed': int(split[0].split('-')[-1]), 'block_size': split[2], 'dataset': split[3]}, tags=None if args['tags'] is None else args['tags'].split(','), project='tacr-reklama')
 
     main()

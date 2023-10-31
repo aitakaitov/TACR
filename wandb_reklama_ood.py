@@ -47,8 +47,12 @@ def main():
         of.write(f'{domain};')
         for metric, values in metrics.items():
             mean = np.mean(values)
-            conf95 = st.t.interval(0.95, len(values) - 1, loc=np.mean(values), scale=st.sem(values))
-            of.write(f'{mean:.3f} ± {mean - conf95[0]:.3f};')
+
+            if len(values) > 1:
+                conf95 = st.t.interval(0.95, len(values) - 1, loc=np.mean(values), scale=st.sem(values))
+                of.write(f'{mean:.3f} ± {mean - conf95[0]:.3f};')
+            else:
+                of.write(f'{mean:.3f};')
 
         of.write('\n')
 
@@ -57,7 +61,7 @@ def main():
 
 if __name__ == '__main__':
     args = {
-        'tags': 'nofilter-v1',
+        'tags': 'nofilter-v1.1',
         'model': 'Seznam/small-e-czech',
         # 'model': 'UWB-AIR/Czert-B-base-cased',
         'valid_seeds': [1, 2, 3, 4, 5]
