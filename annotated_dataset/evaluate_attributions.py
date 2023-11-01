@@ -19,14 +19,53 @@ def threshold_k(attributions):
     return thresholded_attributions
 
 
-def threshold_p(attributions):
-    percentile = np.percentile(attributions, 100 - args['top_p_tokens'])
-    thresholded_attributions = []
-    for attr in attributions:
-        if attr < percentile:
-            thresholded_attributions.append(0)
+def fill_holes(attributions):
+    if args['fill_holes'] == 0:
+        return attributions
+
+    result = []
+    count = 0
+    for i in range(len(attributions)):
+        if attributions[i] == 0:
+            count += 1
         else:
-            thresholded_attributions.append(1)
+            if 0 < count <= args['fill_holes']:
+                value = (attributions[i] + attributions[i - count - 1]) / 2
+                if value % 1 == 0:
+                    value = int(value)
+
+                result.extend([value] * count)
+            else:
+                result.extend([0] * count)
+            count = 0
+            result.append(attributions[i])
+
+    if 0 < count <= args['fill_holes']:
+        result.extend([0] * count)
+
+    return result
+
+
+def threshold_p(attributions):
+    if args['top_p_tokens'] != 0:
+        percentile = np.percentile(attributions, 100 - args['top_p_tokens'])
+        thresholded_attributions = []
+        for attr in attributions:
+            if attr < percentile:
+                thresholded_attributions.append(0)
+            else:
+                thresholded_attributions.append(1)
+    else:
+        top_percentile = np.percentile(attributions, 100 - args['top_percentile'])
+        bottom_percentile = np.percentile(attributions, 100 - args['bottom_percentile'])
+        thresholded_attributions = []
+        for attr in attributions:
+            if attr < bottom_percentile or attr > top_percentile:
+                thresholded_attributions.append(0)
+            else:
+                thresholded_attributions.append(1)
+
+    thresholded_attributions = fill_holes(thresholded_attributions)
 
     return thresholded_attributions
 
@@ -158,6 +197,9 @@ def token_f1(sample, attrs, _type):
     else:
         f1 = 2 * precision * recall / (precision + recall)
 
+    if precision > f1 and recall > f1:
+        print()
+
     return precision, recall, f1
 
 
@@ -258,14 +300,18 @@ def parse_list_to_ints(string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', default='sg25_keep_all_025.jsonl', type=str)
+    parser.add_argument('--file', default='czert-final-wholedoc-3_sg50_510_keep_all.jsonl', type=str)
     parser.add_argument('--top_k_tokens', default=None, type=int)
-    parser.add_argument('--top_p_tokens', default=5, type=int)
-    parser.add_argument('--evaluate_class', default='both', type=str)
-    parser.add_argument('--tags', default='', type=str)
+    parser.add_argument('--top_p_tokens', default=20, type=int)
+    parser.add_argument('--top_percentile', default=95, type=int)
+    parser.add_argument('--bottom_percentile', default=70, type=int)
+    parser.add_argument('--evaluate_class', default='ads', type=str)
+    parser.add_argument('--tags', default=None, type=str)
 
     parser.add_argument('--extend_k_tokens', default=0, type=int)
     parser.add_argument('--fraction_hit_full_count', default=None, type=float)
+
+    parser.add_argument('--fill_holes', default=0, type=int)
 
     args = vars(parser.parse_args())
 
