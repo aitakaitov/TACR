@@ -83,11 +83,29 @@ def select_files(tld, counts):
     selected_files = {}
     for domain, count in counts.items():
         print(f'Processing \'{domain}\'')
-        dir_path = os.path.join(tld, domain, args['source_dir_type'])
-        files = os.listdir(dir_path)
-        files = [str(os.path.join(tld, domain, args['source_dir_type'], file)) for file in files]
-        random.shuffle(files)
-        selected_files[domain] = files[:count]
+        count_unsanitized = count * args['add_unsanitized']
+        count_sanitized = count - count_unsanitized
+
+        if count_unsanitized == 0:
+            dir_path = os.path.join(tld, domain, args['source_dir_type'])
+            files = os.listdir(dir_path)
+            files = [str(os.path.join(tld, domain, args['source_dir_type'], file)) for file in files]
+            random.shuffle(files)
+            selected_files[domain] = files[:count]
+
+        else:
+            print(f'sanitized: {count_sanitized}, unsanitized: {count_unsanitized}')
+            dir_path = os.path.join(tld, domain, 'html_sanitized')
+            files = os.listdir(dir_path)
+            files = [str(os.path.join(tld, domain, 'html_sanitized', file)) for file in files]
+            random.shuffle(files)
+            selected_files[domain] = files[:count_sanitized]
+
+            dir_path = os.path.join(tld, domain, 'html')
+            files = os.listdir(dir_path)
+            files = [str(os.path.join(tld, domain, 'html', file)) for file in files]
+            random.shuffle(files)
+            selected_files[domain].extend(files[:count_unsanitized])
 
     return selected_files
 
@@ -279,13 +297,14 @@ def complete_ood():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--arts_per_ad', default=2, type=int)
-    parser.add_argument('--leave_out_domain', default=None)
+    # parser.add_argument('--leave_out_domain', default=None)
     parser.add_argument('--folder', required=True, default='', type=str)
     parser.add_argument('--trim_text', required=False, default=None)
     parser.add_argument('--trim_length', required=False, default=0, type=int)
     parser.add_argument('--invalid_domains', required=False, default='expres,forbes', type=str)
     parser.add_argument('--random_seed', required=False, default=False, type=bool)
     parser.add_argument('--source_dir_type', required=True, type=str)
+    parser.add_argument('--add_unsanitized', default=0.0, type=float)
     args = vars(parser.parse_args())
 
     if args['random_seed']:
@@ -296,7 +315,7 @@ if __name__ == '__main__':
 
     os.makedirs(args['folder'], exist_ok=True)
 
-    if args['leave_out_domain'] != 'all':
-        main()
-    else:
-        complete_ood()
+    #if args['leave_out_domain'] != 'all':
+    #    main()
+    #else:
+    complete_ood()
