@@ -83,7 +83,7 @@ def select_files(tld, counts):
     selected_files = {}
     for domain, count in counts.items():
         print(f'Processing \'{domain}\'')
-        count_unsanitized = count * args['add_unsanitized']
+        count_unsanitized = int(count * args['add_unsanitized'])
         count_sanitized = count - count_unsanitized
 
         if count_unsanitized == 0:
