@@ -9,7 +9,7 @@ from transformers import AutoTokenizer, DataCollatorWithPadding
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 import argparse
 import wandb
-import time
+import random
 
 from datasets.utils.logging import disable_progress_bar
 disable_progress_bar()
@@ -62,15 +62,24 @@ def split_into_blocks(encoding, cls_token_index, sep_token_index, block_size):
     return blocks
 
 
-def prepare_dataset_whole_docs(dataset):
+def prepare_dataset_whole_docs(dataset, train=True):
     cls_token_index = tokenizer.cls_token_id
     sep_token_index = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else 1
+
+    random.seed(42)
 
     new_dataset = []
     i = 0
     for sample in tqdm.tqdm(dataset):
         encoding = tokenizer(sample['text'], add_special_tokens=False)
         blocks = split_into_blocks(encoding, cls_token_index, sep_token_index, 510)
+
+        if args['edge_block_discard_prob'] != 0 and train:
+            r = random.randint(0, 101)
+            if r <= 100 * args['edge_block_discard_prob']:
+                if len(blocks) > 2:
+                    blocks = blocks[1:-1]
+
         if len(blocks) == 0:
             continue
         for block in blocks:
@@ -161,7 +170,7 @@ def main():
 
     if ood_test:
         test_dataset = load_dataset('json', data_files=args['ood_test_json_path'], split='train').map(tokenize)
-        test_dataset = prepare_dataset_whole_docs(test_dataset)
+        test_dataset = prepare_dataset_whole_docs(test_dataset, False)
         run_verify(model, test_dataset)
 
 
@@ -172,14 +181,14 @@ def parse_bool(s):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', required=False, default=1, type=int)
-    parser.add_argument('--model', required=True, default='UWB-AIR/Czert-B-base-cased', type=str)
-    parser.add_argument('--lr', required=True, default=1e-5, type=float)
+    parser.add_argument('--model', required=False, default='UWB-AIR/Czert-B-base-cased', type=str)
+    parser.add_argument('--lr', required=False, default=1e-5, type=float)
     parser.add_argument('--batch_size', required=False, default=1, type=int)
     parser.add_argument('--test_split_size', required=False, default=0.15, type=float)
     parser.add_argument('--dataset_json_path', required=False, default=None, type=str)
     parser.add_argument('--ood_test_json_path', required=False, default=None, type=str)
     parser.add_argument('--dropout', default=None, type=float, required=False)
-    parser.add_argument('--save_name', required=True, type=str)
+    parser.add_argument('--save_name', required=False, type=str)
     parser.add_argument('--tags', required=False, default=None, type=str)
     parser.add_argument('--domain', required=False, default=None, type=str)
     parser.add_argument('--seed', default=-1, required=False, type=int)
@@ -187,6 +196,7 @@ if __name__ == '__main__':
     parser.add_argument('--gradient_acc_steps', default=1, type=int)
     parser.add_argument('--lr_scheduler', default='linear_decay', type=str)
     parser.add_argument('--warmup_steps', default=0.1, type=float)
+    parser.add_argument('--edge_block_discard_prob', default=0.75, type=float)
 
     args = vars(parser.parse_args())
 
