@@ -50,6 +50,8 @@ def main():
             for method, data in methods.items():
                 f.write(f'{method}')
                 for metric, values in data.items():
+                    if len(values) > 5:
+                        values = values[:5]
                     mean = np.mean(values)
                     if len(values) > 1:
                         conf95 = st.t.interval(0.95, len(values) - 1, loc=np.mean(values), scale=st.sem(values))
